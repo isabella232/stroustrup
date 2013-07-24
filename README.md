@@ -1,0 +1,4 @@
+stroustrup
+==========
+
+Learning project
