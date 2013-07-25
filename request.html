@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="no-js" lang="eng"
+      style="
+  background: url(image/hard_paper_texture_by_dl_stockandresources-d5jalsg.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+
+  ">
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<head>
+    <title>
+        Crystalnix library: book catalogue
+    </title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/foundation.css" />
+    <script src="js/vendor/custom.modernizr.js"></script>
+    <style>
+        .panel{
+            display: none;
+            background: none;
+        }
+    </style>
+
+
+</head>
+
+
+<body style="
+height: 100%;
+background: none;
+height: 100%;
+margin: 0;
+padding: 0;
+" >
+
+<nav class="top-bar">
+    <ul class="title-area">
+        <!-- Title Area -->
+        <li class="name"
+            style="
+            background: #1d021c
+        " >
+            <h1 style="
+            color: #f5f5f5;
+            padding-left: 10px;
+            "> Requests for a new book</h1>
+        </li>
+
+    </ul>
+
+    <section class="top-bar-section">
+        <!-- Left Nav Section -->
+        <ul class="left">
+            <li class="divider"></li>
+            <li class="active"><a href="users.html">User page</a></li>
+            <li class="divider"></li>
+            <li class="active"><a href="books.html">Books page</a></li>
+            <li class="divider"></li>
+            <li class="active"><a href="add_book.html">Add new book</a></li>
+            <li class="divider"></li>
+        </ul>
+
+        <!-- Right Nav Section -->
+        <ul class="right">
+            <li class="divider hide-for-small"></li>
+
+            <li class="divider"></li>
+            <li class="has-form">
+                <form>
+                    <label style=" color: #faebd7">
+                        You are loged as:
+                    </label>
+                    <span id="user_name" style=" width: 100px; color: #b0e0e6">
+                    %USERNAME%
+                    </span>
+                </form>
+            </li>
+            <li class="divider show-for-small">
+
+            </li>
+            <li class="has-form">
+                <a class="button" href="main_page.html" id="log_out_button ">Log out</a>
+            </li>
+        </ul>
+    </section>
+
+</nav>
+
+
+<div class="row">
+    <div class="small-offset-12 columns " style="background: none;">
+        <div class="row" style=" background: #f5f5f5;
+     border-radius: 10px;
+     box-shadow: 10px 10px 40px #000000;
+
+     ">
+            <div class="row" style="padding: 0; margin: 10px; margin-left: 40px; margin-right: 40px;">
+                <form>
+                    <div class="row">
+                        <label> Name:
+                        <input type="text" placeholder="Type name of the book" required>
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label> URL:
+                            <input type="text" placeholder="Paste adress with book" required>
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <button class="success" style="
+                        border-radius: 30px;
+                        height: 30px;
+                        width: 90px;;
+                        font: sans-serif;
+                        font-size: 22px;
+                        text-align: center;
+                        padding: 4px;
+                        color: #f5f5f5;
+                        ">
+                            Send!
+                        </button>
+                    </div>
+
+
+                </form>
+            </div>
+
+            <h4 style=" color: #515246; padding-left: 40px;">
+                Look, what is already has been ordered:
+            </h4>
+
+
+            <div class="row" id="request_1" style="
+             background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+             background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+             background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+             border-radius: 10px;
+             box-shadow: 0px 0px 30px #000000;
+             position: relative;
+
+             text-align: center;
+             margin: 15px;
+
+            ">
+                <div class="small-10 columns"
+                     style="
+                     padding: 20px;
+                     height: 100%;
+                     ">
+
+                    <a href="URL"
+                       style="text-align: left; position: relative; padding: 10px; margin: 40px; font-size: 24px;">
+                        Name of the book
+                    </a>
+
+                </div>
+                <div class="small-1 column"
+                     style="
+                     padding: 0;
+                     margin: 10px;
+                     padding-bottom: 10px;
+                     padding-top: 10px;
+                     position: static;
+                     text-align: center;
+                     ">
+                    <div class="small-1 column"
+                         style="
+                     padding: 0;
+                     margin: 0;
+                     padding-bottom: 10px;
+                     padding-top: 10px;
+                     position: static;
+                     text-align: center;
+                     ">
+                        <div class="row">
+                            <a href="#" class="button success"
+
+                               style="
+                            padding:  0px;
+                            padding-left: 10px;
+                            padding-right: 10px;
+                            margin: 0px;
+                            float: right;
+                            text-align: center;
+                            position: static;
+                            font-size: 30pt;
+                            "
+                                    >
+                                +
+                            </a>
+                        </div>
+                        <div class="row">
+                            <div class="panel"
+                                 style="
+                         padding:  0px;
+                         margin: 0px;
+                         float: right;
+                         padding-left: 10px;
+                         padding-right: 10px;
+                         display:  block;
+                         font-size: 30pt;
+                         text-align: center;
+                         position: static;
+
+                         ">
+                                0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" id="request_2" style="
+             background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+             background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+             background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+             border-radius: 10px;
+             box-shadow: 0px 0px 30px #000000;
+             position: relative;
+
+             text-align: center;
+             margin: 15px;
+
+            ">
+                <div class="small-10 columns"
+                     style="
+                     padding: 20px;
+                     height: 100%;
+                     ">
+
+                    <a href="URL"
+                       style="text-align: left; position: relative; padding: 10px; margin: 40px; font-size: 24px;">
+                        Name of the book
+                    </a>
+
+                </div>
+                <div class="small-1 column"
+                     style="
+                     padding: 0;
+                     margin: 10px;
+                     padding-bottom: 10px;
+                     padding-top: 10px;
+                     position: static;
+                     text-align: center;
+                     ">
+                    <div class="small-1 column"
+                         style="
+                     padding: 0;
+                     margin: 0;
+                     padding-bottom: 10px;
+                     padding-top: 10px;
+                     position: static;
+                     text-align: center;
+                     ">
+                        <div class="row">
+                            <a href="#" class="button success"
+
+                               style="
+                            padding:  0px;
+                            padding-left: 10px;
+                            padding-right: 10px;
+                            margin: 0px;
+                            float: right;
+                            text-align: center;
+                            position: static;
+                            font-size: 30pt;
+                            "
+                                    >
+                                +
+                            </a>
+                        </div>
+                        <div class="row">
+                            <div class="panel"
+                                 style="
+                         padding:  0px;
+                         margin: 0px;
+                         float: right;
+                         padding-left: 10px;
+                         padding-right: 10px;
+                         display:  block;
+                         font-size: 30pt;
+                         text-align: center;
+                         position: static;
+
+                         ">
+                                100
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    document.write('<script src=' +
+            ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
+            '.js><\/script>')
+</script>
+
+<script src="js/zepto.js"></script>
+<script src="js/foundation/foundation.js"></script>
+
+<script src="js/jquery.js"></script>
+<script>
+    $(document).foundation();
+</script>
+</body>
+
+
+</html>

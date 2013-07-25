@@ -43,9 +43,13 @@ padding: 0;
 <nav class="top-bar">
     <ul class="title-area">
         <!-- Title Area -->
-        <li class="name" style=" background: #1d021c">
+        <li class="name"
+            style="
+            background: #1d021c
+        " >
             <h1 style="
             color: #f5f5f5;
+            padding-left: 10px;
             "> Books Collection</h1>
         </li>
 
@@ -163,7 +167,7 @@ padding: 0;
 
                     <div class="row" style=" padding: 20px;">
                         <a href="#" style=" color: #2184b0; font-weight: bold;"
-                           onclick=" comment_branch()"
+                           onclick=" comment_branch(com_1_0)"
                            onmouseover="
                               (function(){
 
@@ -178,9 +182,10 @@ padding: 0;
                             User1:
                         </a>
                         comment of first user.
+                        <label id="com_1_0"></label>
                         <div class="row" style=" padding: 20px;">
                             <a href="#" style=" color: #2184b0; font-weight: bold;"
-                               onclick=" comment_branch()"
+                               onclick=" comment_branch(com_1_0_0)"
                                onmouseover="
                                       (function(){
 
@@ -195,9 +200,10 @@ padding: 0;
                                 User2:
                             </a>
                             comment of second user.
+                            <label id="com_1_0_0"></label>
                             <div class="row" style=" padding: 20px;">
                                 <a href="#" style=" color: #2184b0; font-weight: bold;"
-                                   onclick=" comment_branch()"
+                                   onclick=" comment_branch(com_1_0_0_0)"
                                    onmouseover="
                                           (function(){
 
@@ -212,9 +218,10 @@ padding: 0;
                                     User1:
                                 </a>
                                 Answer of first user.
+                                <label id="com_1_0_0_0"></label>
                                 <div class="row" style=" padding: 20px;">
                                     <a href="#" style=" color: #2184b0; font-weight: bold;"
-                                       onclick=" comment_branch()"
+                                       onclick=" comment_branch(com_1_0_0_0_0)"
                                        onmouseover="
                                               (function(){
 
@@ -228,14 +235,15 @@ padding: 0;
                                             >
                                         User2:
                                     </a>
-                                    The Holywar has began
+                                    The Holywar has began.
+                                    <label id="com_1_0_0_0_0"></label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row" style=" padding-left: 20px;">
                         <a href="#" style=" color: #2184b0; font-weight: bold;"
-                           onclick=" comment_branch()"
+                           onclick=" comment_branch(com_1_1)"
                            onmouseover="
                               (function(){
 
@@ -250,6 +258,7 @@ padding: 0;
                             User3:
                         </a>
                         First sober comment
+                        <label id="com_1_1"></label>
                     </div>
                 </div>
                 <form>
@@ -661,6 +670,12 @@ padding: 0;
         return false;
 
     }
+
+    function comment_branch(sender)
+    {
+
+    }
+
 
 
 </script>
