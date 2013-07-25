@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html class="no-js" lang="eng"
+      style="
+  background: url(image/hard_paper_texture_by_dl_stockandresources-d5jalsg.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+
+  ">
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<head>
+    <title>
+        Crystalnix library: book catalogue
+    </title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/foundation.css" />
+    <script src="js/vendor/custom.modernizr.js"></script>
+    <style>
+        .panel{
+            display: none;
+            background: none;
+        }
+    </style>
+
+
+</head>
+
+
+<body style="
+height: 100%;
+background: none;
+height: 100%;
+margin: 0;
+padding: 0;
+" >
+
+<nav class="top-bar">
+    <ul class="title-area">
+        <!-- Title Area -->
+        <li class="name" style=" background: #1d021c">
+            <h1 style="
+            color: #f5f5f5;
+            "> Books Collection</h1>
+        </li>
+
+    </ul>
+
+    <section class="top-bar-section">
+        <!-- Left Nav Section -->
+        <ul class="left">
+            <li class="divider"></li>
+            <li class="active"><a href="users.html">Users page</a></li>
+            <li class="divider"></li>
+            <li class="active"><a href="request.html">Request new book</a></li>
+            <li class="divider"></li>
+            <li class="active"><a href="add_book.html">Add new book</a></li>
+            <li class="divider"></li>
+        </ul>
+
+        <!-- Right Nav Section -->
+        <ul class="right">
+            <li class="divider hide-for-small"></li>
+
+            <li class="divider"></li>
+            <li class="has-form">
+                <form>
+                    <label style=" color: #faebd7">
+                        You are loged as:
+                    </label>
+                    <span id="user_name" style=" width: 100px; color: #b0e0e6">
+                    %USERNAME%
+                    </span>
+                </form>
+            </li>
+            <li class="divider show-for-small"></li>
+            <li class="has-form">
+                <a class="button" href="main_page.html" id="log_out_button ">Log out</a>
+            </li>
+        </ul>
+    </section>
+
+</nav>
+<div class="row">
+    <div class="small-offset-12 columns " style="background: none;">
+    <div class="row" style=" background: #f5f5f5;
+     border-radius: 10px;
+     box-shadow: 10px 10px 40px #000000;
+     ">
+        <div class="row" id="book_1" style="
+         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         border-radius: 10px;
+         box-shadow: 0px 0px 30px #000000;
+         position: relative;
+
+         text-align: center;
+         margin: 15px;
+
+        ">
+
+
+
+         <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+             <div class="row">
+             <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+             </div>
+         </div>
+         <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+             <div class="row">
+             <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                 Name of the book
+             </a>
+             <br>
+                 <a href="#" style="color: #8d00b0">
+                     Author
+                 </a>
+             <br>
+                 <a href="#" style="color: #760002">
+                     Technology
+                 </a>
+             <div class="row" style="height: 20px;">
+
+             </div>
+             <span   style="color: black;">
+                 Status:
+                 <span style="color: green;"> Free </span>
+             </span>
+
+             </div>
+         </div>
+         <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+             <div class="row">
+             <a  class="button"
+                style="
+                float: right;
+                margin: 20px;
+                height: 30px;
+                width: 30px;
+                border-radius: 30px;
+                padding: 0;
+                text-align: center;
+                font-size: 18pt;
+
+                "
+                     onclick="add_comment_list(1)"
+                     >
+                 ▼
+             </a>
+             </div>
+         </div>
+
+        </div>
+        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;   ">
+            <div class="panel" id="panel1">
+                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel1">
+
+                    <div class="row" style=" padding: 20px;">
+                        <a href="#" style=" color: #2184b0; font-weight: bold;"
+                           onclick=" comment_branch()"
+                           onmouseover="
+                              (function(){
+
+                              })();
+                              "
+                           onmouseout="
+                              (function(){
+
+                              })();
+                              "
+                                >
+                            User1:
+                        </a>
+                        comment of first user.
+                        <div class="row" style=" padding: 20px;">
+                            <a href="#" style=" color: #2184b0; font-weight: bold;"
+                               onclick=" comment_branch()"
+                               onmouseover="
+                                      (function(){
+
+                                      })();
+                                      "
+                                       onmouseout="
+                                      (function(){
+
+                                      })();
+                                      "
+                                    >
+                                User2:
+                            </a>
+                            comment of second user.
+                            <div class="row" style=" padding: 20px;">
+                                <a href="#" style=" color: #2184b0; font-weight: bold;"
+                                   onclick=" comment_branch()"
+                                   onmouseover="
+                                          (function(){
+
+                                          })();
+                                          "
+                                               onmouseout="
+                                          (function(){
+
+                                          })();
+                                          "
+                                        >
+                                    User1:
+                                </a>
+                                Answer of first user.
+                                <div class="row" style=" padding: 20px;">
+                                    <a href="#" style=" color: #2184b0; font-weight: bold;"
+                                       onclick=" comment_branch()"
+                                       onmouseover="
+                                              (function(){
+
+                                              })();
+                                              "
+                                       onmouseout="
+                                              (function(){
+
+                                              })();
+                                              "
+                                            >
+                                        User2:
+                                    </a>
+                                    The Holywar has began
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style=" padding-left: 20px;">
+                        <a href="#" style=" color: #2184b0; font-weight: bold;"
+                           onclick=" comment_branch()"
+                           onmouseover="
+                              (function(){
+
+                              })();
+                              "
+                           onmouseout="
+                              (function(){
+
+                              })();
+                              "
+                                >
+                            User3:
+                        </a>
+                        First sober comment
+                    </div>
+                </div>
+                <form>
+                <div class="row">
+                    <div class="small-2 columns" style="width: 80%">
+                        <input id="input1"  type="text" style="width: 100%;">
+                    </div>
+                    <div class="small-2 columns">
+                        <button type="submit" onclick="comment(1)"> Send! </button>
+                    </div>
+                </div>
+                </form>
+
+            </div>
+        </div>
+        <div class="row" id="book_2" style="
+         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         border-radius: 10px;
+         box-shadow: 0px 0px 30px #000000;
+         position: relative;
+
+         text-align: center;
+         margin: 15px;
+
+        ">
+
+
+
+            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+                <div class="row">
+                    <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                </div>
+            </div>
+            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+                <div class="row">
+                    <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                        Name of the book
+                    </a>
+                    <br>
+                    <a href="#" style="color: #8d00b0">
+                        Author
+                    </a>
+                    <br>
+                    <a href="#" style="color: #760002">
+                        Technology
+                    </a>
+                    <div class="row" style="height: 20px;">
+
+                    </div>
+             <span   style="color: black;">
+                 Status:
+                 <span style="color: red;"> Busy </span>
+                 <div class="row">
+                     Owner: <span style="color: #2184b0; "> User2 </span>
+                     <button type="submit" class="alert"
+                             style="
+                             font-size: 8pt;
+                             height: 15px;
+                             border-radius: 7px;
+                             text-align: center;
+                             padding: 0;
+                             padding-left: 5px;
+                             padding-right: 5px;
+                             ">
+                         Ask to return
+                     </button>
+                 </div>
+             </span>
+
+                </div>
+            </div>
+            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+                <div class="row">
+                    <a  class="button"
+                       style="
+                float: right;
+                margin: 20px;
+                height: 30px;
+                width: 30px;
+                border-radius: 30px;
+                padding: 0;
+                text-align: center;
+                font-size: 18pt;
+
+                "
+                       onclick="add_comment_list(2)"
+                            >
+                        ▼
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;  ">
+            <div class="panel" id="panel2">
+                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel2">
+                    <br>text<br>
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="small-2 columns" style="width: 80%" id="input2">
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="small-2 columns" >
+                            <button type="submit"  onclick="comment(2)"> Send! </button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+        <div class="row" id="book_3" style="
+         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         border-radius: 10px;
+         box-shadow: 0px 0px 30px #000000;
+         position: relative;
+
+         text-align: center;
+         margin: 15px;
+
+        ">
+
+
+
+            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+                <div class="row">
+                    <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                </div>
+            </div>
+            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+                <div class="row">
+                    <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                        Name of the book
+                    </a>
+                    <br>
+                    <a href="#" style="color: #8d00b0">
+                        Author
+                    </a>
+                    <br>
+                    <a href="#" style="color: #760002">
+                        Technology
+                    </a>
+                    <div class="row" style="height: 20px;">
+
+                    </div>
+             <span   style="color: black;">
+                 Status:
+                 <span style="color: green;"> Free </span>
+             </span>
+
+                </div>
+            </div>
+            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+                <div class="row">
+                    <a  class="button"
+                       style="
+                float: right;
+                margin: 20px;
+                height: 30px;
+                width: 30px;
+                border-radius: 30px;
+                padding: 0;
+                text-align: center;
+                font-size: 18pt;
+
+                "
+                       onclick="add_comment_list(3)"
+                            >
+                        ▼
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;   ">
+            <div class="panel" id="panel3">
+                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel3">
+                    <br>text<br>
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="small-2 columns" style="width: 80%" id="input3">
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="small-2 columns" >
+                            <button type="submit"  onclick="comment(3)"> Send! </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <div class="row" id="book_4" style="
+         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         border-radius: 10px;
+         box-shadow: 0px 0px 30px #000000;
+         position: relative;
+
+         text-align: center;
+         margin: 15px;
+
+        ">
+
+
+
+            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+                <div class="row">
+                    <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                </div>
+            </div>
+            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+                <div class="row">
+                    <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                        Name of the book
+                    </a>
+                    <br>
+                    <a href="#" style="color: #8d00b0">
+                        Author
+                    </a>
+                    <br>
+                    <a href="#" style="color: #760002">
+                        Technology
+                    </a>
+                    <div class="row" style="height: 20px;">
+
+                    </div>
+             <span   style="color: black;">
+                 Status:
+                 <span style="color: green;"> Free </span>
+             </span>
+
+                </div>
+            </div>
+            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+                <div class="row">
+                    <a  class="button"
+                       style="
+                float: right;
+                margin: 20px;
+                height: 30px;
+                width: 30px;
+                border-radius: 30px;
+                padding: 0;
+                text-align: center;
+                font-size: 18pt;
+
+                "
+                       onclick="add_comment_list(4)"
+                            >
+                        ▼
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;  ">
+            <div class="panel" id="panel4">
+                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel4">
+                    <br>text<br>
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="small-2 columns" style="width: 80%" id="input4">
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="small-2 columns" >
+                            <button type="submit"  onclick="comment(4)"> Send! </button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+        <div class="row" id="book_5" style="
+         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         border-radius: 10px;
+         box-shadow: 0px 0px 30px #000000;
+         position: relative;
+
+         text-align: center;
+         margin: 15px;
+
+        ">
+
+
+
+            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+                <div class="row">
+                    <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                </div>
+            </div>
+            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+                <div class="row">
+                    <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                        Name of the book
+                    </a>
+                    <br>
+                    <a href="#" style="color: #8d00b0">
+                        Author
+                    </a>
+                    <br>
+                    <a href="#" style="color: #760002">
+                        Technology
+                    </a>
+                    <div class="row" style="height: 20px;">
+
+                    </div>
+
+             <span  style="color: black;">
+                 Status:
+                 <span style="color: red;"> Busy</span>
+                 <div class="row">
+                     Owner: <span style="color: #2184b0; "> User1 </span>
+                     <button type="submit" class="alert"
+                             style="
+                             font-size: 8pt;
+                             height: 15px;
+                             border-radius: 7px;
+                             text-align: center;
+                             padding: 0;
+                             padding-left: 5px;
+                             padding-right: 5px;
+                             ">
+                         Ask to return
+                     </button>
+                 </div>
+
+             </span>
+
+                </div>
+            </div>
+            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+                <div class="row">
+                    <a class="button"
+                       style="
+                float: right;
+                margin: 20px;
+                height: 30px;
+                width: 30px;
+                border-radius: 30px;
+                padding: 0;
+                text-align: center;
+                font-size: 18pt;
+
+                "
+                       onclick="add_comment_list(5)"
+                            >
+                        ▼
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px; ">
+            <div class="panel" id="panel5">
+
+                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel5">
+                    <br>text<br>
+                </div>
+                <form>
+                <div class="row">
+                    <div class="small-2 columns" style="width: 80%" id="input5">
+                        <input type="text" style="width: 100%;">
+                    </div>
+                    <div class="small-2 columns" >
+                        <button type="submit"
+                                style="
+                                border-radius: 5px;
+                                height: 40px;
+                                padding: 0;
+                                padding-left: 5px;
+                                padding-right: 5px;
+                                width: 80px;
+                                "
+                                onclick="comment(5)"> Send! </button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+ </div>
+
+<div class="row" style="height: 100px;"></div>
+
+
+
+<script language="javascript">
+
+
+    function add_comment_list(num)
+    {
+        $("#panel"+num).slideToggle("slow");
+        $(this).toggleClass("active");
+
+
+    }
+    function comment(num)
+    {
+
+        return false;
+
+    }
+
+
+</script>
+
+<script>
+    document.write('<script src=' +
+            ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
+            '.js><\/script>')
+</script>
+
+<script src="js/zepto.js"></script>
+<script src="js/foundation/foundation.js"></script>
+
+<script src="js/jquery.js"></script>
+<script>
+    $(document).foundation();
+</script>
+</body>
+
+
+</html>
