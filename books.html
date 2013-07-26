@@ -20,7 +20,9 @@
     </title>
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/foundation.css" />
+    <link rel="stylesheet" href="css/foundation.min.css"/>
     <script src="js/vendor/custom.modernizr.js"></script>
+    <script src="js/jquery.js"></script>
     <style>
         .panel{
             display: none;
@@ -40,24 +42,33 @@ margin: 0;
 padding: 0;
 " >
 
-<nav class="top-bar">
-    <ul class="title-area">
-        <!-- Title Area -->
-        <li class="name"
-            style="
-            background: #1d021c
-        " >
-            <h1 style="
-            color: #f5f5f5;
-            padding-left: 10px;
-            "> Books Collection</h1>
-        </li>
+<nav class="top-bar" style="margin: 0;">
 
+    <ul class="title-area" >
+
+        <li class="name" style="
+                                background: #1d021c;
+                                color: #f5f5f5;
+                                padding: 10px;
+
+                                font-weight: bolder;
+                                text-align: center;
+               " >
+
+            Books Collection
+
+
+        </li>
+        <li class="toggle-topbar menu-icon"><a><span></span></a></li>
     </ul>
 
-    <section class="top-bar-section">
+
+    <section class="top-bar-section" >
         <!-- Left Nav Section -->
         <ul class="left">
+
+            <li class="divider"></li>
+            <li class="active"><a href="books.html">Books page</a></li>
             <li class="divider"></li>
             <li class="active"><a href="users.html">Users page</a></li>
             <li class="divider"></li>
@@ -65,12 +76,14 @@ padding: 0;
             <li class="divider"></li>
             <li class="active"><a href="add_book.html">Add new book</a></li>
             <li class="divider"></li>
+
         </ul>
 
         <!-- Right Nav Section -->
         <ul class="right">
-            <li class="divider hide-for-small"></li>
 
+            <li class="divider"></li>
+            <li class="active"><a href="my_books.html">My books</a></li>
             <li class="divider"></li>
             <li class="has-form">
                 <form>
@@ -82,15 +95,81 @@ padding: 0;
                     </span>
                 </form>
             </li>
-            <li class="divider show-for-small"></li>
+            <li class="divider"></li>
             <li class="has-form">
                 <a class="button" href="main_page.html" id="log_out_button ">Log out</a>
             </li>
         </ul>
+
+
+
     </section>
 
 </nav>
-<div class="row">
+
+<div class="row"
+     style="
+        background: #0a0a0a;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        padding: 20px;
+        font: caption;
+        font-size: 12pt;
+        height: 100px;
+
+        "
+        >
+    <dl class="sub-nav" >
+        <dt
+                style="
+                    color: #e8eac8;
+                    font-weight: bolder;
+                    ">
+            Filter:</dt>
+        <dd class="active"><a href="#">All</a></dd>
+        <dd><a href="books%25free.html">Free</a></dd>
+        <dd><a href="books%25busy.html">Busy</a></dd>
+        <dd>
+            <a href="#" data-dropdown="drop1" class="button dropdown secondary"
+               style="
+               border-radius: 10px;
+               padding: 4px;
+               width: 150px;
+               text-align: left;
+               ">
+                Technology
+            </a>
+            <br>
+
+            <ul id="drop1" class="f-dropdown" data-dropdown-content>
+                <li><a href="#">Technology1</a></li>
+                <li><a href="#">Technology2</a></li>
+                <li><a href="#">Technology3</a></li>
+            </ul>
+        </dd>
+        <dd>
+            <a href="#" data-dropdown="drop2" class="button dropdown secondary"
+               style="
+               border-radius: 10px;
+               padding: 4px;
+               width: 150px;
+               text-align: left;
+               ">
+                Author
+            </a>
+            <br>
+
+            <ul id="drop2" class="f-dropdown" data-dropdown-content>
+                <li><a href="#">Author1</a></li>
+                <li><a href="#">Author2</a></li>
+                <li><a href="#">Author3</a></li>
+            </ul>
+        </dd>
+    </dl>
+</div>
+
+
+<div class="row" style="margin-top: 20px;">
     <div class="small-offset-12 columns " style="background: none;">
     <div class="row" style=" background: #f5f5f5;
      border-radius: 10px;
@@ -113,21 +192,31 @@ padding: 0;
 
          <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
              <div class="row">
-             <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                 <a href="#" data-dropdown="drop_book1" data-options="is_hover:true">
+                    <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                 </a>
+                 <ul id="drop_book1" class="f-dropdown content large" data-dropdown-content>
+                     <li>
+                         <a >
+                             <img src="image/book_index.png"/>
+                         </a>
+                     </li>
+                 </ul>
              </div>
+
          </div>
          <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
              <div class="row">
-             <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+             <a href="book_index%25busy.html" style=" text-align: justify; margin: 10px;">
                  Name of the book
              </a>
              <br>
                  <a href="#" style="color: #8d00b0">
-                     Author
+                     Author1
                  </a>
              <br>
                  <a href="#" style="color: #760002">
-                     Technology
+                     Technology1
                  </a>
              <div class="row" style="height: 20px;">
 
@@ -291,21 +380,30 @@ padding: 0;
 
             <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
                 <div class="row">
-                    <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                    <a href="#" data-dropdown="drop_book2" data-options="is_hover:true">
+                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                    </a>
+                    <ul id="drop_book2" class="f-dropdown content large" data-dropdown-content>
+                        <li>
+                            <a >
+                                <img src="image/book_index.png"/>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
                 <div class="row">
-                    <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index%25busy.html" style=" text-align: justify; margin: 10px;">
                         Name of the book
                     </a>
                     <br>
                     <a href="#" style="color: #8d00b0">
-                        Author
+                        Author2
                     </a>
                     <br>
                     <a href="#" style="color: #760002">
-                        Technology
+                        Technology1
                     </a>
                     <div class="row" style="height: 20px;">
 
@@ -360,8 +458,8 @@ padding: 0;
                 </div>
                 <form>
                     <div class="row">
-                        <div class="small-2 columns" style="width: 80%" id="input2">
-                            <input type="text" style="width: 100%;">
+                        <div class="small-2 columns" style="width: 80%">
+                            <input  id="input2" type="text" style="width: 100%;">
                         </div>
                         <div class="small-2 columns" >
                             <button type="submit"  onclick="comment(2)"> Send! </button>
@@ -389,21 +487,30 @@ padding: 0;
 
             <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
                 <div class="row">
-                    <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                    <a href="#" data-dropdown="drop_book3" data-options="is_hover:true">
+                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                    </a>
+                    <ul id="drop_book3" class="f-dropdown content large" data-dropdown-content>
+                        <li>
+                            <a >
+                                <img src="image/book_index.png"/>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
                 <div class="row">
-                    <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index%25busy.html" style=" text-align: justify; margin: 10px;">
                         Name of the book
                     </a>
                     <br>
                     <a href="#" style="color: #8d00b0">
-                        Author
+                        Author2
                     </a>
                     <br>
                     <a href="#" style="color: #760002">
-                        Technology
+                        Technology2
                     </a>
                     <div class="row" style="height: 20px;">
 
@@ -444,8 +551,8 @@ padding: 0;
                 </div>
                 <form>
                     <div class="row">
-                        <div class="small-2 columns" style="width: 80%" id="input3">
-                            <input type="text" style="width: 100%;">
+                        <div class="small-2 columns" style="width: 80%">
+                            <input  id="input3" type="text" style="width: 100%;">
                         </div>
                         <div class="small-2 columns" >
                             <button type="submit"  onclick="comment(3)"> Send! </button>
@@ -472,21 +579,30 @@ padding: 0;
 
             <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
                 <div class="row">
-                    <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                    <a href="#" data-dropdown="drop_book4" data-options="is_hover:true">
+                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                    </a>
+                    <ul id="drop_book4" class="f-dropdown content large" data-dropdown-content>
+                        <li>
+                            <a >
+                                <img src="image/book_index.png"/>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
                 <div class="row">
-                    <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index%25busy.html" style=" text-align: justify; margin: 10px;">
                         Name of the book
                     </a>
                     <br>
                     <a href="#" style="color: #8d00b0">
-                        Author
+                        Author3
                     </a>
                     <br>
                     <a href="#" style="color: #760002">
-                        Technology
+                        Technology2
                     </a>
                     <div class="row" style="height: 20px;">
 
@@ -519,15 +635,15 @@ padding: 0;
                 </div>
             </div>
         </div>
-        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;  ">
+        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;" id="row_panel4"   >
             <div class="panel" id="panel4">
-                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel4">
+                <div class="row" style=" margin: 0; padding: 10px;">
                     <br>text<br>
                 </div>
                 <form>
                     <div class="row">
-                        <div class="small-2 columns" style="width: 80%" id="input4">
-                            <input type="text" style="width: 100%;">
+                        <div class="small-2 columns" style="width: 80%" >
+                            <input  id="input4" type="text" style="width: 100%;">
                         </div>
                         <div class="small-2 columns" >
                             <button type="submit"  onclick="comment(4)"> Send! </button>
@@ -555,21 +671,30 @@ padding: 0;
 
             <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
                 <div class="row">
-                    <img src="../index_of_book.png" style=" float: left; margin: 20px;  ">
+                    <a href="#" data-dropdown="drop_book5" data-options="is_hover:true">
+                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                    </a>
+                    <ul id="drop_book5" class="f-dropdown content large" data-dropdown-content>
+                        <li>
+                            <a >
+                                <img src="image/book_index.png"/>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
                 <div class="row">
-                    <a href="../index_of_book.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index%25busy.html" style=" text-align: justify; margin: 10px;">
                         Name of the book
                     </a>
                     <br>
                     <a href="#" style="color: #8d00b0">
-                        Author
+                        Author3
                     </a>
                     <br>
                     <a href="#" style="color: #760002">
-                        Technology
+                        Technology3
                     </a>
                     <div class="row" style="height: 20px;">
 
@@ -577,7 +702,7 @@ padding: 0;
 
              <span  style="color: black;">
                  Status:
-                 <span style="color: red;"> Busy</span>
+                 <span style="color: red;"> Busy </span>
                  <div class="row">
                      Owner: <span style="color: #2184b0; "> User1 </span>
                      <button type="submit" class="alert"
@@ -627,11 +752,11 @@ padding: 0;
                 </div>
                 <form>
                 <div class="row">
-                    <div class="small-2 columns" style="width: 80%" id="input5">
-                        <input type="text" style="width: 100%;">
+                    <div class="small-2 columns" style="width: 80%" >
+                        <input id="input5" type="text" style="width: 100%;">
                     </div>
                     <div class="small-2 columns" >
-                        <button type="submit"
+                        <button type="button"
                                 style="
                                 border-radius: 5px;
                                 height: 40px;
@@ -666,7 +791,10 @@ padding: 0;
     }
     function comment(num)
     {
-
+        var msg='<div class="row"style="padding: 20px;"><a href="#" style=" color: #2184b0; font-weight: bold;"onclick=" comment_branch(com_1_0)"'
+        +'> User1: </a>'+$('#input'+num).val()+'<label id="com_'+num+'_0"></label>';
+        $('#input'+num).val('');
+         /*add text to a field*/
         return false;
 
     }
@@ -686,10 +814,25 @@ padding: 0;
             '.js><\/script>')
 </script>
 
+
+
+<script src="js/foundation.min.js"></script>
 <script src="js/zepto.js"></script>
 <script src="js/foundation/foundation.js"></script>
-
-<script src="js/jquery.js"></script>
+<script src="js/foundation/foundation.alerts.js"></script>
+<script src="js/foundation/foundation.clearing.js"></script>
+<script src="js/foundation/foundation.cookie.js"></script>
+<script src="js/foundation/foundation.dropdown.js"></script>
+<script src="js/foundation/foundation.forms.js"></script>
+<script src="js/foundation/foundation.joyride.js"></script>
+<script src="js/foundation/foundation.magellan.js"></script>
+<script src="js/foundation/foundation.orbit.js"></script>
+<script src="js/foundation/foundation.placeholder.js"></script>
+<script src="js/foundation/foundation.reveal.js"></script>
+<script src="js/foundation/foundation.section.js"></script>
+<script src="js/foundation/foundation.tooltips.js"></script>
+<script src="js/foundation/foundation.topbar.js"></script>
+<script src="js/foundation/foundation.interchange.js"></script>
 <script>
     $(document).foundation();
 </script>

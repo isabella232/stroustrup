@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="no-js" lang="eng"
+      style="
+  background: url(image/hard_paper_texture_by_dl_stockandresources-d5jalsg.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+
+  ">
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<head>
+    <title>
+        Crystalnix library: book catalogue
+    </title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/foundation.css" />
+    <link rel="stylesheet" href="css/foundation.min.css"/>
+    <script src="js/vendor/custom.modernizr.js"></script>
+    <script src="js/jquery.js"></script>
+    <style>
+        .panel{
+            display: none;
+            background: none;
+        }
+    </style>
+
+
+</head>
+
+
+
+<body style="
+height: 100%;
+background: none;
+height: 100%;
+margin: 0;
+padding: 0;
+" >
+
+<nav class="top-bar" style="margin: 0;">
+
+    <ul class="title-area" >
+
+        <li class="name" style="
+                                background: #1d021c;
+                                color: #f5f5f5;
+                                padding: 10px;
+
+                                font-weight: bolder;
+                                text-align: center;
+               " >
+
+            Books Collection
+
+
+        </li>
+        <li class="toggle-topbar menu-icon"><a><span></span></a></li>
+    </ul>
+
+
+    <section class="top-bar-section" >
+        <!-- Left Nav Section -->
+        <ul class="left">
+
+            <li class="divider"></li>
+            <li class="active"><a href="books.html">Books page</a></li>
+            <li class="divider"></li>
+            <li class="active"><a href="users.html">Users page</a></li>
+            <li class="divider"></li>
+            <li class="active"><a href="request.html">Request new book</a></li>
+            <li class="divider"></li>
+            <li class="active"><a href="add_book.html">Add new book</a></li>
+            <li class="divider"></li>
+
+        </ul>
+
+        <!-- Right Nav Section -->
+        <ul class="right">
+
+            <li class="divider"></li>
+            <li class="active"><a href="my_books.html">My books</a></li>
+            <li class="divider"></li>
+            <li class="has-form">
+                <form>
+                    <label style=" color: #faebd7">
+                        You are loged as:
+                    </label>
+                    <span id="user_name" style=" width: 100px; color: #b0e0e6">
+                    %USERNAME%
+                    </span>
+                </form>
+            </li>
+            <li class="divider"></li>
+            <li class="has-form">
+                <a class="button" href="main_page.html" id="log_out_button ">Log out</a>
+            </li>
+        </ul>
+
+
+
+    </section>
+
+</nav>
+
+
+<div class="row" style="margin-top: 20px;">
+    <div class="row" id="book_1" style="
+         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         border-radius: 10px;
+         box-shadow: 0px 0px 30px #000000;
+         position: relative;
+
+         text-align: center;
+         margin: 15px;
+
+        ">
+
+
+
+        <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+
+            <div class="row">
+                <a href="#" data-dropdown="drop_book1" data-options="is_hover:true">
+                    <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                </a>
+                <ul id="drop_book1" class="f-dropdown content large" data-dropdown-content>
+                    <li>
+                        <a >
+                            <img src="image/book_index.png"/>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+            <div class="row">
+                <a href="book_index%mine.html" style=" text-align: justify; margin: 10px;">
+                    Name of the book3
+                </a>
+                <br>
+                <a href="#" style="color: #8d00b0">
+                    Author3
+                </a>
+                <br>
+                <a href="#" style="color: #760002">
+                    Technology3
+                </a>
+                <div class="row" style="height: 20px;">
+
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+            <div class="row">
+                <button class="button" id="button1"
+                        style=" font-size: 24pt; background: #ff8704; border-radius: 20px; margin: 20px; padding: 10px;" type="button"
+                        onmouseover="(function(){
+                                    $('#button1').css('background','#824502');
+
+                                })();"
+                        onmouseout="
+                                (function(){
+                                    $('#button1').css('background','#ff8704');
+
+                                })();"
+                        >
+                    Put it back
+                </button>
+            </div>
+        </div>
+    </div>
+
+<div class="row" id="book_2" style="
+         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+         border-radius: 10px;
+         box-shadow: 0px 0px 30px #000000;
+         position: relative;
+
+         text-align: center;
+         margin: 15px;
+
+        ">
+
+
+
+    <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+
+        <div class="row">
+            <a href="#" data-dropdown="drop_book2" data-options="is_hover:true">
+                <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+            </a>
+            <ul id="drop_book2" class="f-dropdown content large" data-dropdown-content>
+                <li>
+                    <a >
+                        <img src="image/book_index.png"/>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+        <div class="row">
+            <a href="book_index%mine.html" style=" text-align: justify; margin: 10px;">
+                Name of the book2
+            </a>
+            <br>
+            <a href="#" style="color: #8d00b0">
+                Author2
+            </a>
+            <br>
+            <a href="#" style="color: #760002">
+                Technology2
+            </a>
+            <div class="row" style="height: 20px;">
+
+            </div>
+
+
+
+        </div>
+    </div>
+    <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+        <div class="row">
+            <button class="button" id="button2"
+                    style=" font-size: 24pt; background: #ff8704; border-radius: 20px; margin: 20px; padding: 10px;" type="button"
+                    onmouseover="(function(){
+                                    $('#button2').css('background','#824502');
+
+                                })();"
+                    onmouseout="
+                                (function(){
+                                    $('#button2').css('background','#ff8704');
+
+                                })();"
+                    >
+                Put it back
+            </button>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<div class="row" style="height: 100px;"></div>
+
+
+
+
+
+<script>
+    document.write('<script src=' +
+            ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
+            '.js><\/script>')
+</script>
+
+
+
+<script src="js/foundation.min.js"></script>
+<script src="js/zepto.js"></script>
+<script src="js/foundation/foundation.js"></script>
+<script src="js/foundation/foundation.alerts.js"></script>
+<script src="js/foundation/foundation.clearing.js"></script>
+<script src="js/foundation/foundation.cookie.js"></script>
+<script src="js/foundation/foundation.dropdown.js"></script>
+<script src="js/foundation/foundation.forms.js"></script>
+<script src="js/foundation/foundation.joyride.js"></script>
+<script src="js/foundation/foundation.magellan.js"></script>
+<script src="js/foundation/foundation.orbit.js"></script>
+<script src="js/foundation/foundation.placeholder.js"></script>
+<script src="js/foundation/foundation.reveal.js"></script>
+<script src="js/foundation/foundation.section.js"></script>
+<script src="js/foundation/foundation.tooltips.js"></script>
+<script src="js/foundation/foundation.topbar.js"></script>
+<script src="js/foundation/foundation.interchange.js"></script>
+<script>
+    $(document).foundation();
+</script>
+</body>
+
+
+</html>

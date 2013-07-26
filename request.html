@@ -32,6 +32,9 @@
 </head>
 
 
+
+
+
 <body style="
 height: 100%;
 background: none;
@@ -40,37 +43,48 @@ margin: 0;
 padding: 0;
 " >
 
-<nav class="top-bar">
-    <ul class="title-area">
-        <!-- Title Area -->
-        <li class="name"
-            style="
-            background: #1d021c
-        " >
-            <h1 style="
-            color: #f5f5f5;
-            padding-left: 10px;
-            "> Requests for a new book</h1>
-        </li>
+<nav class="top-bar" style="margin: 0;">
 
+    <ul class="title-area" >
+
+        <li class="name" style="
+                                background: #1d021c;
+                                color: #f5f5f5;
+                                padding: 10px;
+
+                                font-weight: bolder;
+                                text-align: center;
+               " >
+
+            Order a new book
+
+
+        </li>
+        <li class="toggle-topbar menu-icon"><a><span></span></a></li>
     </ul>
 
-    <section class="top-bar-section">
+
+    <section class="top-bar-section" >
         <!-- Left Nav Section -->
         <ul class="left">
-            <li class="divider"></li>
-            <li class="active"><a href="users.html">User page</a></li>
+
             <li class="divider"></li>
             <li class="active"><a href="books.html">Books page</a></li>
             <li class="divider"></li>
+            <li class="active"><a href="users.html">Users page</a></li>
+            <li class="divider"></li>
+            <li class="active"><a href="request.html">Request new book</a></li>
+            <li class="divider"></li>
             <li class="active"><a href="add_book.html">Add new book</a></li>
             <li class="divider"></li>
+
         </ul>
 
         <!-- Right Nav Section -->
         <ul class="right">
-            <li class="divider hide-for-small"></li>
 
+            <li class="divider"></li>
+            <li class="active"><a href="my_books.html">My books</a></li>
             <li class="divider"></li>
             <li class="has-form">
                 <form>
@@ -82,16 +96,18 @@ padding: 0;
                     </span>
                 </form>
             </li>
-            <li class="divider show-for-small">
-
-            </li>
+            <li class="divider"></li>
             <li class="has-form">
                 <a class="button" href="main_page.html" id="log_out_button ">Log out</a>
             </li>
         </ul>
+
+
+
     </section>
 
 </nav>
+
 
 
 <div class="row">

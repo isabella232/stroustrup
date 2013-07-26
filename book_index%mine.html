@@ -20,7 +20,9 @@
     </title>
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/foundation.css" />
+    <link rel="stylesheet" href="css/foundation.min.css"/>
     <script src="js/vendor/custom.modernizr.js"></script>
+    <script src="js/jquery.js"></script>
     <style>
         .panel{
             display: none;
@@ -31,7 +33,6 @@
 
 </head>
 
-
 <body style="
 height: 100%;
 background: none;
@@ -39,7 +40,6 @@ height: 100%;
 margin: 0;
 padding: 0;
 " >
-
 
 <nav class="top-bar" style="margin: 0;">
 
@@ -54,7 +54,7 @@ padding: 0;
                                 text-align: center;
                " >
 
-            Add a new book
+            Current book
 
 
         </li>
@@ -107,9 +107,8 @@ padding: 0;
 </nav>
 
 
-
-<div class="row" style=" width: 100%;">
-    <div class="small-offset-12 columns " style=" width: 100%; background: none;">
+<div class="row">
+    <div class="small-offset-12 columns " style="background: none;">
         <div class="row" style=" background: #f5f5f5;
      border-radius: 10px;
      box-shadow: 10px 10px 40px #000000;
@@ -126,98 +125,67 @@ padding: 0;
          margin: 15px;
 
         ">
-            <form>
-             <div class="row" style="padding: 0; margin: 20px;">
-                <div class="small-2 column" style="width: 500px; float: left;">
-                    <div class="row"  >
-                    <label> Name:
-                        <input type="text" placeholder="Type Name of the book" required>
-                    </label>
-                    </div>
-                    <div class="row">
-                        <label> Author:
-                            <input type="text" placeholder="Type Author of the book" required>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label> Technology:
-                            <input type="text" placeholder="Type Technology of the book" required>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label> ISBN:
-                            <input type="text" placeholder="International Standard Book Number" required>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label> Description:
-                            <input type="text" placeholder="Type something about" required>
-                        </label>
-                    </div>
-
-                </div>
-                <div class="small-2 column" style="width: 250px; position: relative;">
-                    <div class=" panel "
-                         style="
-                         display: block;
-                         width: 200px;
-                         height: 100px;
-                         position: relative;
-                         margin: 20px;
-                         padding: 10px;">
-                        <div class="row">
-                            FLASH LOADER?
+                <div class="small-6 columns">
+                    <div class="row" style="padding: 20px;">
+                        <div class="panel"  style=" display: block; width: 280px; height: 280px;">
+                            <img src="image/book_index.png"/>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style=" padding-left: 40px; color: #2184b0; font-weight: bold; text-align: left;">
+
+                        Name:
+                          <span style="text-align: left; padding-left: 10pt; font-weight: normal; color: #0a0a0a;">
+                               The Name;
+                           </span>
+
+                    </div>
+                    <div class="row" style="padding-left: 40px;  color: #2184b0; font-weight: bold; text-align: left;">
+
+                        Author:
+                          <span style="text-align: left; padding-left: 10pt; font-weight: normal; color: #0a0a0a;">
+                               Author's Full Name;
+                           </span>
+
+                    </div>
+                    <div class="row" style="padding-bottom: 40px; padding-left: 40px;  color: #2184b0; font-weight: bold; text-align: left;">
+
+                        Technology:
+                           <span style=" text-align: left;  padding-left: 10pt; font-weight: normal; color: #0a0a0a;">
+                               The Technology;
+                           </span>
+
+                    </div>
+                </div>
+                <div class="small-6 columns" style="padding: 20px; font-size: 24pt;">
+                    <div class="row" style="height: 20px;"></div>
+                    <div class="row" style=" padding: 10px; font-weight: bold; text-align: left;">
+                        Status:
+                        <span class="round label" style="background: #ff8704;">Belongs me</span>
+                    </div>
+
+                    <div class="row" style=" padding: 10px; font-weight: bold; text-align: left;">
                         <button class="button" id="button1"
-                                style="
-                                width: 200px;
-                                height: 50px;
-                                padding: 0;
-                                margin-left: 20px;
-                                font-size: 24pt;
-                                border-radius: 25px;
-                                color: #FFE657;
-                                background: #8b4dff;
-                                "
+                                style="background: #ff8704; border-radius: 10px; padding: 4px;" type="button"
                                 onmouseover="(function(){
-
-                                    $('#button1').css('background','#FFE657').css('color',' #8b4dff ').css('border-radius','20px');
-
+                                    $('#button1').css('background','#824502');
 
                                 })();"
                                 onmouseout="
                                 (function(){
-
-                                    $('#button1').css('background','#8b4dff').css('color','#FFE657').css('border-radius','25px');
-
+                                    $('#button1').css('background','#ff8704');
 
                                 })();"
                                 >
-                                Load
-                        <input type="file" size="1" required
-                               style="opacity: 0; position: relative; margin-top:-30px; margin-bottom: 30px; top: -30px; height: 50px">
+                            Put it back
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="row" style="width: 100%;">
-                <a href="books.html">
-                <button type="submit" class="success" style="border-radius: 10px; width: 80%;">
-                   +     Add
-                </button>
-                </a>
-            </div>
-            </form>
 
 
-                </div>
             </div>
         </div>
+    </div>
 </div>
-
-
 
 
 <script>
@@ -226,10 +194,25 @@ padding: 0;
             '.js><\/script>')
 </script>
 
+
+
+<script src="js/foundation.min.js"></script>
 <script src="js/zepto.js"></script>
 <script src="js/foundation/foundation.js"></script>
-
-<script src="js/jquery.js"></script>
+<script src="js/foundation/foundation.alerts.js"></script>
+<script src="js/foundation/foundation.clearing.js"></script>
+<script src="js/foundation/foundation.cookie.js"></script>
+<script src="js/foundation/foundation.dropdown.js"></script>
+<script src="js/foundation/foundation.forms.js"></script>
+<script src="js/foundation/foundation.joyride.js"></script>
+<script src="js/foundation/foundation.magellan.js"></script>
+<script src="js/foundation/foundation.orbit.js"></script>
+<script src="js/foundation/foundation.placeholder.js"></script>
+<script src="js/foundation/foundation.reveal.js"></script>
+<script src="js/foundation/foundation.section.js"></script>
+<script src="js/foundation/foundation.tooltips.js"></script>
+<script src="js/foundation/foundation.topbar.js"></script>
+<script src="js/foundation/foundation.interchange.js"></script>
 <script>
     $(document).foundation();
 </script>
