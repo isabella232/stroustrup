@@ -90,7 +90,7 @@
                      margin-left: 40px;
                      "
                             >
-                    <small class="error">Password confirmation is required.</small>
+                    <small class="error"> Password confirmation is required. </small>
                 </label>
             </div>
 
@@ -99,6 +99,22 @@
                     <img id="captcha" src="../captcha.png">
 
                 </label>
+                <div class="panel" id="wrong_pass" style="
+                    border: #a52a2a 2px;
+                    border-style: outset;
+                    background: rgba(255,0,0,0.24);
+                    font: sans-serif;
+                    color: #7a0000;
+                    margin-right: 40px;
+                    margin-left: 40px;
+                    padding: 4pt;
+                    height: 50px;
+                    display: none;
+                    ">
+
+                    Passwords aren't same.
+
+                    </div>
             </div>
 
             <div class="row">
@@ -115,7 +131,21 @@
 
                      margin-left: 40px;
 
-                     ">
+                     "
+                        onclick="
+                        (function(){
+                        var first_pass=$('#password_field').val();
+                        var conf_pass=$('#confirm_password_field').val();
+
+
+                        if(first_pass!=conf_pass)
+                        {
+                          $('#wrong_pass').css('display', 'block');
+
+                        }
+                        })();
+                        "
+                        >
                     <img src="image/arrow.png" style="float: left; text-align: justify;">
                     Sign up!
                 </button>
@@ -129,9 +159,6 @@
     </div>
 </div>
 
-<div class="large-5 columns" style="width: 400px; height: 100px; ">
-
-</div>
 
 
 <script>
