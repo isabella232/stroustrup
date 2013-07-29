@@ -1,0 +1,9 @@
+{% extends 'main/base.html' %}
+{% block title %}Main page{% endblock %}
+
+{% block content %}
+<p>You are on the main page. <a href="{% url 'registration:register' %}">Sign up</a> or
+<a href="{% url 'login:login' %}">sign in</a> if you already have an account.<br></p>
+<p>You can also sign in through <a href="{% url 'google_login:openid-login' %}">google</a>.<p/>
+</form>
+{% endblock %}
