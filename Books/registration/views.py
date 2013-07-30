@@ -199,4 +199,4 @@ class ActivationView(TemplateView):
             return request
 
     def get_success_url(self, request, user):
-        return 'registration:activation_complete'
+        return 'registration:activation_complete' test change
