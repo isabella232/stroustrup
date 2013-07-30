@@ -1,8 +1,0 @@
-{% extends 'profilebase.html' %}
-{% block content %}
-    <h1>{{ user.username }}'s profile</h1>
-
-        <p>First name: {{ user.first_name }}</p>
-        <p>Last name: {{ user.first_name }}</p>
-        <p><a href="{% url 'profile:change' %}">Change profile's data</a> <a href="{% url 'logout' %}">logout</a></p>
-{% endblock %}
