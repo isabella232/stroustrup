@@ -1,16 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="eng"
-      style="
-  background: url(image/hard_paper_texture_by_dl_stockandresources-d5jalsg.jpg) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  height: 100%;
-  margin: 0;
-  width: 100%;
-
-  ">
+<html class="no-js" lang="eng">
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width" />
@@ -20,177 +9,103 @@
     </title>
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/foundation.css" />
+    <link rel="stylesheet" href="css/foundation.min.css"/>
     <script src="js/vendor/custom.modernizr.js"></script>
-    <style>
-        .panel{
-            display: none;
-            background: none;
-        }
-    </style>
+    <script src="js/jquery.js"></script>
+    <script src="js/the_source.js"></script>
 
+    <link rel="stylesheet" href="css/top_bar.css"/>
+    <link rel="stylesheet" href="css/library.css"/>
+    <link rel="stylesheet" href="css/book_index.css"/>
+    <link rel="stylesheet" href="css/users.css"/>
 
 </head>
-<body style="
-height: 100%;
-background: none;
-height: 100%;
-margin: 0;
-padding: 0;
-" >
+<body>
 
 
 
 
-<nav class="top-bar" style="margin: 0;">
+<header >
 
-    <ul class="title-area" >
+    <div class="top_bar_row" >
+        <div class="top_bar_left_side" >
+            <a  class="active button active_bar_button " >Users List</a>
+        </div>
 
-        <li class="name" style="
-                                background: #1d021c;
-                                color: #f5f5f5;
-                                padding: 10px;
+        <div class="top_bar_left_side" >
+            <a class="button bar_button"  href="books.html" >Books page</a>
+        </div>
 
-                                font-weight: bolder;
-                                text-align: center;
-               " >
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="users.html" >Users page</a>
+        </div>
 
-            Users list
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="request.html" > Request a new book</a>
+        </div>
+
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="add_book.html"  > Add a new book</a>
+        </div>
+
+        <div class="top_bar_left_side" >
+            <a class="button bar_button" href="my_books.html"  > My books</a>
+        </div>
+
+        <div class="top_bar_right_side">
+            <a class="button bar_right_button" href="main_page.html" >Log out</a>
+        </div>
+
+        <div class="top_bar_right_side" style=" min-width: 150px;">
+            You are logged as:
+            <br><br>
+            <span style="color: #2184b0;"> %USERNAME% </span>
+        </div>
 
 
-        </li>
-        <li class="toggle-topbar menu-icon"><a><span></span></a></li>
-    </ul>
+    </div>
 
-
-    <section class="top-bar-section" >
-        <!-- Left Nav Section -->
-        <ul class="left">
-
-            <li class="divider"></li>
-            <li class="active"><a href="books.html">Books page</a></li>
-            <li class="divider"></li>
-            <li class="active"><a href="users.html">Users page</a></li>
-            <li class="divider"></li>
-            <li class="active"><a href="request.html">Request new book</a></li>
-            <li class="divider"></li>
-            <li class="active"><a href="add_book.html">Add new book</a></li>
-            <li class="divider"></li>
-
-        </ul>
-
-        <!-- Right Nav Section -->
-        <ul class="right">
-
-            <li class="divider"></li>
-            <li class="active"><a href="my_books.html">My books</a></li>
-            <li class="divider"></li>
-            <li class="has-form">
-                <form>
-                    <label style=" color: #faebd7">
-                        You are loged as:
-                    </label>
-                    <span id="user_name" style=" width: 100px; color: #b0e0e6">
-                    %USERNAME%
-                    </span>
-                </form>
-            </li>
-            <li class="divider"></li>
-            <li class="has-form">
-                <a class="button" href="main_page.html" id="log_out_button ">Log out</a>
-            </li>
-        </ul>
+</header>
 
 
 
-    </section>
+<div class="row main_strip_row" >
+    <div class="small-offset-12 columns main_strip_column"  >
+        <div class="row background_strip" >
+            <div class="row work_label" id="user_1">
 
-</nav>
-
-
-
-<div class="row">
-    <div class="small-offset-12 columns " style="background: none;">
-        <div class="row" style=" background: #f5f5f5;
-     border-radius: 10px;
-     box-shadow: 10px 10px 40px #000000;
-     ">
-            <div class="row" id="user_1" style="
-             background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-             background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-             background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-             border-radius: 10px;
-             box-shadow: 0px 0px 30px #000000;
-             position: relative;
-
-             text-align: center;
-             margin: 15px;
-
-            ">
-                <div class="small-4 columns"
-                     style="font: arial;
-                     font-size: 18pt;
-                     font-weight: bolder;
-                     text-align: right;
-                     padding: 10pt;
-                     ">
+                <div class="small-4 columns user_image">
                     <img src="image/user.jpeg">
                     USER1
                 </div>
 
-                <div class="small-6 columns" style=" height: 100%; padding: 40px; margin: 0;">
+                <div class="small-6 columns user_activity">
                          <div class="row">
                              <div class="small-5 columns">
-                                 <a href="book_index%25busy.html">Book1</a>
+                                 <a href="book_index_busy.html">Book1</a>
                              </div>
                              <div class="small-5 columns">
-                                 <button type="submit" class="alert"
-                                         style="
-                                         font-size: 8pt;
-                                         height: 15px;
-                                         border-radius: 7px;
-                                         text-align: center;
-                                         padding: 0;
-                                         padding-left: 5px;
-                                         padding-right: 5px;
-                                         ">
+                                 <button type="submit" class="alert ask_to_return_small">
                                      Ask to return
                                  </button>
                              </div>
                          </div>
                     <div class="row">
                         <div class="small-5 columns">
-                            <a href="book_index%25busy.html">Book2</a>
+                            <a href="book_index_busy.html">Book2</a>
                         </div>
                         <div class="small-5 columns">
-                            <button type="submit" class="alert"
-                                    style="
-                                         font-size: 8pt;
-                                         height: 15px;
-                                         border-radius: 7px;
-                                         text-align: center;
-                                         padding: 0;
-                                         padding-left: 5px;
-                                         padding-right: 5px;
-                                         ">
+                            <button type="submit" class="alert ask_to_return_small">
                                 Ask to return
                             </button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="small-5 columns">
-                            <a href="book_index%25busy.html">Book3</a>
+                            <a href="book_index_busy.html">Book3</a>
                         </div>
                         <div class="small-5 columns">
-                            <button type="submit" class="alert"
-                                    style="
-                                         font-size: 8pt;
-                                         height: 15px;
-                                         border-radius: 7px;
-                                         text-align: center;
-                                         padding: 0;
-                                         padding-left: 5px;
-                                         padding-right: 5px;
-                                         ">
+                            <button type="submit" class="alert ask_to_return_small">
                                 Ask to return
                             </button>
                         </div>
@@ -199,57 +114,51 @@ padding: 0;
 
 
             </div>
-            <div class="row" id="user_2" style="
-             background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-             background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-             background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-             border-radius: 10px;
-             box-shadow: 0px 0px 30px #000000;
-             position: relative;
+            <div class="row offset"></div>
+            <div class="row work_label" id="user_2">
 
-             text-align: center;
-             margin: 15px;
-
-            ">
-                <div class="small-4 columns"
-                     style="font: arial;
-                     font-size: 18pt;
-                     font-weight: bolder;
-                     text-align: right;
-                     padding: 10pt;
-                     ">
+                <div class="small-4 columns user_image">
                     <img src="image/user.jpeg">
                     USER2
                 </div>
 
-                <div class="small-6 columns" style=" height: 100%; padding: 40px; margin: 0;">
+                <div class="small-6 columns user_activity">
                     <div class="row">
                         <div class="small-5 columns">
-                            <a href="book_index%25busy.html">Book4</a>
+                            <a href="book_index_busy.html">Book4</a>
                         </div>
                         <div class="small-5 columns">
-                            <button type="submit" class="alert"
-                                    style="
-                                         font-size: 8pt;
-                                         height: 15px;
-                                         border-radius: 7px;
-                                         text-align: center;
-                                         padding: 0;
-                                         padding-left: 5px;
-                                         padding-right: 5px;
-                                         ">
+                            <button type="submit" class="alert ask_to_return_small">
                                 Ask to return
                             </button>
                         </div>
                     </div>
-
                 </div>
-
-
             </div>
         </div>
     </div>
 </div>
+
+<div class="row between_footer"></div>
+
+<div class="row">
+    <div class="small-offset-1 column underground">
+
+        <ul class="pagination">
+            <li class="arrow unavailable"><a href="">&laquo;</a></li>
+            <li class="current"><a href="">1</a></li>
+            <li><a href="">2</a></li>
+            <li><a href="">3</a></li>
+            <li><a href="">4</a></li>
+            <li class="unavailable"><a href="">&hellip;</a></li>
+            <li><a href="">12</a></li>
+            <li><a href="">13</a></li>
+            <li class="arrow"><a href="">&raquo;</a></li>
+        </ul>
+
+    </div>
+</div>
+
 
 
 <script src="js/zepto.js"></script>

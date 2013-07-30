@@ -1,11 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="eng"
-      style="
-  background: url(image/hard_paper_texture_by_dl_stockandresources-d5jalsg.jpg) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;">
+<html class="no-js" lang="eng">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width" />
 <head>
@@ -15,136 +9,73 @@
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/foundation.css" />
     <script src="js/vendor/custom.modernizr.js"></script>
+    <script src="js/the_source.js"></script>
+    <link rel="stylesheet" href="css/authorisation.css" />
 </head>
 
 
 <body>
+<div class="row top_offset" ></div>
+<div class="large-4 columns side_offset" ></div>
+<div class="large-1 columns" >
+    <div class="row main_row" id="main_row">
 
-<div class="large-4 columns" style=" height: 100px;"></div>
-
-<div class="large-1 column" style=" width: 500px;">
-    <div class="row" style="height: 200px; " ></div>
-    <div class="row" id="main_row"
-         style="height: 420px;
-     background: -webkit-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
-     background: -o-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
-     background: -ms-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
-     border-radius: 10px;
-     box-shadow: 10px 10px 40px #000000;
-     position: static;
-     ">
         <form id="log_in">
-            <div class="row"
-                 style="
-               background: #ffdf88;
-               border-top-left-radius: 10px;
-               border-top-right-radius: 10px ;
-               font: SERIF;
-               font-size: 18pt;
-               color: black;
-               margin-left: 0px;
-               margin-right: 0px;
-               padding: 5pt;
+            <div class="row pin_header">
 
-               ">
-                Log in your account:
+                • Log in your account:
             </div>
-            <div class=" row" style=" height: 40px; "></div>
-            <div class=" row">
-                <label for="login_field">
-                    <input type="text" id="login_field" placeholder="Type your email" required
-                           style="
-                     width: 250px;
-                     margin-left: 40px;
-                     "
-                            >
-                </label>
+            <div class=" row offset_row"></div>
+            <div class=" row input_row">
+
+                <input class="input_style"
+                       type="text"
+                       id="login_field"
+                       placeholder="Type your email"
+                       required >
+
             </div>
+            <div class="row input_row" >
+
+                <input type="password"
+                       id="password_field"
+                       placeholder="Type your password"
+                       required
+                       class="input_style"
+                        >
+
+            </div>
+
             <div class="row">
-                <label for="password_field">
-                    <input type="password" id="password_field" placeholder="Type your password" required
-                           style="
-                     width: 250px;
-                     margin-left: 40px;
-                     "
-                            >
-                </label>
+                <div class='error_box'>
+                Wrong login or password! Please, make sure, that you are typing correctly.
+                </div>
             </div>
-            <div class="row"
-                    style="
-                    border: #a52a2a 2px;
-                    border-style: outset;
-                    background: rgba(255,0,0,0.24);
-                    font: sans-serif;
-                    color: #7a0000;
-                    margin: 10px;
-                    padding: 4pt;
-                    height: 50px;
-                    "
-                    >
-                    Wrong login or password! Please, make sure, that you are typing correctly.
 
-            </div>
+
             <div class="row">
-                <button class="success button" type="submit"
-                        style="
-                     border-radius: 15px;
-                     font-size: 18pt;
-                     color: #f5f5f5;
-                     font-weight: bold;
-                     padding: 4pt;
-                     width: 150px;
-                     height: 45px;
-                     text-align: center;
-
-                     margin-left: 40px;
-
-                     ">
-                    <img src="/image/arrow.png" style="float: left; text-align: justify;">
+                <button class="success button submit_button" type="submit">
+                    <img src="image/arrow.png" class="image">
                     Sign in!
                 </button>
             </div>
             <div class="row">
-                <label for="checkbox1" style=" margin-left: 40px; font: arial; font-size: 10pt; font-style: italic;">
-                    Remember me!
-                    <input type="checkbox" id="checkbox1" >
+             <span class="remember_me">
+                 Remember me!
+                 <input type="checkbox" id="checkbox1" >
 
-                </label>
+             </span>
             </div>
         </form>
         <div class="row">
-            <div class="small-1 column" style="width: 500px; margin-left: 20px;">
-                <a href="register_new.html" class="button success"
-                   style="
-                border-radius: 15px;
-                     font-size: 12pt;
-                     color: #f5f5f5;
-                     font-weight: bold;
-                     padding: 4pt;
-                     width: 200px;
-                     height: 45px;
-                     text-align: center;
-
-
-                ">
+            <div class="small-1 column support_row"  >
+                <a href="register_new.html" class="button success support_button">
 
                     Haven't registered yet?
 
                 </a>
 
-                <a href="restore.html" class="button success"
-                   style="
-                border-radius: 15px;
-                     font-size: 12pt;
-                     color: #f5f5f5;
-                     font-weight: bold;
-                     padding: 4pt;
-                     width: 200px;
-                     height: 45px;
-                     text-align: center;
-                     margin-left: 20px;
-
-                ">
+                <a href="restore.html" class="button success support_button">
 
                     Forgot your password?
 
@@ -157,9 +88,8 @@
     </div>
 </div>
 
-<div class="large-5 columns" style="width: 400px; height: 100px; ">
 
-</div>
+
 
 
 

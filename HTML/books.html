@@ -1,16 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="eng"
-      style="
-  background: url(image/hard_paper_texture_by_dl_stockandresources-d5jalsg.jpg) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  height: 100%;
-  margin: 0;
-  width: 100%;
-
-  ">
+<html class="no-js" lang="eng">
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width" />
@@ -23,120 +12,68 @@
     <link rel="stylesheet" href="css/foundation.min.css"/>
     <script src="js/vendor/custom.modernizr.js"></script>
     <script src="js/jquery.js"></script>
-    <style>
-        .panel{
-            display: none;
-            background: none;
-        }
-    </style>
+    <script src="js/the_source.js"></script>
 
+    <link rel="stylesheet" href="css/top_bar.css"/>
+    <link rel="stylesheet" href="css/library.css"/>
 
 </head>
 
 
-<body style="
-height: 100%;
-background: none;
-height: 100%;
-margin: 0;
-padding: 0;
-" >
+<body>
 
-<nav class="top-bar" style="margin: 0;">
+<header>
 
-    <ul class="title-area" >
+    <div class="top_bar_row" >
+        <div class="top_bar_left_side" >
+            <a  class="active button active_bar_button " >Books List</a>
+        </div>
 
-        <li class="name" style="
-                                background: #1d021c;
-                                color: #f5f5f5;
-                                padding: 10px;
+        <div class="top_bar_left_side" >
+            <a class="button bar_button"  href="books.html" >Books page</a>
+        </div>
 
-                                font-weight: bolder;
-                                text-align: center;
-               " >
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="users.html" >Users page</a>
+        </div>
 
-            Books Collection
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="request.html" > Request a new book</a>
+        </div>
 
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="add_book.html"  > Add a new book</a>
+        </div>
 
-        </li>
-        <li class="toggle-topbar menu-icon"><a><span></span></a></li>
-    </ul>
+        <div class="top_bar_left_side" >
+            <a class="button bar_button" href="my_books.html"  > My books</a>
+        </div>
 
+        <div class="top_bar_right_side">
+            <a class="button bar_right_button" href="main_page.html" >Log out</a>
+        </div>
 
-    <section class="top-bar-section" >
-        <!-- Left Nav Section -->
-        <ul class="left">
-
-            <li class="divider"></li>
-            <li class="active"><a href="books.html">Books page</a></li>
-            <li class="divider"></li>
-            <li class="active"><a href="users.html">Users page</a></li>
-            <li class="divider"></li>
-            <li class="active"><a href="request.html">Request new book</a></li>
-            <li class="divider"></li>
-            <li class="active"><a href="add_book.html">Add new book</a></li>
-            <li class="divider"></li>
-
-        </ul>
-
-        <!-- Right Nav Section -->
-        <ul class="right">
-
-            <li class="divider"></li>
-            <li class="active"><a href="my_books.html">My books</a></li>
-            <li class="divider"></li>
-            <li class="has-form">
-                <form>
-                    <label style=" color: #faebd7">
-                        You are loged as:
-                    </label>
-                    <span id="user_name" style=" width: 100px; color: #b0e0e6">
-                    %USERNAME%
-                    </span>
-                </form>
-            </li>
-            <li class="divider"></li>
-            <li class="has-form">
-                <a class="button" href="main_page.html" id="log_out_button ">Log out</a>
-            </li>
-        </ul>
+        <div class="top_bar_right_side" style=" min-width: 150px;">
+            You are logged as:
+            <br><br>
+            <span style="color: #2184b0;"> %USERNAME% </span>
+        </div>
 
 
+    </div>
 
-    </section>
+</header>
 
-</nav>
-
-<div class="row"
-     style="
-        background: #0a0a0a;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        padding: 20px;
-        font: caption;
-        font-size: 12pt;
-        height: 100px;
-
-        "
-        >
+<div class="filter row" >
     <dl class="sub-nav" >
-        <dt
-                style="
-                    color: #e8eac8;
-                    font-weight: bolder;
-                    ">
+        <dt class="filter_statement" >
             Filter:</dt>
         <dd class="active"><a href="#">All</a></dd>
-        <dd><a href="books%25free.html">Free</a></dd>
-        <dd><a href="books%25busy.html">Busy</a></dd>
+        <dd><a href="books_free.html">Free</a></dd>
+        <dd><a href="books_busy.html">Busy</a></dd>
         <dd>
-            <a href="#" data-dropdown="drop1" class="button dropdown secondary"
-               style="
-               border-radius: 10px;
-               padding: 4px;
-               width: 150px;
-               text-align: left;
-               ">
+            <a href="#" data-dropdown="drop1" class="button dropdown secondary filter_button">
+
                 Technology
             </a>
             <br>
@@ -149,13 +86,7 @@ padding: 0;
             </ul>
         </dd>
         <dd>
-            <a href="#" data-dropdown="drop2" class="button dropdown secondary"
-               style="
-               border-radius: 10px;
-               padding: 4px;
-               width: 150px;
-               text-align: left;
-               ">
+            <a href="#" data-dropdown="drop2" class="button dropdown secondary filter_button">
                 Author
             </a>
             <br>
@@ -171,31 +102,17 @@ padding: 0;
 </div>
 
 
-<div class="row" style="margin-top: 20px;">
-    <div class="small-offset-12 columns " style="background: none;">
-    <div class="row" style=" background: #f5f5f5;
-     border-radius: 10px;
-     box-shadow: 10px 10px 40px #000000;
-     ">
-        <div class="row" id="book_1" style="
-         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         border-radius: 10px;
-         box-shadow: 0px 0px 30px #000000;
-         position: relative;
-
-         text-align: center;
-         margin: 15px;
-
-        ">
+<div class="row main_strip_row" >
+    <div class="small-offset-12 columns main_strip_column"  >
+    <div class="row background_strip" >
+        <div class="row work_label" id="book_1">
 
 
 
-         <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+         <div class="small-5 columns work_label_left">
              <div class="row">
                  <a href="#" data-dropdown="drop_book1" data-options="is_hover:true">
-                    <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                    <img src="image/book_index.png" class="thumbnail">
                  </a>
                  <ul id="drop_book1" class="f-dropdown content large" data-dropdown-content>
                      <li>
@@ -207,43 +124,33 @@ padding: 0;
              </div>
 
          </div>
-         <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+         <div class="small-5 columns work_label_middle">
              <div class="row">
-             <a href="book_index%25free.html" style=" text-align: justify; margin: 10px;">
+             <a href="book_index_free.html" class="book_href">
                  Name of the book
              </a>
              <br>
-                 <a href="#" style="color: #8d00b0">
+                 <a href="#" class="author_href" >
                      Author1
                  </a>
              <br>
-                 <a href="#" style="color: #760002">
+                 <a href="#" class="technology_href">
                      Technology1
                  </a>
              <div class="row" style="height: 20px;">
 
              </div>
-             <span   style="color: black;">
+             <span>
                  Status:
-                 <span style="color: green;"> Free </span>
+                 <span class="status_free"> Free </span>
              </span>
 
              </div>
          </div>
-         <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+         <div class="small-1 columns work_label_right">
              <div class="row">
-             <a  class="button"
-                style="
-                float: right;
-                margin: 20px;
-                height: 30px;
-                width: 30px;
-                border-radius: 30px;
-                padding: 0;
-                text-align: center;
-                font-size: 18pt;
+             <a  class="button spoiler_button"
 
-                "
                      onclick="add_comment_list(1)"
                      >
                  ▼
@@ -252,138 +159,73 @@ padding: 0;
          </div>
 
         </div>
-        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;   ">
-            <div class="panel" id="panel1">
-                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel1">
+        <div class="row comment_panel_strip">
+            <div class="panel comment_panel" id="panel1">
+                <div class="row row_panel" id="row_panel1">
 
-                    <div class="row" style=" padding: 20px;">
-                        <a href="#" style=" color: #2184b0; font-weight: bold;"
-                           onclick=" comment_branch(com_1_0)"
-                           onmouseover="
-                              (function(){
-
-                              })();
-                              "
-                           onmouseout="
-                              (function(){
-
-                              })();
-                              "
-                                >
+                    <div class="row comment_branch" >
+                        <a href="#" class="comment_name"
+                           onclick=" comment_branch()">
                             User1:
                         </a>
                         comment of first user.
-                        <label id="com_1_0"></label>
-                        <div class="row" style=" padding: 20px;">
-                            <a href="#" style=" color: #2184b0; font-weight: bold;"
-                               onclick=" comment_branch(com_1_0_0)"
-                               onmouseover="
-                                      (function(){
 
-                                      })();
-                                      "
-                                       onmouseout="
-                                      (function(){
-
-                                      })();
-                                      "
-                                    >
+                        <div class="row comment_branch">
+                            <a href="#" class="comment_name"
+                               onclick=" comment_branch()">
                                 User2:
                             </a>
                             comment of second user.
-                            <label id="com_1_0_0"></label>
-                            <div class="row" style=" padding: 20px;">
-                                <a href="#" style=" color: #2184b0; font-weight: bold;"
-                                   onclick=" comment_branch(com_1_0_0_0)"
-                                   onmouseover="
-                                          (function(){
 
-                                          })();
-                                          "
-                                               onmouseout="
-                                          (function(){
-
-                                          })();
-                                          "
-                                        >
+                            <div class="row comment_branch">
+                                <a href="#" class="comment_name"
+                                   onclick=" comment_branch()">
                                     User1:
                                 </a>
                                 Answer of first user.
-                                <label id="com_1_0_0_0"></label>
-                                <div class="row" style=" padding: 20px;">
-                                    <a href="#" style=" color: #2184b0; font-weight: bold;"
-                                       onclick=" comment_branch(com_1_0_0_0_0)"
-                                       onmouseover="
-                                              (function(){
 
-                                              })();
-                                              "
-                                       onmouseout="
-                                              (function(){
-
-                                              })();
-                                              "
-                                            >
+                                <div class="row comment_branch">
+                                    <a href="#" class="comment_name"
+                                       onclick=" comment_branch()">
                                         User2:
                                     </a>
                                     The Holywar has began.
-                                    <label id="com_1_0_0_0_0"></label>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row" style=" padding-left: 20px;">
-                        <a href="#" style=" color: #2184b0; font-weight: bold;"
-                           onclick=" comment_branch(com_1_1)"
-                           onmouseover="
-                              (function(){
-
-                              })();
-                              "
-                           onmouseout="
-                              (function(){
-
-                              })();
-                              "
-                                >
+                    <div class="row comment_branch">
+                        <a href="#" class="comment_name"
+                           onclick=" comment_branch()">
                             User3:
                         </a>
                         First sober comment
-                        <label id="com_1_1"></label>
+
                     </div>
                 </div>
                 <form>
                 <div class="row">
-                    <div class="small-2 columns" style="width: 80%">
-                        <input id="input1"  type="text" style="width: 100%;">
+                    <div class="small-2 columns input_comment_column">
+                        <input id="input1"  type="text" class="input_comment">
                     </div>
                     <div class="small-2 columns">
-                        <button type="submit" onclick="comment(1)"> Send! </button>
+                        <button type="submit" class="comment_button" onclick="comment(1)"> Send! </button>
                     </div>
                 </div>
                 </form>
 
             </div>
         </div>
-        <div class="row" id="book_2" style="
-         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         border-radius: 10px;
-         box-shadow: 0px 0px 30px #000000;
-         position: relative;
 
-         text-align: center;
-         margin: 15px;
-
-        ">
+        <div class="row work_label" id="book_2">
 
 
 
-            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+            <div class="small-5 columns work_label_left">
                 <div class="row">
                     <a href="#" data-dropdown="drop_book2" data-options="is_hover:true">
-                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                        <img src="image/book_index.png" class="thumbnail">
                     </a>
                     <ul id="drop_book2" class="f-dropdown content large" data-dropdown-content>
                         <li>
@@ -393,38 +235,31 @@ padding: 0;
                         </li>
                     </ul>
                 </div>
+
             </div>
-            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+            <div class="small-5 columns work_label_middle">
                 <div class="row">
-                    <a href="book_index%25busy.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index_free.html" class="book_href">
                         Name of the book
                     </a>
                     <br>
-                    <a href="#" style="color: #8d00b0">
+                    <a href="#" class="author_href" >
                         Author2
                     </a>
                     <br>
-                    <a href="#" style="color: #760002">
+                    <a href="#" class="technology_href">
                         Technology1
                     </a>
                     <div class="row" style="height: 20px;">
 
                     </div>
-             <span   style="color: black;">
+             <span>
                  Status:
-                 <span style="color: red;"> Busy </span>
+                 <span class="status_busy"> Busy </span>
                  <div class="row">
-                     Owner: <span style="color: #2184b0; "> User2 </span>
-                     <button type="submit" class="alert"
-                             style="
-                             font-size: 8pt;
-                             height: 15px;
-                             border-radius: 7px;
-                             text-align: center;
-                             padding: 0;
-                             padding-left: 5px;
-                             padding-right: 5px;
-                             ">
+                     Owner: <span class="comment_name"> User1 </span>
+                     <button type="submit" class="alert ask_to_return_small">
+
                          Ask to return
                      </button>
                  </div>
@@ -432,65 +267,47 @@ padding: 0;
 
                 </div>
             </div>
-            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+            <div class="small-1 columns work_label_right">
                 <div class="row">
-                    <a  class="button"
-                       style="
-                float: right;
-                margin: 20px;
-                height: 30px;
-                width: 30px;
-                border-radius: 30px;
-                padding: 0;
-                text-align: center;
-                font-size: 18pt;
+                    <a  class="button spoiler_button"
 
-                "
-                       onclick="add_comment_list(2)"
+                        onclick="add_comment_list(2)"
                             >
                         ▼
                     </a>
                 </div>
             </div>
+
         </div>
-        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;  ">
-            <div class="panel" id="panel2">
-                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel2">
-                    <br>text<br>
+        <div class="row comment_panel_strip">
+            <div class="panel comment_panel" id="panel2">
+                <div class="row row_panel" id="row_panel2">
+
+                    <br> text <br>
+
                 </div>
                 <form>
                     <div class="row">
-                        <div class="small-2 columns" style="width: 80%">
-                            <input  id="input2" type="text" style="width: 100%;">
+                        <div class="small-2 columns input_comment_column">
+                            <input id="input2"  type="text" class="input_comment">
                         </div>
-                        <div class="small-2 columns" >
-                            <button type="submit"  onclick="comment(2)"> Send! </button>
+                        <div class="small-2 columns">
+                            <button type="submit" class="comment_button" onclick="comment(2)"> Send! </button>
                         </div>
                     </div>
                 </form>
 
-
             </div>
         </div>
-        <div class="row" id="book_3" style="
-         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         border-radius: 10px;
-         box-shadow: 0px 0px 30px #000000;
-         position: relative;
 
-         text-align: center;
-         margin: 15px;
-
-        ">
+        <div class="row work_label" id="book_3">
 
 
 
-            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+            <div class="small-5 columns work_label_left">
                 <div class="row">
                     <a href="#" data-dropdown="drop_book3" data-options="is_hover:true">
-                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                        <img src="image/book_index.png" class="thumbnail">
                     </a>
                     <ul id="drop_book3" class="f-dropdown content large" data-dropdown-content>
                         <li>
@@ -500,89 +317,73 @@ padding: 0;
                         </li>
                     </ul>
                 </div>
+
             </div>
-            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+            <div class="small-5 columns work_label_middle">
                 <div class="row">
-                    <a href="book_index%25free.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index_free.html" class="book_href">
                         Name of the book
                     </a>
                     <br>
-                    <a href="#" style="color: #8d00b0">
+                    <a href="#" class="author_href" >
                         Author2
                     </a>
                     <br>
-                    <a href="#" style="color: #760002">
+                    <a href="#" class="technology_href">
                         Technology2
                     </a>
                     <div class="row" style="height: 20px;">
 
                     </div>
-             <span   style="color: black;">
+             <span>
                  Status:
-                 <span style="color: green;"> Free </span>
+                 <span class="status_free"> Free </span>
+
              </span>
 
                 </div>
             </div>
-            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+            <div class="small-1 columns work_label_right">
                 <div class="row">
-                    <a  class="button"
-                       style="
-                float: right;
-                margin: 20px;
-                height: 30px;
-                width: 30px;
-                border-radius: 30px;
-                padding: 0;
-                text-align: center;
-                font-size: 18pt;
+                    <a  class="button spoiler_button"
 
-                "
-                       onclick="add_comment_list(3)"
+                        onclick="add_comment_list(3)"
                             >
                         ▼
                     </a>
                 </div>
             </div>
-        </div>
 
-        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;   ">
-            <div class="panel" id="panel3">
-                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel3">
-                    <br>text<br>
-                </div>
-                <form>
-                    <div class="row">
-                        <div class="small-2 columns" style="width: 80%">
-                            <input  id="input3" type="text" style="width: 100%;">
-                        </div>
-                        <div class="small-2 columns" >
-                            <button type="submit"  onclick="comment(3)"> Send! </button>
-                        </div>
-                    </div>
-                </form>
+        </div>
+        <div class="row comment_panel_strip">
+        <div class="panel comment_panel" id="panel3">
+            <div class="row row_panel" id="row_panel3">
+
+                <br> text <br>
 
             </div>
+            <form>
+                <div class="row">
+                    <div class="small-2 columns input_comment_column">
+                        <input id="input3"  type="text" class="input_comment">
+                    </div>
+                    <div class="small-2 columns">
+                        <button type="submit" class="comment_button" onclick="comment(3)"> Send! </button>
+                    </div>
+                </div>
+            </form>
+
         </div>
-        <div class="row" id="book_4" style="
-         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         border-radius: 10px;
-         box-shadow: 0px 0px 30px #000000;
-         position: relative;
+        </div>
 
-         text-align: center;
-         margin: 15px;
-
-        ">
+        <div class="row work_label" id="book_4">
 
 
 
-            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+            <div class="small-5 columns work_label_left">
                 <div class="row">
                     <a href="#" data-dropdown="drop_book4" data-options="is_hover:true">
-                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                        <img src="image/book_index.png" class="thumbnail">
                     </a>
                     <ul id="drop_book4" class="f-dropdown content large" data-dropdown-content>
                         <li>
@@ -592,89 +393,73 @@ padding: 0;
                         </li>
                     </ul>
                 </div>
+
             </div>
-            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+            <div class="small-5 columns work_label_middle">
                 <div class="row">
-                    <a href="book_index%25free.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index_free.html" class="book_href">
                         Name of the book
                     </a>
                     <br>
-                    <a href="#" style="color: #8d00b0">
+                    <a href="#" class="author_href" >
                         Author3
                     </a>
                     <br>
-                    <a href="#" style="color: #760002">
+                    <a href="#" class="technology_href">
                         Technology2
                     </a>
                     <div class="row" style="height: 20px;">
 
                     </div>
-             <span   style="color: black;">
+             <span>
                  Status:
-                 <span style="color: green;"> Free </span>
+                 <span class="status_free"> Free </span>
+
              </span>
 
                 </div>
             </div>
-            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+            <div class="small-1 columns work_label_right">
                 <div class="row">
-                    <a  class="button"
-                       style="
-                float: right;
-                margin: 20px;
-                height: 30px;
-                width: 30px;
-                border-radius: 30px;
-                padding: 0;
-                text-align: center;
-                font-size: 18pt;
+                    <a  class="button spoiler_button"
 
-                "
-                       onclick="add_comment_list(4)"
+                        onclick="add_comment_list(4)"
                             >
                         ▼
                     </a>
                 </div>
             </div>
+
         </div>
-        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px;" id="row_panel4"   >
-            <div class="panel" id="panel4">
-                <div class="row" style=" margin: 0; padding: 10px;">
-                    <br>text<br>
+        <div class="row comment_panel_strip">
+            <div class="panel comment_panel" id="panel4">
+                <div class="row row_panel" id="row_panel4">
+
+                    <br> text <br>
+
                 </div>
                 <form>
                     <div class="row">
-                        <div class="small-2 columns" style="width: 80%" >
-                            <input  id="input4" type="text" style="width: 100%;">
+                        <div class="small-2 columns input_comment_column">
+                            <input id="input4"  type="text" class="input_comment">
                         </div>
-                        <div class="small-2 columns" >
-                            <button type="submit"  onclick="comment(4)"> Send! </button>
+                        <div class="small-2 columns">
+                            <button type="submit" class="comment_button" onclick="comment(4)"> Send! </button>
                         </div>
                     </div>
                 </form>
 
-
             </div>
         </div>
-        <div class="row" id="book_5" style="
-         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         border-radius: 10px;
-         box-shadow: 0px 0px 30px #000000;
-         position: relative;
 
-         text-align: center;
-         margin: 15px;
-
-        ">
+        <div class="row work_label" id="book_5">
 
 
 
-            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+            <div class="small-5 columns work_label_left">
                 <div class="row">
                     <a href="#" data-dropdown="drop_book5" data-options="is_hover:true">
-                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                        <img src="image/book_index.png" class="thumbnail">
                     </a>
                     <ul id="drop_book5" class="f-dropdown content large" data-dropdown-content>
                         <li>
@@ -684,114 +469,78 @@ padding: 0;
                         </li>
                     </ul>
                 </div>
+
             </div>
-            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+            <div class="small-5 columns work_label_middle">
                 <div class="row">
-                    <a href="book_index%25busy.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index_free.html" class="book_href">
                         Name of the book
                     </a>
                     <br>
-                    <a href="#" style="color: #8d00b0">
+                    <a href="#" class="author_href" >
                         Author3
                     </a>
                     <br>
-                    <a href="#" style="color: #760002">
+                    <a href="#" class="technology_href">
                         Technology3
                     </a>
                     <div class="row" style="height: 20px;">
 
                     </div>
-
-             <span  style="color: black;">
+             <span>
                  Status:
-                 <span style="color: red;"> Busy </span>
+                 <span class="status_busy"> Busy </span>
                  <div class="row">
-                     Owner: <span style="color: #2184b0; "> User1 </span>
-                     <button type="submit" class="alert"
-                             style="
-                             font-size: 8pt;
-                             height: 15px;
-                             border-radius: 7px;
-                             text-align: center;
-                             padding: 0;
-                             padding-left: 5px;
-                             padding-right: 5px;
-                             ">
+                     Owner: <span class="comment_name"> User2 </span>
+                     <button type="submit" class="alert ask_to_return_small">
+
                          Ask to return
                      </button>
                  </div>
-
              </span>
 
                 </div>
             </div>
-            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+            <div class="small-1 columns work_label_right">
                 <div class="row">
-                    <a class="button"
-                       style="
-                float: right;
-                margin: 20px;
-                height: 30px;
-                width: 30px;
-                border-radius: 30px;
-                padding: 0;
-                text-align: center;
-                font-size: 18pt;
+                    <a  class="button spoiler_button"
 
-                "
-                       onclick="add_comment_list(5)"
+                        onclick="add_comment_list(5)"
                             >
                         ▼
                     </a>
                 </div>
             </div>
-        </div>
-        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px; ">
-            <div class="panel" id="panel5">
 
-                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel5">
-                    <br>text<br>
+        </div>
+        <div class="row comment_panel_strip">
+            <div class="panel comment_panel" id="panel5">
+                <div class="row row_panel" id="row_panel5">
+
+                    <br> text <br>
+
                 </div>
                 <form>
-                <div class="row">
-                    <div class="small-2 columns" style="width: 80%" >
-                        <input id="input5" type="text" style="width: 100%;">
+                    <div class="row">
+                        <div class="small-2 columns input_comment_column">
+                            <input id="input5"  type="text" class="input_comment">
+                        </div>
+                        <div class="small-2 columns">
+                            <button type="submit" class="comment_button" onclick="comment(5)"> Send! </button>
+                        </div>
                     </div>
-                    <div class="small-2 columns" >
-                        <button type="button"
-                                style="
-                                border-radius: 5px;
-                                height: 40px;
-                                padding: 0;
-                                padding-left: 5px;
-                                padding-right: 5px;
-                                width: 80px;
-                                "
-                                onclick="comment(5)"> Send! </button>
-                    </div>
-                </div>
                 </form>
+
             </div>
         </div>
-        <div class="row" id="book_6" style="
-         background: -webkit-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
-         border-radius: 10px;
-         box-shadow: 0px 0px 30px #000000;
-         position: relative;
-
-         text-align: center;
-         margin: 15px;
-
-        ">
+        <div class="row work_label" id="book_6">
 
 
 
-            <div class="small-5 columns" style="width: 30%; float: left; margin: 0; padding: 0;">
+            <div class="small-5 columns work_label_left">
                 <div class="row">
                     <a href="#" data-dropdown="drop_book6" data-options="is_hover:true">
-                        <img src="image/book_index.png" style=" float: left; margin: 20px; height: 46px; width: 46px; ">
+                        <img src="image/book_index.png" class="thumbnail">
                     </a>
                     <ul id="drop_book6" class="f-dropdown content large" data-dropdown-content>
                         <li>
@@ -801,144 +550,104 @@ padding: 0;
                         </li>
                     </ul>
                 </div>
+
             </div>
-            <div class="small-5 columns" style="width: 30%; margin: 0; margin-top: 10px; padding: 0;">
+            <div class="small-5 columns work_label_middle">
                 <div class="row">
-                    <a href="book_index%25mine.html" style=" text-align: justify; margin: 10px;">
+                    <a href="book_index_free.html" class="book_href">
                         Name of the book
                     </a>
                     <br>
-                    <a href="#" style="color: #8d00b0">
+                    <a href="#" class="author_href" >
                         Author4
                     </a>
                     <br>
-                    <a href="#" style="color: #760002">
+                    <a href="#" class="technology_href">
                         Technology4
                     </a>
                     <div class="row" style="height: 20px;">
 
                     </div>
-
-             <span  style="color: black;">
+             <span>
                  Status:
-                 <span style="color: red;"> Busy </span>
+                 <span class="status_busy"> Busy </span>
                  <div class="row">
-                     Owner: <span style="color: #2184b0; "> You </span>
-                     <button type="submit"
-                             id="mine1"
-                             style="
-                             background: #ff8704;
-                             font-size: 8pt;
-                             height: 15px;
-                             border-radius: 7px;
-                             text-align: center;
-                             padding: 0;
-                             padding-left: 5px;
-                             padding-right: 5px;
-                             "
+                     Owner: <span class="comment_name"> You </span>
+                     <button  class=" put_back_small" id="put_it_back6"
                              onmouseover="
-                             (function(){
-                                $('#mine1').css('background', '#824502');
-                             })();
+
+                             colored_button('put_it_back6','#824502');
+
                              "
-                             onmouseout="
-                             (function(){
-                                 $('#mine1').css('background', '#ff8704');
-                             })();
-                             "
-                             >
-                         Put it back
+                             onmouseout="colored_button('put_it_back6','#FF8704');">
+
+                        Put it back
                      </button>
                  </div>
-
              </span>
 
                 </div>
             </div>
-            <div class="small-1 columns" style="width: 30%; margin: 0; padding: 0;float: right;">
+            <div class="small-1 columns work_label_right">
                 <div class="row">
-                    <a class="button"
-                       style="
-                float: right;
-                margin: 20px;
-                height: 30px;
-                width: 30px;
-                border-radius: 30px;
-                padding: 0;
-                text-align: center;
-                font-size: 18pt;
+                    <a  class="button spoiler_button"
 
-                "
-                       onclick="add_comment_list(6)"
+                        onclick="add_comment_list(6)"
                             >
                         ▼
                     </a>
                 </div>
             </div>
-        </div>
-        <div class="row" style=" margin: 0; margin-left: 20px; margin-right: 20px; ">
-            <div class="panel" id="panel6">
 
-                <div class="row" style=" margin: 0; padding: 10px;" id="row_panel6">
-                    <br>text<br>
+        </div>
+        <div class="row comment_panel_strip">
+            <div class="panel comment_panel" id="panel6">
+                <div class="row row_panel" id="row_panel6">
+
+                    <br> text <br>
+
                 </div>
                 <form>
                     <div class="row">
-                        <div class="small-2 columns" style="width: 80%" >
-                            <input id="input6" type="text" style="width: 100%;">
+                        <div class="small-2 columns input_comment_column">
+                            <input id="input6"  type="text" class="input_comment">
                         </div>
-                        <div class="small-2 columns" >
-                            <button type="button"
-                                    style="
-                                border-radius: 5px;
-                                height: 40px;
-                                padding: 0;
-                                padding-left: 5px;
-                                padding-right: 5px;
-                                width: 80px;
-                                "
-                                    onclick="comment(6)"> Send! </button>
+                        <div class="small-2 columns">
+                            <button type="submit" class="comment_button" onclick="comment(6)"> Send! </button>
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
     </div>
  </div>
 
-<div class="row" style="height: 100px;"></div>
+<div class="row between_footer"></div>
+
+<div class="row">
+    <div class="small-offset-1 column underground">
+
+        <ul class="pagination">
+            <li class="arrow unavailable"><a href="">&laquo;</a></li>
+            <li class="current"><a href="">1</a></li>
+            <li><a href="">2</a></li>
+            <li><a href="">3</a></li>
+            <li><a href="">4</a></li>
+            <li class="unavailable"><a href="">&hellip;</a></li>
+            <li><a href="">12</a></li>
+            <li><a href="">13</a></li>
+            <li class="arrow"><a href="">&raquo;</a></li>
+        </ul>
+
+    </div>
+</div>
 
 
 
-<script language="javascript">
 
 
-    function add_comment_list(num)
-    {
-        $("#panel"+num).slideToggle("slow");
-        $(this).toggleClass("active");
-
-
-    }
-    function comment(num)
-    {
-        var msg='<div class="row"style="padding: 20px;"><a href="#" style=" color: #2184b0; font-weight: bold;"onclick=" comment_branch(com_1_0)"'
-        +'> User1: </a>'+$('#input'+num).val()+'<label id="com_'+num+'_0"></label>';
-        $('#input'+num).val('');
-         /*add text to a field*/
-        return false;
-
-    }
-
-    function comment_branch(sender)
-    {
-
-    }
-
-
-
-</script>
 
 <script>
     document.write('<script src=' +

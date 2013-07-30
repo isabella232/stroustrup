@@ -1,0 +1,12 @@
+.user_image{
+    font: arial;
+    font-size: 18pt;
+    font-weight: bolder;
+    text-align: right;
+    padding: 10pt;
+}
+.user_activity{
+    height: 100%;
+    padding: 40px;
+    margin: 0;
+}

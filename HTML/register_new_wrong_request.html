@@ -1,11 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="eng"
-      style="
-  background: url(image/hard_paper_texture_by_dl_stockandresources-d5jalsg.jpg) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;">
+<html class="no-js" lang="eng">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width" />
 <head>
@@ -15,119 +9,78 @@
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/foundation.css" />
     <script src="js/vendor/custom.modernizr.js"></script>
+    <script src="js/the_source.js"></script>
+    <link rel="stylesheet" href="css/authorisation.css" />
 </head>
 
 
 <body>
+<div class="row top_offset" ></div>
+<div class="large-4 columns side_offset" ></div>
+<div class="large-1 columns" >
+    <div class="row main_row" id="main_row">
 
-<div class="large-4 columns" style=" height: 100px;"></div>
-
-<div class="large-1 column" style=" width: 500px;">
-    <div class="row" style="height: 200px; " ></div>
-    <div class="row" id="main_row"
-         style="height: 350px;
-     background: -webkit-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
-     background: -o-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
-     background: -ms-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
-     border-radius: 10px;
-     box-shadow: 10px 10px 40px #000000;
-     position: static;
-     ">
         <form id="log_in">
-            <div class="row"
-                 style="
-               background: #ffdf88;
-               border-top-left-radius: 10px;
-               border-top-right-radius: 10px ;
-               font: SERIF;
-               font-size: 18pt;
-               color: black;
-               margin-left: 0px;
-               margin-right: 0px;
-               padding: 5pt;
-
-               "
-
-                    >
-                Create new account:
+            <div class="row pin_header">
+                • Create a new account:
             </div>
-            <div class=" row" style=" height: 40px; "></div>
-            <div class=" row">
-                <label for="login_field">
-                    <input type="text" required id="login_field" placeholder="Type email"
-                           style="
-                     width: 250px;
-                     margin-left: 40px;
-                     "
+            <div class=" row offset_row"></div>
+            <div class=" row input_row">
 
-                            >
-                    <small class="error">An email address is required.</small>
-                </label>
-
-                <div class="row"
-                     style="
-                    border: #a52a2a 2px;
-                    border-style: outset;
-                    background: rgba(255,0,0,0.24);
-                    font: sans-serif;
-                    color: #7a0000;
-                    margin: 10px;
-                    margin-left: 20px;
-                    margin-right: 20px;
-                    padding: 4pt;
-                    height: 50px;
-                    "
+                <input class="input_style"
+                       type="text"
+                       id="login_field"
+                       placeholder="Type an email"
+                       required
+                        oninput="remove_error_box()"
                         >
-                    The error has been occured! Such email is already exist.
-                </div>
-            </div>
-            <div class="row">
-                <label for="password_field">
-                    <input type="password" required id="password_field" placeholder="Type a password"
-                           style="
-                     width: 250px;
-                     margin-left: 40px;
-                     "
-                            >
-                    <small class="error">Password is required.</small>
-                </label>
+
+
             </div>
 
-            <div class="row">
-                <label for="confirm_password_field">
-                    <input type="password" required id="confirm_password_field" placeholder="Repeat the password"
-                           style="
-                     width: 250px;
-                     margin-left: 40px;
-                     "
-                            >
-                    <small class="error">Password confirmation is required.</small>
-                </label>
+            <div class="panel error_box" id="wrong_email" >
+
+                Such email already exist.
+
+            </div>
+
+            <div class="row input_row" >
+
+                <input type="password"
+                       id="password_field"
+                       placeholder="Type a password"
+                       required
+                       class="input_style"
+                       oninput="equals()"
+                        >
+
+            </div>
+
+            <div class="row input_row" >
+
+                <input type="password"
+                       id="confirm_password_field"
+                       placeholder="Type a password"
+                       required
+                       class="input_style"
+                       oninput="equals()"
+                        >
+
+            </div>
+
+            <div class="panel error_box block" id="wrong_pass" >
+
+                Passwords aren't same.
+
+            </div>
+
+            <div class="row input_row">
+                <img id="captcha" src="../captcha.png" class="captcha">
             </div>
 
             <div class="row">
-                <label for="captcha" style="margin-left: 40px;">
-                    <img id="captcha" src="../captcha.png">
-
-                </label>
-            </div>
-
-            <div class="row">
-                <button class="success button" type="submit"
-                        style="
-                     border-radius: 15px;
-                     font-size: 18pt;
-                     color: #f5f5f5;
-                     font-weight: bold;
-                     padding: 4pt;
-                     width: 150px;
-                     height: 45px;
-                     text-align: center;
-
-                     margin-left: 40px;
-
-                     ">
-                    <img src="image/arrow.png" style="float: left; text-align: justify;">
+                <button  class="success button submit_button" id="button1" type="submit" onclick=" valid_pass(); ">
+                    <img src="image/arrow.png" class="image">
                     Sign up!
                 </button>
             </div>
@@ -140,33 +93,12 @@
     </div>
 </div>
 
-<div class="large-5 columns" style="width: 400px; height: 100px; ">
 
-</div>
-
-
-<script>
-    function correct_email()
-    {
-        if(" " in document.getElementById("login_field"))
-            return false;
-        if("@" in document.getElementById("login_field"))
-            return true;
-        return false;
-    }
-    function equals()
-    {
-        if(document.getElementById("password_field")===document.getElementById("confirm_password_field"))
-            return true;
-        return false;
-    }
-</script>
 <script>
     document.write('<script src=' +
             ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
             '.js><\/script>')
 </script>
-
 
 <script>
     document.write('<script src=' +

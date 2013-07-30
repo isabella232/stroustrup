@@ -12,24 +12,21 @@
     <link rel="stylesheet" href="css/foundation.min.css"/>
     <script src="js/vendor/custom.modernizr.js"></script>
     <script src="js/jquery.js"></script>
-    <script src="js/the_source.js"></script>
 
+    <script src="js/the_source.js"></script>
     <link rel="stylesheet" href="css/top_bar.css"/>
     <link rel="stylesheet" href="css/library.css"/>
     <link rel="stylesheet" href="css/book_index.css"/>
-    <link rel="stylesheet" href="css/add_book.css"/>
 
 </head>
 
-
-<body>
-
+<body >
 
 <header >
 
     <div class="top_bar_row" >
         <div class="top_bar_left_side" >
-            <a  class="active button active_bar_button " >Add a new book</a>
+            <a  class="active button active_bar_button " >Current book</a>
         </div>
 
         <div class="top_bar_left_side" >
@@ -67,75 +64,65 @@
 
 </header>
 
-
-
-
 <div class="row main_strip_row" >
     <div class="small-offset-12 columns main_strip_column"  >
         <div class="row background_strip" >
             <div class="row work_label">
-            <form>
-             <div class="row">
-                <div class="small-2 column add_input_area" >
-                    <div class="row"  >
-                    <label> Name: </label>
-                        <input type="text" placeholder="Type Name of the book" required>
 
-                    </div>
-                    <div class="row">
-                        <label> Author: </label>
-                            <input type="text" placeholder="Type Author of the book" required>
-
-                    </div>
-                    <div class="row">
-                        <label> Technology: </label>
-                            <input type="text" placeholder="Type Technology of the book" required>
-
-                    </div>
-                    <div class="row">
-                        <label> ISBN: </label>
-                            <input type="text" placeholder="International Standard Book Number" required>
-
-                    </div>
-                    <div class="row">
-                        <label> Description:</label>
-                            <input type="text" placeholder="Type something about" required>
-
-                    </div>
-
-                </div>
-                <div class="small-2 column load_picture_area">
-                    <div class=" panel picture_area">
-                        <div class="row">
-                            FLASH LOADER?
+                <div class="small-6 columns">
+                    <div class="row picture_row">
+                        <div class="panel picture_area">
+                            <img src="image/book_index.png"/>
                         </div>
                     </div>
-                    <div class="row">
-                        <button class="load_button" id="button1"
-                                onmouseover="colored_button('button1','#462885') "
-                                onmouseout=" colored_button('button1','#8b4dff') "
+                    <div class="row info_area">
+
+                        Name:
+                          <span class="declaration_area">
+                               The Name;
+                           </span>
+
+                    </div>
+                    <div class="row info_area">
+
+                        Author:
+                          <span class="declaration_area">
+                               Author's Full Name;
+                           </span>
+
+                    </div>
+                    <div class="row info_area">
+
+                        Technology:
+                           <span class="declaration_area">
+                               The Technology;
+                           </span>
+
+                    </div>
+                </div>
+                <div class="small-6 columns activity_area"  >
+                    <div class="row offset"></div>
+                    <div class="row action_style">
+                        Status:
+                        <span class="mine">Belongs me</span>
+                    </div>
+
+
+                    <div class="row action_style">
+                        <button class="put action_button" id="button1" type="button"
+                                onmouseover="colored_button(this.id,'#824502')"
+                                onmouseout="colored_button(this.id,'#ff8704')"
                                 >
-                                Load
-                        <input class="loader" type="file" size="1" required>
+                            Put it back.
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="row full_row">
-                <a href="books.html">
-                <button type="submit" class="success add_book_button">
-                   +     Add
-                </button>
-                </a>
-            </div>
-            </form>
 
 
-                </div>
             </div>
         </div>
+    </div>
 </div>
-
 
 
 
@@ -144,11 +131,26 @@
             ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
             '.js><\/script>')
 </script>
-<script src="js/the_source.js"></script>
+
+
+
+<script src="js/foundation.min.js"></script>
 <script src="js/zepto.js"></script>
 <script src="js/foundation/foundation.js"></script>
-
-<script src="js/jquery.js"></script>
+<script src="js/foundation/foundation.alerts.js"></script>
+<script src="js/foundation/foundation.clearing.js"></script>
+<script src="js/foundation/foundation.cookie.js"></script>
+<script src="js/foundation/foundation.dropdown.js"></script>
+<script src="js/foundation/foundation.forms.js"></script>
+<script src="js/foundation/foundation.joyride.js"></script>
+<script src="js/foundation/foundation.magellan.js"></script>
+<script src="js/foundation/foundation.orbit.js"></script>
+<script src="js/foundation/foundation.placeholder.js"></script>
+<script src="js/foundation/foundation.reveal.js"></script>
+<script src="js/foundation/foundation.section.js"></script>
+<script src="js/foundation/foundation.tooltips.js"></script>
+<script src="js/foundation/foundation.topbar.js"></script>
+<script src="js/foundation/foundation.interchange.js"></script>
 <script>
     $(document).foundation();
 </script>
