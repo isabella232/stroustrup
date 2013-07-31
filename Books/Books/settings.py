@@ -157,6 +157,16 @@ AUTHENTICATION_BACKENDS = (
     'auth.GoogleBackend',
 )
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SERVER_EMAIL = 'root@localhost'
+
+EMAIL_HOST = 'localhost'
+
+EMAIL_FILE_PATH = 'tmp/email-messages/'
+
+EMAIL_PORT = 1025
+
 OPENID_CREATE_USERS = True
 
 OPENID_UPDATE_DETAILS_FROM_SREG = True

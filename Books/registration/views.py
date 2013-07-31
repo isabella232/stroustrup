@@ -11,6 +11,11 @@ from django.template import RequestContext
 from django.template import loader
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
+from django.core.mail import send_mail
+from django.core import mail
+
+
+from Books.settings import DOMAIN
 
 from registration.forms import RegistrationForm
 from registration.models import RegistrationProfile
@@ -129,14 +134,12 @@ class RegistrationView(_RequestPassingFormView):
                 new_profile = RegistrationProfile.objects.create(user=user,
                                           activation_key=activation_key,
                                           key_expires=key_expires)
-                email_subject = 'Your new example.com account confirmation'
-                email_body = "Hello, %s, and thanks for signing up for an " \
-                             "example.com account!\n\nTo activate your account, click this link within 48 " \
-                             "hours:\n\nhttp://example.com/accounts/activate/%s" % (
-                    user.username,
-                    new_profile.activation_key)
-                something = 1
-               # send_mail(email_subject, email_body, 'accounts@example.com', [user.email])
+                header = "Your {0} account confirmation".format(DOMAIN)
+                body = ''.join(("Hello, {0} and thanks for signing up for an, {1} account! ",
+                           "To activate your account click this link within 48 hours: \n\n",
+                           "http://{1}/accounts/activate/{2}")).format(user.username, DOMAIN,
+                                                                       new_profile.activation_key)
+                send_mail(header, body, 'from@example.com', ['to@example.com'])
             else:
                 error = u'form is invalid'
                 error_type = 'sign_up_error'
@@ -148,7 +151,7 @@ class RegistrationView(_RequestPassingFormView):
 
     def send_registration_confirmation(conf_code, email):
         title = "Libary account confirmation"
-        content = "http://127.0.0.1/confirm/" + str(conf_code)
+        content = "http://{0}/confirm/".format(DOMAIN) + str(conf_code)
         #send_mail(title, content, 'no-reply@gmail.com', email, fail_silently=False)
 
     def confirm(request, confirmation_code, username):
