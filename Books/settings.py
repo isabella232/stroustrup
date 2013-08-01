@@ -4,7 +4,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Roman', 'r.vaseev@crystalnix.com'),
 )
 
 DOMAIN = '127.0.0.1:8001'
@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Asia/Omsk'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -104,10 +104,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'Books.urls'
+ROOT_URLCONF = 'urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'Books.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 TEMPLATE_DIRS = (
     'templates'
@@ -127,9 +127,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_openid_auth',
-    'google_login',
     'registration',
-    'login',
+    'registration_app',
     'profile',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
@@ -145,11 +144,7 @@ AUTHENTICATION_BACKENDS = (
             'auth.GoogleBackend',
         )
 
-ACCOUNT_ACTIVATION_DAYS = 2
 
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login/'
-LOGOUT_URL = '/logout/'
 OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
 
 AUTHENTICATION_BACKENDS = (
@@ -159,13 +154,7 @@ AUTHENTICATION_BACKENDS = (
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-SERVER_EMAIL = 'root@localhost'
-
-EMAIL_HOST = 'localhost'
-
 EMAIL_FILE_PATH = 'tmp/email-messages/'
-
-EMAIL_PORT = 1025
 
 OPENID_CREATE_USERS = True
 
@@ -175,11 +164,15 @@ LOGIN_URL = '/openid/login/'
 
 LOGIN_REDIRECT_URL = '/'
 
+ACCOUNT_ACTIVATION_DAYS = 2
+
 RECAPTCHA_PRIVATE_KEY = '6LfTGuUSAAAAAB5OmCmNtYo0_CsMBozbaaoLR8Ad'
 
 RECAPTCHA_PUBLIC_KEY = '6LfTGuUSAAAAAOpUy6YyDLTliIMo3FBAcyHGmV2K'
 
 RECAPTCHA_USE_SSL = True
+
+#will be implemented later
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
