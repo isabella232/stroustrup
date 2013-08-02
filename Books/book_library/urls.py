@@ -7,7 +7,7 @@ from django import forms
 from views import BookListView, AddBookView
 
 urlpatterns = patterns('',
-                       url(r'^$', BookListView.as_view(queryset=[for x,y in Book.objects.all()],
+                       url(r'^$', BookListView.as_view(queryset=,
                                                        context_object_name='books_list'),
                            name='list'),
                        url(r'^$', AddBookView.as_view(form_class=forms.Form(Book),
