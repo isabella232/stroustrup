@@ -46,13 +46,22 @@
     background: green;
 
 }
+.take:hover{
+    background: #005d00;
+}
 
 .ask{
     background: red;
 }
+.ask:hover{
+    background: darkred;
+}
 
 .put{
     background: #ff8704;
+}
+.put:hover{
+    background: #824502;
 }
 
 .free{

@@ -33,6 +33,10 @@
     cursor: hand;
 }
 
+.load_button:hover{
+    background: #462885;
+}
+
 .loader{
     opacity: 0;
     position: relative;

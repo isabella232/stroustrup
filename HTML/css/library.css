@@ -20,7 +20,9 @@ body{
 }
 .filter{
 
-    background: #0a0a0a;
+    background: -webkit-linear-gradient(top, #000000 4%, #131313 50%, #f5f5f5 100%);
+    background: -o-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
+    background: -ms-linear-gradient(top, #e8eac8 4%,#fff7e8 50%,#e8eac8 100%);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     padding: 20px;
@@ -28,7 +30,12 @@ body{
     font-size: 12pt;
     height: 100px;
     min-width: 1000px;
-
+    border-top: black;
+    border-bottom: #c0c0c0 2px;
+    border-right: #c0c0c0 2px;
+    border-left: #c0c0c0 2px;
+    border-style: outset;
+    box-shadow: 0 10px 40px black;
 }
 .filter_button{
 
@@ -198,6 +205,10 @@ body{
     padding-right: 5px;
     background: #FF8704;
 }
+.put_back_small:hover{
+    background: #824502;
+}
+
 
 .put_back_large{
     font-size: 24pt;
@@ -208,6 +219,9 @@ body{
     padding-left: 15px;
     padding-right: 15px;
     background: #FF8704;
+}
+.put_back_large:hover{
+    background: #824502;
 }
 
 .panel{
@@ -253,4 +267,14 @@ body{
 
 .full_row{
     width: 100%;
+}
+
+.filter_link{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.filter_link:hover{
+    background: #4177b6;
+    color: #ffffff;
+    border-radius: 20px;
 }

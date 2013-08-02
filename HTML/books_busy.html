@@ -53,7 +53,7 @@
             <a class="button bar_right_button" href="main_page.html" >Log out</a>
         </div>
 
-        <div class="top_bar_right_side" style=" min-width: 150px;">
+        <div class="top_bar_right_side user_label">
             You are logged as:
             <br><br>
             <span class="bar_username_style"> %USERNAME% </span>
@@ -68,8 +68,8 @@
     <dl class="sub-nav" >
         <dt class="filter_statement" >
             Filter:</dt>
-        <dd><a href="books.html">All</a></dd>
-        <dd><a href="books_free.html">Free</a></dd>
+        <dd><a class="filter_link" href="books.html">All</a></dd>
+        <dd><a class="filter_link" href="books_free.html">Free</a></dd>
         <dd class="active"><a href="#">Busy</a></dd>
         <dd>
             <a href="#" data-dropdown="drop1" class="button dropdown secondary filter_button">
@@ -127,7 +127,7 @@
     </div>
     <div class="small-5 columns work_label_middle">
         <div class="row">
-            <a href="book_index_free.html" class="book_href">
+            <a href="book_index_busy.html" class="book_href">
                 Name of the book
             </a>
             <br>
@@ -138,7 +138,7 @@
             <a href="#" class="technology_href">
                 Technology1
             </a>
-            <div class="row" style="height: 20px;">
+            <div class="row offset">
 
             </div>
              <span>
@@ -208,7 +208,7 @@
     </div>
     <div class="small-5 columns work_label_middle">
         <div class="row">
-            <a href="book_index_free.html" class="book_href">
+            <a href="book_index_busy.html" class="book_href">
                 Name of the book
             </a>
             <br>
@@ -219,7 +219,7 @@
             <a href="#" class="technology_href">
                 Technology3
             </a>
-            <div class="row" style="height: 20px;">
+            <div class="row offset">
 
             </div>
              <span>
@@ -289,7 +289,7 @@
     </div>
     <div class="small-5 columns work_label_middle">
         <div class="row">
-            <a href="book_index_free.html" class="book_href">
+            <a href="book_index_mine.html" class="book_href">
                 Name of the book
             </a>
             <br>
@@ -300,7 +300,7 @@
             <a href="#" class="technology_href">
                 Technology4
             </a>
-            <div class="row" style="height: 20px;">
+            <div class="row offset">
 
             </div>
              <span>
@@ -308,13 +308,7 @@
                  <span class="status_busy"> Busy </span>
                  <div class="row">
                      Owner: <span class="comment_name"> You </span>
-                     <button  class=" put_back_small" id="put_it_back6"
-                              onmouseover="
-
-                             colored_button('put_it_back6','#824502');
-
-                             "
-                              onmouseout="colored_button('put_it_back6','#FF8704');">
+                     <button  class=" put_back_small" id="put_it_back6">
 
                          Put it back
                      </button>

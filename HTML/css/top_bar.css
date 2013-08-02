@@ -33,13 +33,14 @@ header{
     width: 10%;
 }
 
+.user_label{
+    min-width: 150px;
+}
+
 a{
     /*noth*/
 }
 
-.button{
-    /*alright*/
-}
 .active_bar_button{
     background: -webkit-linear-gradient(top, #280036 4%, #a384c2 50%, #000000 100%);
     background: -o-linear-gradient(top, #280036 4%, #a384c2 50%, #000000 100%);
