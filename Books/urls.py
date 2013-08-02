@@ -16,5 +16,6 @@ urlpatterns = patterns('',
     url(r'^profile/',include('profile.urls', namespace="profile")),
 
     (r'^accounts/', include('registration_app.urls')),
+    (r'^books/', include('book_library.urls',namespace='books')),
     (r'^auth/', include('registration.auth_urls', namespace="authorisation")),
     )

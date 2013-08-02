@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_openid_auth',
     'registration',
+    'book_library',
     'registration_app',
     'profile',
     # Uncomment the next line to enable the admin:
