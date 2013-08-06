@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+{% block title %}All books.{% endblock %}
+{% block content %}
+<p>Go to <a href={% url "profile:profile" %}>profile</a>
+    {% if user.is_staff %}
+<a href={% url "books:add"%}> Add book.</a>
+    {% endif %}
+    </p>
+<p><a href={% url "books:busy"%}> Show only busy.</a>  <a href={% url "books:not_busy"%}>Show only not busy.</a></p>
+    {% if not search_flag %}
+    <form action="search_results/" method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Search" />
+    </form>
+    {% endif %}
+{% if books_list %}
+    <ul>
+    {% for book in books_list %}
+        <li><a href={% url "books:book" book.id%}>{{ book.title }}</a>
+            {% for author in book.authors.all %}
+                <a href={% url "books:author" author.id%}>{{ author.first_name }} {{ author.last_name }}</a>
+            {% endfor %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No books are available.</p>
+{% endif %}
+{% endblock %}

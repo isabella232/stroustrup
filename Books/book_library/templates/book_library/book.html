@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+
+<p>
+    ISBN: {{ book.isbn}} <br>
+    Id: {{ book.id}}
+    <img src="{{ book.picture.url }}" alt="Book image"/><br>
+    Title: {{ book.title }} <br>
+    Authors:
+    <ls>
+    {% for author in book.authors.all %}
+            <a href={% url "books:author" author.id%}>{{ author.first_name }} {{ author.last_name }} </a><br>
+    {% endfor %}
+    </ls>
+    Description: {{ book.description }}<br>
+    Is busy: {{ book.busy }} <br>
+    E version: {{ book.e_version_exists }} <br>
+    Paper version: {{ book.paperback_version_exists }} <br>
+    Tags:
+    <ls>
+    {% for tag in book.tags.all %}
+<a href={% url "books:tag" tag.tag%}>{{ tag.tag }}</a>
+    {% endfor %}
+    </ls>
+    <p> <a href="{% url 'books:list'%}">Return </a>to list of books.</p>
+    {% if user.is_staff %}
+    <p> <a href="{% url 'books:change' book.id%}">Change book</a></p>
+    <p> <a href="{% url 'books:delete' book.id%}">Delete book</a></p>
+    {% endif %}
+
+{% endblock %}

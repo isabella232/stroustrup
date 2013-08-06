@@ -1,7 +1,7 @@
-<head>
-<title>Activation</title>
-    <body>
+{% extends 'main/base.html' %}
+{% block title %}Book added{% endblock %}
+
+{% block content %}
     <p>Seems activation key is wrong. Copypaste it more neater.</p>
     <p>Return to <a href="{% url 'mainpage' %}">main</a> page.</p>
-    </body>
-</head>
+{% endblock %}

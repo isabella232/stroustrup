@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+
+<p>
+    First name: {{ author.first_name }}<br>
+    Last name: {{ author.last_name }}<br>
+    Middle name: {{ author.middle_name }}<br>
+    Books:
+    <ul><ls>
+         {% for book in author.books.all %}
+<a href={% url "books:book" book.id%}>{{ book.title }}</a><br>
+        {% endfor %}
+    </ls></ul>
+    <p> <a href="{% url 'books:list'%}">Return </a>to list of books.</p>
+</p>
+
+{% endblock %}

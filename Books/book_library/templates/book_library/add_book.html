@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% block title %}Add book page{% endblock %}
+
+{% block content %}
+
+<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+{{ form.as_p }}
+<p>Add tag <a href="{% url 'books:add_tag' %}" target="_blank"><img src="/static/icon_addlink.gif" width="10" height="10" alt="Add Another"/></a></p>
+<p>Add author <a href="{% url 'books:add_author'%}" target="_blank"><img src="/static/icon_addlink.gif" width="10" height="10" alt="Add Another"/></a></p>
+<input type="submit" value="Submit" />
+</form>
+<p>Or <a href="{% url 'books:list' %}">cancel</a> if you changed your mind.</p>
+
+{% endblock %}
