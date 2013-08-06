@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% block title %}Register page{% endblock %}
+
+{% block content %}
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
+
+<form action="" method="POST">{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Submit" />
+<p>Or <a href="{% url 'authorisation:auth_login' %}">login</a> if you already have an account.</p>
+</form>
+{% endblock %}

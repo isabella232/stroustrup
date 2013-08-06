@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+{% block title %}All books.{% endblock %}
+{% block content %}
+ <p>Go to <a href={% url "profile:profile" %}>profile</a> <a href={% url "books:add" %}> Add book.</a> </p>
+{% if books_list %}
+    <ul>
+    {% for book in books_list %}
+        <li><a href={% url "mainpage" %}>{{ book.title }}</a>
+            {% for author in book.authors %}
+                <a href={% url "mainpage" %}>{{ author.first_name }} {{ author.lirst_name }} </a>
+            {% endfor %} </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No books are available.</p>
+{% endif %}
+{% endblock %}

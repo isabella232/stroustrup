@@ -1,0 +1,10 @@
+{% extends 'profilebase.html' %}
+{% block content %}
+    <h1>{{ user.username }}'s profile</h1>
+
+        <p>First name: {{ user.first_name }}</p>
+        <p>Last name: {{ user.last_name }}</p>
+        <p><a href="{% url 'profile:change' %}">Change profile's data</a>
+        <a href="{% url 'authorisation:auth_password_change' %}">Change password</a><br>
+        <a href="{% url 'authorisation:auth_logout' %}">Logout</a></p>
+{% endblock %}
