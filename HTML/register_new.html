@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html class="no-js" lang="eng">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<head>
+    <title>
+        Crystalnix library: Welcome!
+    </title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/foundation.css" />
+    <script src="js/vendor/custom.modernizr.js"></script>
+    <script src="js/the_source.js"></script>
+    <link rel="stylesheet" href="css/authorisation.css" />
+</head>
+
+
+<body>
+<div class="row top_offset" ></div>
+<div class="large-4 columns side_offset" ></div>
+<div class="large-1 columns" >
+    <div class="row main_row" id="main_row">
+
+        <form id="log_in">
+            <div class="row pin_header">
+                • Create a new account:
+            </div>
+            <div class=" row offset_row"></div>
+            <div class=" row input_row">
+
+                <input class="input_style"
+                       type="text"
+                       id="login_field"
+                       placeholder="Type an email"
+                       required >
+
+            </div>
+            <div class="row input_row" >
+
+                <input type="password"
+                       id="password_field"
+                       placeholder="Type a password"
+                       required
+                       class="input_style"
+                       oninput="equals()"
+                        >
+
+            </div>
+
+            <div class="row input_row" >
+
+                <input type="password"
+                       id="confirm_password_field"
+                       placeholder="Type a password"
+                       required
+                       class="input_style"
+                       oninput="equals()"
+                        >
+
+            </div>
+
+            <div class="panel error_box block" id="wrong_pass" >
+
+                Passwords aren't same.
+
+            </div>
+
+            <div class="row input_row">
+                    <img id="captcha" src="../captcha.png" class="captcha">
+            </div>
+
+            <div class="row">
+                <button  class="success button submit_button" id="button1" type="submit" onclick=" valid_pass(); ">
+                    <img src="image/arrow.png" class="image">
+                    Sign up!
+                </button>
+            </div>
+
+
+        </form>
+
+
+
+    </div>
+</div>
+
+
+<script>
+    document.write('<script src=' +
+            ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
+            '.js><\/script>')
+</script>
+
+<script>
+    document.write('<script src=' +
+            ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
+            '.js><\/script>')
+</script>
+
+<script src="js/zepto.js"></script>
+<script src="js/foundation/foundation.js"></script>
+
+<script src="js/jquery.js"></script>
+<script>
+    $(document).foundation();
+</script>
+</body>
+
+
+</html>
