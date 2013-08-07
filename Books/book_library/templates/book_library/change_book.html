@@ -3,10 +3,10 @@
 
 {% block content %}
 
-<form action="" method="POST">{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Submit" />
-</form>
-<p>Or <a href={% url "books:book" pk%}>cancel</a> if you changed your mind.</p>
+    <form action="" method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit"/>
+    </form>
+    <p>Or <a href={% url "books:book" pk %}>cancel</a> if you changed your mind.</p>
 
 {% endblock %}

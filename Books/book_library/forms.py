@@ -37,4 +37,4 @@ class SureForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    keywords = forms.CharField(label='Search', max_length=45)
+    keywords = forms.CharField(label='Search', max_length=45, required=False)

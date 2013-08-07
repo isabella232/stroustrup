@@ -11,13 +11,25 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from settings import STATIC_ROOT, MEDIA_ROOT
+import datetime
+
+
+class Client_Story_RecordManager(models.Manager):
+
+    def create(self, book, client):
+        record = Client_Story_Record()
+        record.book = book
+        record.client = client
+        record.save()
+        return record
 
 
 class Client_Story_Record(models.Model):
-    book_taken = models.DateField(auto_now_add=True)
-    book_returned = models.DateField(auto_now_add=False,blank=True)
     book = models.ForeignKey('Book')
     client = models.ForeignKey('Library_Client')
+    objects = Client_Story_RecordManager()
+    book_taken = models.DateTimeField(default=datetime.datetime.now, blank=False)
+    book_returned = models.DateTimeField(null=True, auto_now=False, blank=True)
 
 
 class AuthorManager(models.Manager):
@@ -46,26 +58,7 @@ class Author(models.Model):
         return self.first_name+' '+self.last_name
 
 
-class Library_Client(models.Model):
-    first_name = first_name = models.CharField(max_length=45, verbose_name="First name")
-    last_name = models.CharField(max_length=45, verbose_name="Last name")
-    middle_name = models.CharField(max_length=45, blank=True)
-    books = models.ManyToManyField('Book', through='Client_Story_Record')
-
-    def __unicode__(self):
-        return self.first_name+' '+self.last_name
-
-
 class BookManager(models.Manager):
-
-    # def author_filter(self, ):
-    #     ratings = self.filter(event__in=[event.id for event in events],
-    #                           user=user)
-    #     rating_dict = collections.defaultdict(lambda: None)
-    #     for rating in ratings:
-    #         rating_dict[rating.event_id] = rating
-    #     return rating_dict
-
 
     def create_new_book(self, cleaned_data):
         book = Book()
@@ -91,14 +84,13 @@ class Book(models.Model):
                                                #       ,    ,
     isbn = models.BigIntegerField(validators=[MinValueValidator(1000000000000)], max_length=13, unique=True)  # 13 digit ISBN
     title = models.CharField(max_length=45)
-    busy = models.BooleanField(default = 0)
-    e_version_exists = models.BooleanField(default=0, verbose_name="e version")
-    paperback_version_exists = models.BooleanField(default=True,verbose_name="paper version")
+    busy = models.BooleanField(default=False)
+    e_version_exists = models.BooleanField(default=False, verbose_name="e version")
+    paperback_version_exists = models.BooleanField(default=True, verbose_name="paper version")
     description = models.TextField(max_length=45, default="No description available.")
-    picture = models.FileField(upload_to='files', default=STATIC_ROOT+"/No_image_Avaliable.gif")
+    picture = models.FileField(upload_to='book_images', default=STATIC_ROOT+"/No_image_Avaliable.gif")
     authors = models.ManyToManyField(Author, related_name="authors")
     tags = models.ManyToManyField("Book_Tag", blank=True)
-    clients = models.ManyToManyField(Library_Client, through='Client_Story_Record')
 
     def __unicode__(self):
         return self.title
@@ -112,6 +104,31 @@ class Book(models.Model):
             book.tags.add(tag)
             tag.books.add(book)
         return book
+
+    def take_by(self, client):
+        book = self
+        book.busy = True
+        new_record = Client_Story_Record(book=book, client=client)
+        new_record.save()
+        client.save()
+        return book
+
+    def return_by(self, client):
+        book = self
+        book.busy = False
+        record = book.client_story_record_set.latest('book_taken')
+        record.book_returned = datetime.datetime.now()
+        record.save()
+        return book
+
+
+class Library_Client(models.Model):
+
+    books = models.ManyToManyField(Book, blank=True, through=Client_Story_Record)
+    user = models.OneToOneField(User, primary_key=True)
+
+    def __unicode__(self):
+        return self.user.first_name+' '+self.user.last_name
 
 
 class Book_TagManager(models.Manager):

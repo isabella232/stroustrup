@@ -38,4 +38,4 @@ urlpatterns = patterns('',
                            auth_views.logout,
                            {'template_name': 'registration/logout.html'},
                            name='auth_logout'),
-)
+                       )

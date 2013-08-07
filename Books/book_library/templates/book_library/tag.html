@@ -3,14 +3,13 @@
 
 {% block content %}
 
-<p>
-    Tag: {{ book_tag.tag }}<br>
-    Books:<ul>
-         {% for book in book_tag.books.all %}
- <ls><a href={% url "books:book" book.id%}>{{ book.title }}</a><br></ls>
+    <p>Tag: {{ book_tag.tag }}<br>
+        Books:</p>
+    <ul>
+        {% for book in book_tag.books.all %}
+            <ls><a href={% url "books:book" book.id %}>{{ book.title }}</a><br></ls>
         {% endfor %}
-        </ul>
-    <p> <a href="{% url 'books:list'%}">Return </a>to list of books.</p>
-</p>
+    </ul>
+    <p><a href="{% url 'books:list' %}">Return </a>to list of books.</p>
 
 {% endblock %}

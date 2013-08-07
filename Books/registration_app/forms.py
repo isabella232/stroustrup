@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+
 class CustomRegistrationForm(RegistrationForm):
     password1 = forms.CharField(widget=forms.PasswordInput,
                                 label=_("Password"),
