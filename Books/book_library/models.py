@@ -1,24 +1,14 @@
 import datetime
-import hashlib
-import random
-import re
-
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.db import transaction
-from django.template.loader import render_to_string
-from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MaxValueValidator, MinValueValidator
-from settings import STATIC_ROOT, MEDIA_ROOT
-import datetime
+from django.core.validators import MinValueValidator
 
 
 class Client_Story_Record(models.Model):
     records = models.Manager()
 
     book = models.ForeignKey('Book')
-    client = models.ForeignKey('Library_Client')
+    client = models.ForeignKey(User)
     book_taken = models.DateTimeField(default=datetime.datetime.now, blank=False)
     book_returned = models.DateTimeField(null=True, blank=True)
 
@@ -45,7 +35,8 @@ class Book(models.Model):
     description = models.TextField(max_length=45, default="No description available.")
     picture = models.FileField(upload_to='book_images', blank=True)
     authors = models.ManyToManyField(Author, related_name="books")
-    tags = models.ManyToManyField("Book_Tag", related_name="books")
+    users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
+    tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
 
     def __unicode__(self):
         return self.title
@@ -63,16 +54,6 @@ class Book(models.Model):
         record.book_returned = datetime.datetime.now()
         record.save()
         return self
-
-
-class Library_Client(models.Model):
-    clients = models.Manager()
-
-    books = models.ManyToManyField(Book, blank=True, through=Client_Story_Record)
-    user = models.OneToOneField(User, primary_key=True)
-
-    def __unicode__(self):
-        return self.user.first_name+' '+self.user.last_name
 
 
 class Book_Tag(models.Model):

@@ -7,7 +7,7 @@ class BookForm(ModelForm):
 
     class Meta:
         model = Book
-        exclude = ['busy']
+        exclude = ['busy', 'users']
 
 
 class Book_TagForm(ModelForm):

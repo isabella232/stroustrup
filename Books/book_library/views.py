@@ -1,5 +1,4 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
@@ -59,14 +58,10 @@ class DeleteBookView(BookFormView):
         return self.form_valid(form)
 
 @login_required
-def TakeBookView(request, **kwargs):
+def take_book_view(request, **kwargs):
     book = models.Book.books.get(id=kwargs['pk'])
     if not book.busy:
-        try:
-            client = request.user.library_client
-        except:
-            client = models.Library_Client()
-            client.user = User.objects.get(username=request.user.username)
+        client = request.user
         book.take_by(client)
         client.save()
         request.user.save()
@@ -74,14 +69,9 @@ def TakeBookView(request, **kwargs):
     return HttpResponseRedirect("..")
 
 @login_required
-def ReturnBookView(request, **kwargs):
+def return_book_view(request, **kwargs):
     book = models.Book.books.get(id=kwargs['pk'])
-    try:
-        client = request.user.library_client
-    except:
-        client = models.Library_Client()
-        client.user = User.objects.get(username=request.user.username)
-        return render_to_response("book_library/you_have_no_book.html")
+    client = request.user
     if book.busy and client.books.filter(id=book.id):
         book.return_by(client)
         client.save()
