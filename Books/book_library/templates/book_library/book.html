@@ -4,9 +4,15 @@
 {% block content %}
 
     <p>
-        ISBN: {{ book.isbn }} <br>
+        {% if book.isbn%}
+            ISBN: {{ book.isbn }} <br>
+        {% endif %}
         Id: {{ book.id }}
-        <img src="{{ book.picture.url }}" alt="Book image"/><br>
+        {% if book.picture%}
+            <img src="{{ book.picture.url }}" alt="Book image"/><br>
+        {% else %}
+            <img src="/static/No_Image_Available.gif" alt="Book image"/><br>
+        {% endif %}
         Title: {{ book.title }} <br>
         Authors:
         <ls>
@@ -27,9 +33,9 @@
         </ls>
         <br>
     {% if not book.busy %}
-        <ul><a href="{% url "books:book:take" book.id %}"><img src="{{ static }}Take_book.jpg" alt="Book image"/></a></ul>
+        <ul><a href="{% url "books:book:take" book.id %}"><img src="/static/Take_book.jpg" alt="Book image"/></a></ul>
     {% else %}
-        <ul><a href="{% url "books:book:return" book.id %}"><img src="{{ static }}Return_book.jpg" alt="Book image"/></a></ul>
+        <ul><a href="{% url "books:book:return" book.id %}"><img src="/static/Return_book.jpg" alt="Book image"/></a></ul>
     {% endif %}
     <p><a href="{% url 'books:list' %}">Return </a>to list of books.</p>
     {% if user.is_staff %}

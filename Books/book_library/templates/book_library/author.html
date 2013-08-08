@@ -11,7 +11,7 @@
     <ul>
         <ls>
             {% for book in author.books.all %}
-                <a href={% url "books:book" book.id %}>{{ book.title }}</a><br>
+                <a href={% url "books:book:book" book.id %}>{{ book.title }}</a><br>
             {% endfor %}
         </ls>
     </ul>

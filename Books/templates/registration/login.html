@@ -7,6 +7,6 @@
 <form action="" method="POST">{% csrf_token %}
 {{ form.as_p }}
 <input type="submit" value="Login" />
-<p><a href="{% url 'mainpage'%}">Forgot your password? (do not working for now)</a> You can also <a href="{% url 'registration_register'%}">sign up</a>.</p>
+<p><a href="{% url 'mainpage'%}">Forgot your password? (do not working for now)</a> You can also <a href="{% url 'registration_register'%}">sign up</a> or login via <a href="{% url 'openid-login' %}">google</a>.</p>
 </form>
 {% endblock %}

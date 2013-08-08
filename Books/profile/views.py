@@ -1,20 +1,18 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 from forms import ProfileForm
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-
+@user_passes_test(lambda u: u.is_active)
 def profile(request):
-    if request.user.is_active:
         user = request.user
         template = loader.get_template('profile.html')
         context = RequestContext(request,{'user': user})
         return render_to_response('profile.html', context)
-    else:
-        return render_to_response('main/you_are_not_user.html')
 
 
+@user_passes_test(lambda u: u.is_active)
 def profile_change(request):
-    if request.user.is_active:
         user = request.user
         if request.method == 'POST':
             form = ProfileForm(request.POST)
@@ -31,5 +29,3 @@ def profile_change(request):
             context=RequestContext(request,{'user':user,'form':form})
             return render_to_response('profile_change.html',
                                       context, context_instance=RequestContext(request))
-    else:
-        return render_to_response('main/you_are_not_user.html')
