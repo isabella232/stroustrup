@@ -8,7 +8,7 @@ class Client_Story_Record(models.Model):
     records = models.Manager()
 
     book = models.ForeignKey('Book')
-    client = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     book_taken = models.DateTimeField(default=datetime.datetime.now, blank=False)
     book_returned = models.DateTimeField(null=True, blank=True)
 
@@ -34,16 +34,28 @@ class Book(models.Model):
     paperback_version_exists = models.BooleanField(default=True, verbose_name="paper version")
     description = models.TextField(max_length=45, default="No description available.")
     picture = models.FileField(upload_to='book_images', blank=True)
-    authors = models.ManyToManyField(Author, related_name="books")
-    users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
+    authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
+    users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
 
     def __unicode__(self):
         return self.title
 
+    def taken_about(self):
+        taken = self.client_story_record_set.latest('book_taken').book_taken.date()
+        now = datetime.date.today()
+        return abs((taken - now).days)
+
+    def taken_by(self):
+        if self.client_story_record_set.all():
+            last = self.client_story_record_set.latest('book_taken')
+            if not last.book_returned:
+                return last.user
+        return None
+
     def take_by(self, client):
         self.busy = True
-        new_record = Client_Story_Record(book=self, client=client)
+        new_record = Client_Story_Record(book=self, user=client)
         new_record.save()
         client.save()
         return self
@@ -59,7 +71,7 @@ class Book(models.Model):
 class Book_Tag(models.Model):
     tags = models.Manager()
 
-    tag = models.CharField(max_length=20, primary_key=True)
+    tag = models.CharField(max_length=20)
 
     def __unicode__(self):
         return self.tag

@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% block title %}All books.{% endblock %}
 {% block content %}
-    <p>Go to <a href={% url "profile:profile" %}>profile</a>
+    <p>Go to <a href={% url "profile:profile" user.pk %}>profile</a>
         {% if user.is_staff %}
             <a href={% url "books:add" %}> Add book.</a>
         {% endif %}

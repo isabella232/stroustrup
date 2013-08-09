@@ -41,7 +41,7 @@ urlpatterns = patterns('',
                                                                          ),
                            name='author'),
 
-                       url(r'^tags/(?P<pk>\w[\w|\s]+\w)/', DetailView.as_view(model=Book_Tag,
+                       url(r'^tags/(?P<pk>\d+)/', DetailView.as_view(model=Book_Tag,
                                                                               template_name="book_library/tag.html",
                                                                               ),
                            name='tag'),
