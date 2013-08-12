@@ -1,7 +1,7 @@
 import datetime
 from django.contrib.auth.models import User
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import RegexValidator
 
 
 class Client_Story_Record(models.Model):
@@ -26,8 +26,10 @@ class Author(models.Model):
 
 class Book(models.Model):
     books = models.Manager()
-                                               #       ,    ,
-    isbn = models.BigIntegerField(validators=[MinValueValidator(1000000000000)], max_length=13, blank=True, null=True)  # 13 digit ISBN
+
+    isbn = models.CharField(help_text="13 digit", max_length=13, blank=True,
+                            validators=[RegexValidator(regex="\d{13,13}", message="please just 13 digits")],
+                            )
     title = models.CharField(max_length=45)
     busy = models.BooleanField(default=False)
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
@@ -36,7 +38,7 @@ class Book(models.Model):
     picture = models.FileField(upload_to='book_images', blank=True)
     authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
-    tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
+    tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)
 
     def __unicode__(self):
         return self.title

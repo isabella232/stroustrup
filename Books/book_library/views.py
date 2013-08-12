@@ -1,10 +1,12 @@
 from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 import forms, models
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
+from django.views.generic import DetailView
+from profile.views import get_users_books
 
 
 class BookFormView(FormView):
@@ -15,47 +17,65 @@ class BookFormView(FormView):
         return super(BookFormView, self).get(self, request, *args, **kwargs)
 
 
-class AddView(BookFormView):
+class BookView(DetailView):
+    model = models.Book
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST, request.FILES)
-        if form.is_valid():
-            book = form.save()
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    def get_context_data(self, **kwargs):
+        context = super(BookView, self).get_context_data()
+        if context['book'].busy:
+            context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
+        return context
 
 
-class ChangeBookView(BookFormView):
+class AddView(CreateView):
 
     @method_decorator(user_passes_test(lambda u: u.is_staff))
     def get(self, request, *args, **kwargs):
-            form = self.get_form_class()
-            book = models.Book.books.get(pk=kwargs['pk'])
-            form = form(instance=book)
-            return self.render_to_response(super(BookFormView, self).get_context_data(form=form, pk=kwargs['pk']))
-
-    def post(self, request, *args, **kwargs):
-        book = models.Book.books.get(pk=kwargs['pk'])
-        form = forms.BookForm(request.POST, request.FILES, instance=book)
-        if form.is_valid():
-            if not form.cleaned_data['picture']:
-                book.picture = None
-            book.save()
-            book = form.save()
-            return self.form_valid(form)
-        return self.form_invalid(form)
+        return super(AddView, self).get(self, request, *args, **kwargs)
 
 
-class DeleteBookView(BookFormView):
+class AuthorAdd(AddView):
+    model = models.Author
+    form_class = forms.AuthorForm
 
-    def post(self, request, *args, **kwargs):
-        form = forms.SureForm(request.POST)
-        if form.is_valid():
-            if form.cleaned_data['confirm']:
-                book = models.Book.books.filter(pk=kwargs['pk'])[0]
-                book.delete()
-        return self.form_valid(form)
+
+class TagAdd(AddView):
+    model = models.Book_Tag
+    form_class = forms.Book_TagForm
+
+
+class BookAdd(AddView):
+    model = models.Book
+    form_class = forms.BookForm
+
+
+class BookUpdate(UpdateView):
+    model = models.Book
+    form_class = forms.BookForm
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def get(self, request, *args, **kwargs):
+        return super(BookUpdate, self).get(self, request, *args, **kwargs)
+
+
+class Delete(DeleteView):
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def get(self, request, *args, **kwargs):
+        return super(Delete, self).get(self, request, *args, **kwargs)
+
+
+class DeleteBook(Delete):
+    model = models.Book
+
+
+class DeleteTag(Delete):
+    model = models.Book_Tag
+
+
+class DeleteAuthor(Delete):
+    model = models.Author
+
 
 @login_required
 def take_book_view(request, **kwargs):
@@ -72,7 +92,8 @@ def take_book_view(request, **kwargs):
 def return_book_view(request, **kwargs):
     book = models.Book.books.get(id=kwargs['pk'])
     client = request.user
-    if book.busy and client.books.filter(id=book.id):
+    books = get_users_books(client)
+    if book.busy and books and book in books:
         book.return_by(client)
         client.save()
         request.user.save()

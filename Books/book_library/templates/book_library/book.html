@@ -7,12 +7,13 @@
         {% if book.isbn%}
             ISBN: {{ book.isbn }} <br>
         {% endif %}
-        Id: {{ book.id }}
         {% if book.picture%}
             <img src="{{ book.picture.url }}" height="300" alt="Book image"/><br>
         {% else %}
             <img src="/static/No_Image_Available.gif" height="300" alt="Book image"/><br>
         {% endif %}
+        Id: {{ book.id }}
+
         Title: {{ book.title }} <br>
         Authors:
         <ls>
@@ -24,7 +25,9 @@
     </p>
     <p>
         {% if book.busy %}
-            Taken by <a href={% url "profile:profile" user.id %}>{{ user.username }}</a><br>
+            Taken by <a href={% url "profile:profile" book_user.id %}>{{ book_user }}</a>
+            <a href={% url "profile:ask" user.id book.id %}>Ask to return</a>.
+            <br>
         {% endif %}
         <a href={% url "books:book:story" book.id %}>View story of book's takers </a><br>
     </p>
@@ -40,14 +43,14 @@
         Tags:
         <ls>
             {% for tag in book.tags.all %}
-                <a href={% url "books:tag" tag.tag %}>{{ tag.tag }}</a>
+                <a href={% url "books:tag" tag.pk %}>{{ tag.tag }}</a>
             {% endfor %}
         </ls>
         <br>
     {% if not book.busy %}
         <ul><a href="{% url "books:book:take" book.id %}"><img src="/static/Take_book.jpg" alt="Book image"/></a></ul>
     {% else %}
-        {% if user in book.users.all %}
+        {% if user == book_user %}
             <ul><a href="{% url "books:book:return" book.id %}"><img src="/static/Return_book.jpg" alt="Book image"/></a></ul>
         {% endif %}
     {% endif %}

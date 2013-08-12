@@ -15,23 +15,20 @@
         First name: {{ profile.first_name }}<br>
         Last name: {{ profile.last_name }}<br>
         E-mail: {{ profile.email }}<br>
-    {% if form %}
+    {% if books %}
         Books:
     <ul>
-        <ls>
-            {% for book in books %}
+            {% for book in books%}
+                <li>
                 <a href={% url "books:book:book" book.id %}>{{ book.title }}</a>
                 {% for author in book.authors.all %}
                         <a href={% url "books:author" author.id %}>{{ author.first_name }} {{ author.last_name }}</a>
                 {% endfor %}
                 keeps about {{ book.taken_about }} days.
+                <a href={% url "profile:ask" profile.id book.id %}>Ask this book.</a>
+                </li>
             {% endfor %}
-        </ls>
     </ul>
-        <form action="" method="POST">{% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Ask to return book"/>
-        </form>
     {% endif %}
     {% if user.pk == profile.pk %}
         <a href="{% url 'profile:change' user.pk %}">Change profile's data</a>

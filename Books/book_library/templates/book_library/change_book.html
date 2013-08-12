@@ -8,6 +8,6 @@
             {{ form.as_p }}
             <input type="submit" value="Submit"/>
     </form>
-    <p>Or <a href={% url "books:book:book" pk %}>cancel</a> if you changed your mind.</p>
+    <p>Or <a href={% url "books:book:book" book.id %}>cancel</a> if you changed your mind.</p>
 
 {% endblock %}

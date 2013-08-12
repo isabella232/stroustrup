@@ -5,7 +5,7 @@
         <ul>
             {% for record in records_list %}
                 <li>
-                    <p>Taken : {{ record.book_taken }} by {{ record.client.user.username}}
+                    <p>Taken : {{ record.book_taken }} by {{ record.user.username}}
                     </p>
                     {% if record.book_returned %}
                         <p>Returned : {{ record.book_returned }}</p>

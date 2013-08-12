@@ -1,12 +1,13 @@
-from forms import ProfileForm, AskReturnForm
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views.generic.edit import FormView
+from django.views.generic import DetailView
 from django.contrib.auth.models import User
 from django.core import mail
 from book_library.models import Book
 from django.contrib.sites.models import RequestSite
-import datetime
+from django.shortcuts import render_to_response
+from django.shortcuts import get_object_or_404
+from django.views.generic.edit import UpdateView
+from django.http import HttpResponseRedirect
+import forms
 
 
 def get_users_books(user):
@@ -20,47 +21,40 @@ def get_users_books(user):
             return None
 
 
-class ProfileView(FormView):
-    form_class = AskReturnForm
+class ProfileView(DetailView):
+    model = User
 
-    def get_form(self, request):
-        profile = User.objects.get(pk=self.kwargs['pk'])
-        queryset = get_users_books(profile)
-        if queryset:
-            return self.form_class(queryset=get_users_books(profile))
-        else:
-            return None
-
-    def get_context_data(self, form):
-        profile = User.objects.get(pk=self.kwargs['pk'])
-        context = {'profile': profile, 'books': get_users_books(profile), 'user': self.request.user, 'form': form}
+    def get_context_data(self, object):
+        context = {'profile': object, 'books': get_users_books(object), 'user': self.request.user}
         return super(ProfileView, self).get_context_data(**context)
 
-    def post(self, request, *args, **kwargs):
-        profile = User.objects.get(pk=self.kwargs['pk'])
-        books = get_users_books(profile)
-        form = AskReturnForm(books, request.POST)
-        if form.is_valid():
-            book = form.cleaned_data['choices']
-            authors_string = ""
-            for author in book.authors.all():
-                authors_string += author.__unicode__()
-            connection = mail.get_connection()
-            connection.open()
-            site = RequestSite(request)
-            email = mail.EmailMessage('Book return request', "User %(username)s asks you to return the book %(book)s %(author)s. You can return"\
-            "it by click on this link: %(link)s"%{'username': request.user.username, 'book': book.__unicode__(), 'author': authors_string, 'link': "http:/%(site)s/books/%(id)s/return/" % {'id': book.id, 'site': site.domain}}, 'from@example.com',
-                                      [profile.email], connection=connection)
-            email.send()
-            connection.close()
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+
+def ask_to_return(request, *args, **kwargs):
+    book = get_object_or_404(Book, pk=kwargs['num'])
+    if book.busy:
+        profile = get_object_or_404(User, pk=kwargs['pk'])
+        authors_string = ""
+        for author in book.authors.all():
+            authors_string += author.__unicode__()
+        site = RequestSite(request)
+        email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) asks you"
+                                                         " to return the book %(book)s %(author)s."
+                                                         " You can return it by click on this link: %(link)s"%
+                                                         {'username': request.user.username,
+                                                          'firstname': request.user.first_name,
+                                                          'lastname': request.user.last_name,
+                                                          'book': book.__unicode__(),
+                                                          'author': authors_string,
+                                                          'link': "http:/%(site)s/books/%(id)s/return/"
+                                                                  %{'id': book.id, 'site': site.domain}
+                                                         },
+                                  'from@example.com',
+                                  [profile.email])
+        email.send()
+        return render_to_response('asked_successfully.html', {'book': book})
+    return HttpResponseRedirect("..")
 
 
-class ProfileFormView(FormView):
-    form_class = ProfileForm
-
-    @method_decorator(login_required)
-    def get(self, request, **kwargs):
-        return super(ProfileFormView, self).get(self, request, **kwargs)
+class ProfileFormView(UpdateView):
+    model = User
+    form_class = forms.ProfileForm
