@@ -25,7 +25,9 @@
                         <a href={% url "books:author" author.id %}>{{ author.first_name }} {{ author.last_name }}</a>
                 {% endfor %}
                 keeps about {{ book.taken_about }} days.
-                <a href={% url "profile:ask" profile.id book.id %}>Ask this book.</a>
+                {% if user.pk != profile.pk %}
+                    <a href={% url "profile:ask" profile.id book.id %}>Ask this book.</a>
+                {% endif %}
                 </li>
             {% endfor %}
     </ul>

@@ -35,7 +35,9 @@
     <p>
         {% if book.busy %}
             Taken by <a href={% url "profile:profile" book_user.id %}>{{ book_user }}</a>
-            <a href={% url "profile:ask" user.id book.id %}>Ask to return</a>.
+            {% if user != book_user %}
+                <a href={% url "profile:ask" user.id book.id %}>Ask to return</a>
+            {% endif %}.
             <br>
         {% endif %}
         <a href={% url "books:book:story" book.id %}>View story of book's takers </a><br>

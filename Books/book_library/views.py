@@ -91,27 +91,19 @@ def take_book_view(request, **kwargs):
         if not book.busy:
             client = request.user
             book.take_by(client)
-            client.save()
-            request.user.save()
             book.save()
         return HttpResponseRedirect(reverse('mainpage'))
     return "text"
 
 @login_required
 def return_book_view(request, **kwargs):
-    if request.is_ajax():
         book = models.Book.books.get(id=kwargs['pk'])
         client = request.user
         books = get_users_books(client)
         if book.busy and books and book in books:
             book.return_by(client)
-            client.save()
-            request.user.save()
             book.save()
         return HttpResponseRedirect(reverse('mainpage'))
-    return simplejson.dumps({'message':'Hello from Python!'})
-
-
 
 
 class BookListView(ListView):

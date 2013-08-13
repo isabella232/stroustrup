@@ -48,7 +48,7 @@ class Book(models.Model):
         now = datetime.date.today()
         return abs((taken - now).days)
 
-    def taken_by(self):
+    def taken_by(self, user):
         if self.client_story_record_set.all():
             last = self.client_story_record_set.latest('book_taken')
             if not last.book_returned:
