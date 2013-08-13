@@ -7,6 +7,13 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from profile.views import get_users_books
+from django.core.urlresolvers import reverse
+from django.utils import simplejson
+from dajaxice.decorators import dajaxice_register
+
+@dajaxice_register
+def example(request):
+    return simplejson.dumps({'message': 'Hello from Python!'})
 
 
 class BookFormView(FormView):
@@ -79,26 +86,32 @@ class DeleteAuthor(Delete):
 
 @login_required
 def take_book_view(request, **kwargs):
-    book = models.Book.books.get(id=kwargs['pk'])
-    if not book.busy:
-        client = request.user
-        book.take_by(client)
-        client.save()
-        request.user.save()
-        book.save()
-    return HttpResponseRedirect("..")
+    if not request.is_ajax():
+        book = models.Book.books.get(id=kwargs['pk'])
+        if not book.busy:
+            client = request.user
+            book.take_by(client)
+            client.save()
+            request.user.save()
+            book.save()
+        return HttpResponseRedirect(reverse('mainpage'))
+    return "text"
 
 @login_required
 def return_book_view(request, **kwargs):
-    book = models.Book.books.get(id=kwargs['pk'])
-    client = request.user
-    books = get_users_books(client)
-    if book.busy and books and book in books:
-        book.return_by(client)
-        client.save()
-        request.user.save()
-        book.save()
-    return HttpResponseRedirect("..")
+    if request.is_ajax():
+        book = models.Book.books.get(id=kwargs['pk'])
+        client = request.user
+        books = get_users_books(client)
+        if book.busy and books and book in books:
+            book.return_by(client)
+            client.save()
+            request.user.save()
+            book.save()
+        return HttpResponseRedirect(reverse('mainpage'))
+    return simplejson.dumps({'message':'Hello from Python!'})
+
+
 
 
 class BookListView(ListView):

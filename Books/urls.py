@@ -1,6 +1,10 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django_openid_auth.views import login_complete
+from dajaxice.core import dajaxice_autodiscover, dajaxice_config
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+dajaxice_autodiscover()
 
 import views,settings
 
@@ -20,4 +24,7 @@ urlpatterns = patterns('',
                        (r'^books/', include('book_library.urls',namespace='books')),
 
                        (r'^auth/', include('registration.auth_urls', namespace="authorisation")),
+                       url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
                        )
+
+urlpatterns += staticfiles_urlpatterns()

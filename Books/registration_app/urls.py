@@ -24,6 +24,8 @@ from django.views.generic.base import TemplateView
 
 from registration.backends.default.views import RegistrationView, ActivationView
 from forms import CustomRegistrationForm
+import os
+os.environ['RECAPTCHA_TESTING'] = 'True'
 
 
 urlpatterns = patterns('',
