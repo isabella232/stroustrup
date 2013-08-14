@@ -19,4 +19,6 @@ urlpatterns = patterns('',
                        url(r'^story/$', views.BookStoryListView.as_view(template_name='book_library/book_story.html',
                                                                     ),
                            name='story'),
+                       url(r'^ask_to_return/$', views.ask_to_return,
+                           name='ask'),
                        )

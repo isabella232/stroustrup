@@ -10,6 +10,11 @@ from profile.views import get_users_books
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 from dajaxice.decorators import dajaxice_register
+from django.core import mail
+from book_library.models import Book
+from django.contrib.sites.models import RequestSite
+from django.shortcuts import render_to_response
+from django.shortcuts import get_object_or_404
 
 @dajaxice_register
 def example(request):
@@ -86,24 +91,22 @@ class DeleteAuthor(Delete):
 
 @login_required
 def take_book_view(request, **kwargs):
-    if not request.is_ajax():
-        book = models.Book.books.get(id=kwargs['pk'])
-        if not book.busy:
-            client = request.user
-            book.take_by(client)
-            book.save()
-        return HttpResponseRedirect(reverse('mainpage'))
-    return "text"
+    book = models.Book.books.get(id=kwargs['pk'])
+    if not book.busy:
+        client = request.user
+        book.take_by(client)
+        book.save()
+    return HttpResponseRedirect(reverse('mainpage'))
 
 @login_required
 def return_book_view(request, **kwargs):
-        book = models.Book.books.get(id=kwargs['pk'])
-        client = request.user
-        books = get_users_books(client)
-        if book.busy and books and book in books:
-            book.return_by(client)
-            book.save()
-        return HttpResponseRedirect(reverse('mainpage'))
+    book = models.Book.books.get(id=kwargs['pk'])
+    client = request.user
+    books = get_users_books(client)
+    if book.busy and books and book in books:
+        book.return_by(client)
+        book.save()
+    return HttpResponseRedirect(reverse('mainpage'))
 
 
 class BookListView(FormView):
@@ -148,6 +151,7 @@ class BookListView(FormView):
         context = {'books_list': self.queryset, "form" : self.get_form(self.form_class)}
         return super(BookListView, self).get_context_data(**context)
 
+
 class BookStoryListView(ListView):
 
     @method_decorator(login_required())
@@ -163,3 +167,30 @@ class BookStoryListView(ListView):
         context['object_list'] = records_list
         context['pk'] = pk
         return super(BookStoryListView, self).get_context_data(**context)
+
+def ask_to_return(request, **kwargs):
+    book = get_object_or_404(Book, pk=kwargs['pk'])
+    if book.busy:
+        profile = book.taken_by()
+        if request.user != profile:
+            authors_string = ""
+            for author in book.authors.all():
+                authors_string += author.__unicode__()
+            site = RequestSite(request)
+            server_email = "testemail@" + site.domain
+            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) asks you"
+                                                             " to return the book %(book)s %(author)s."
+                                                             " You can return it by click on this link: %(link)s"%
+                                                             {'username': request.user.username,
+                                                              'firstname': request.user.first_name,
+                                                              'lastname': request.user.last_name,
+                                                              'book': book.__unicode__(),
+                                                              'author': authors_string,
+                                                              'link': "http:/%(site)s/books/%(id)s/return/"
+                                                                      % {'id': book.id, 'site': site.domain}
+                                                             },
+                                      server_email,
+                                      [profile.email])
+            email.send()
+            return render_to_response('asked_successfully.html', {'book': book})
+    return HttpResponseRedirect("..")

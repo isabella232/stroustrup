@@ -50,7 +50,7 @@ class Book(models.Model):
 
     def taken_by(self):
         if self.busy:
-            return self.client_story_record_set.latest('book_taken')
+            return self.client_story_record_set.latest('book_taken').user
         return None
 
     def take_by(self, client):

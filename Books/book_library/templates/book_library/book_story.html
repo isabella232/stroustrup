@@ -1,9 +1,9 @@
 {% extends 'main/base.html' %}
 {% block title %}Book story.{% endblock %}
 {% block content %}
-    {% if records_list %}
+    {% if object_list %}
         <ul>
-            {% for record in records_list %}
+            {% for record in object_list %}
                 <li>
                     <p>Taken : {{ record.book_taken }} by {{ record.user.username}}
                     </p>

@@ -26,7 +26,7 @@
                 {% endfor %}
                 keeps about {{ book.taken_about }} days.
                 {% if user.pk != profile.pk %}
-                    <a href={% url "profile:ask" profile.id book.id %}>Ask this book.</a>
+                    <a href={% url "books:book:ask" book.id %}>Ask this book.</a>
                 {% endif %}
                 </li>
             {% endfor %}
