@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'book_library',
     'registration_app',
     'profile',
+    'dajaxice',
 )
 
 ALLOWED_EXTERNAL_OPENID_REDIRECT_DOMAINS = [DOMAIN]

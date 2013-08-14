@@ -88,7 +88,7 @@ class DeleteTag(Delete):
 class DeleteAuthor(Delete):
     model = models.Author
 
-
+@dajaxice_register()
 @login_required
 def take_book_view(request, **kwargs):
     book = models.Book.books.get(id=kwargs['pk'])
@@ -96,8 +96,11 @@ def take_book_view(request, **kwargs):
         client = request.user
         book.take_by(client)
         book.save()
+        if request.is_ajax():
+            return simplejson.dumps({'message': 'Book taken'})
     return HttpResponseRedirect(reverse('mainpage'))
 
+@dajaxice_register
 @login_required
 def return_book_view(request, **kwargs):
     book = models.Book.books.get(id=kwargs['pk'])
@@ -106,6 +109,8 @@ def return_book_view(request, **kwargs):
     if book.busy and books and book in books:
         book.return_by(client)
         book.save()
+        if request.is_ajax():
+            return simplejson.dumps({'message': 'Book returned'})
     return HttpResponseRedirect(reverse('mainpage'))
 
 

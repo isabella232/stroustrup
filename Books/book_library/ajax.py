@@ -1,8 +1,6 @@
-from dajax.core import Dajax
+from django.utils import simplejson
+from dajaxice.decorators import dajaxice_register
 
-
-def multiply(request, a, b):
-    dajax = Dajax()
-    result = int(a) * int(b)
-    dajax.assign('#result','value',str(result))
-    return dajax.json()
+@dajaxice_register
+def sayhello(request):
+    return simplejson.dumps({'message': 'Book taken'})
