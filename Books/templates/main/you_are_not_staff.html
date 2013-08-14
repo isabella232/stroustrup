@@ -1,0 +1,7 @@
+{% extends 'main/base.html' %}
+{% block title %}Acces denied{% endblock %}
+
+{% block content %}
+    <p>You are not staff.</p>
+    <p>Return to <a href="{% url 'books:list' %}">all books</a> page.</p>
+{% endblock %}

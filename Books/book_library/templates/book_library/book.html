@@ -1,0 +1,75 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+
+{% block content %}
+    <body>
+<button onclick="Dajaxice.example.sayhello(my_js_callback);">Click here!</button>
+    <script type="text/javascript" charset="utf-8">
+    function my_callback(data){
+        alert(data.message);
+    }
+</script>
+    <p>
+
+        {% if book.isbn%}
+            ISBN: {{ book.isbn }} <br>
+        {% endif %}
+        {% if book.picture%}
+            <img src="{{ book.picture.url }}" height="300" alt="Book image"/><br>
+        {% else %}
+            <img src="/static/No_Image_Available.gif" height="300" alt="Book image"/><br>
+        {% endif %}
+        Id: {{ book.id }}
+
+        Title: {{ book.title }} <br>
+        Authors:
+        <ls>
+            {% for author in book.authors.all %}
+                <a href={% url "books:author" author.id %}>{{ author.first_name }} {{ author.last_name }} </a><br>
+            {% endfor %}
+        </ls>
+        Description: {{ book.description }}<br>
+    </p>
+    <p>
+        {% if book.busy %}
+            Taken by <a href={% url "profile:profile" book_user.id %}>{{ book_user }}</a>
+            {% if user != book_user %}
+                <a href={% url "profile:ask" user.id book.id %}>Ask to return</a>
+            {% endif %}.
+            <br>
+        {% endif %}
+        <a href={% url "books:book:story" book.id %}>View story of book's takers </a><br>
+    </p>
+    <p>
+        Version:
+        {% if book.e_version_exists %}
+            E-version
+        {% endif %}
+        {% if book.paperback_version_exists %}
+            paperback version
+        {% endif %}
+    </p>
+        Tags:
+        <ls>
+            {% for tag in book.tags.all %}
+                <a href={% url "books:tag" tag.pk %}>{{ tag.tag }}</a>
+            {% endfor %}
+        </ls>
+        <br>
+    {% if not book.busy %}
+        <ul><a href="{% url "books:book:take" book.id %}"><img src="/static/Take_book.jpg" id="myDiv" alt="Book image"/></a></ul>
+    {% else %}
+        {% if user == book_user %}
+            <ul><a href="{% url "books:book:return" book.id %}"><img src="/static/Return_book.jpg" id="myDiv" alt="Book image"/></a></ul>
+        {% endif %}
+    {% endif %}
+    <p><a href="{% url 'books:list' %}">Return </a>to list of books.</p>
+    {% if user.is_staff %}
+        <p><a href="{% url 'books:book:change' book.id %}">Change book</a></p>
+        <p><a href="{% url 'books:book:delete' book.id %}">Delete book</a></p>
+    {% endif %}
+
+</body>
+{% endblock %}

@@ -8,7 +8,12 @@ import book_urls
 import views
 
 urlpatterns = patterns('',
+<<<<<<< HEAD
                        url(r'^$', views.BookListView.as_view(template_name='book_library/book_list.html',
+=======
+                       url(r'^$', views.BookListView.as_view(context_object_name='books_list',
+                                                             template_name='book_library/book_list.html',
+>>>>>>> 9c0a6af58166aef9d53fcd202e26d0c5d585cb20
                                                              ),
                            name='list'),
                        url(r'^(?P<pk>\d+)/', include(book_urls, namespace='book')),

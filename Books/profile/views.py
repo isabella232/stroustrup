@@ -12,7 +12,18 @@ import forms
 
 
 def get_users_books(user):
+<<<<<<< HEAD
     return Book.books.filter(client_story_record__book_returned=None)
+=======
+        books = set()
+        for book in Book.books.all():
+            if book.taken_by() == user:
+                books.add(book.pk)
+        if books:
+            return Book.books.filter(pk__in=books)
+        else:
+            return None
+>>>>>>> 9c0a6af58166aef9d53fcd202e26d0c5d585cb20
 
 
 class ProfileView(DetailView):

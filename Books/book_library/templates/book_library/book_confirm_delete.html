@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% block title %}Confirm{% endblock %}
+
+{% block content %}
+    {% if user.is_staff %}
+       <form action="" method="post">{% csrf_token %}
+            <p>Are you sure you want to delete "{{ object }}"?</p>
+            <input type="submit" value="Confirm" />
+        </form>
+    {% else %}
+        <p>You aren't staff.</p>
+    {% endif %}
+
+{% endblock %}
