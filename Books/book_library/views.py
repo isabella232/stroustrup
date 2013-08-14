@@ -1,72 +1,202 @@
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import RequestContext, loader
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
-from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
+import forms, models
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
+from django.views.generic import DetailView
+from profile.views import get_users_books
+from django.core.urlresolvers import reverse
+from django.utils import simplejson
+from dajaxice.decorators import dajaxice_register
 
-from models import Book
+@dajaxice_register
+def example(request):
+    return simplejson.dumps({'message': 'Hello from Python!'})
 
-class BookListView(ListView):
 
-    model = Book
+class BookFormView(FormView):
+    form_class = forms.BookForm
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def get(self, request, *args, **kwargs):
+        return super(BookFormView, self).get(self, request, *args, **kwargs)
+
+
+class BookView(DetailView):
+    model = models.Book
 
     def get_context_data(self, **kwargs):
-        context = super(BookListView, self).get_context_data(**kwargs)
+        context = super(BookView, self).get_context_data()
+        if context['book'].busy:
+            context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
         return context
 
-class AddBookView(FormView):
-    """
-    A version of FormView which passes extra arguments to certain
-    methods, notably passing the HTTP request nearly everywhere, to
-    enable finer-grained processing.
 
-    """
+class AddView(CreateView):
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
     def get(self, request, *args, **kwargs):
-        # Pass request to get_form_class and get_form for per-request
-        # form control.
-        form_class = self.get_form_class(request)
-        form = self.get_form(form_class)
-        return self.render_to_response(self.get_context_data(form=form))
+        return super(AddView, self).get(self, request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        # Pass request to get_form_class and get_form for per-request
-        # form control.
-        form_class = self.get_form_class(request)
-        form = self.get_form(form_class)
-        if form.is_valid():
-            # Pass request to form_valid.
-            return self.form_valid(request, form)
+
+class AuthorAdd(AddView):
+    model = models.Author
+    form_class = forms.AuthorForm
+
+
+class TagAdd(AddView):
+    model = models.Book_Tag
+    form_class = forms.Book_TagForm
+
+
+class BookAdd(AddView):
+    model = models.Book
+    form_class = forms.BookForm
+
+
+class BookUpdate(UpdateView):
+    model = models.Book
+    form_class = forms.BookForm
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def get(self, request, *args, **kwargs):
+        return super(BookUpdate, self).get(self, request, *args, **kwargs)
+
+
+class Delete(DeleteView):
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def get(self, request, *args, **kwargs):
+        return super(Delete, self).get(self, request, *args, **kwargs)
+
+
+class DeleteBook(Delete):
+    model = models.Book
+
+
+class DeleteTag(Delete):
+    model = models.Book_Tag
+
+
+class DeleteAuthor(Delete):
+    model = models.Author
+
+
+@login_required
+def take_book_view(request, **kwargs):
+    if not request.is_ajax():
+        book = models.Book.books.get(id=kwargs['pk'])
+        if not book.busy:
+            client = request.user
+            book.take_by(client)
+            book.save()
+        return HttpResponseRedirect(reverse('mainpage'))
+    return "text"
+
+@login_required
+def return_book_view(request, **kwargs):
+        book = models.Book.books.get(id=kwargs['pk'])
+        client = request.user
+        books = get_users_books(client)
+        if book.busy and books and book in books:
+            book.return_by(client)
+            book.save()
+        return HttpResponseRedirect(reverse('mainpage'))
+
+
+class BookListView(FormView):
+    busy = None
+    form_class = forms.SearchForm
+    object_list = None
+    queryset = models.Book.books.all()
+
+    @method_decorator(login_required())
+    def get(self, request, *args, **kwargs):
+        if request.GET:
+            form = forms.SearchForm(request.GET)
+            filtered = models.Book.books.all()
+            if form.is_valid():
+                if form.cleaned_data['keywords']:
+                    keywords = form['keywords']
+                    keywords = list(set(keywords.data.split(' ')))  #deleting equals
+                    for keyword in keywords:
+                        filtered = filtered.filter(title__icontains=keyword)
+                        filtered = filtered | models.Book.books.filter(isbn__iexact=keyword)
+                        filtered = filtered | models.Book.books.filter(description__icontains=keyword)
+                        for author in models.Author.authors.filter(first_name__iexact=keyword):
+                            filtered = filtered | author.books.all()
+                        for author in models.Author.authors.filter(last_name__iexact=keyword):
+                            filtered = filtered | author.books.all()
+                        for author in models.Author.authors.filter(middle_name__iexact=keyword):
+                            filtered = filtered | author.books.all()
+                        for tag in models.Book_Tag.tags.filter(tag__iexact=keyword):
+                            filtered = filtered | tag.books.all()
+                filtered.order_by("title")
+                self.busy = form.cleaned_data['busy']
+                if not self.busy is None:
+                    if self.busy:
+                        filtered = filtered.filter(busy=True)
+                    else:
+                        filtered = filtered.filter(busy=False)
+                return self.render_to_response({'books_list': filtered, 'form': forms.SearchForm})
         else:
-            return self.form_invalid(form)
+            return super(BookListView, self).get(request, *args, **kwargs)
 
-    def get_form_class(self, request=None):
-        return super(AddBookView, self).get_form_class()
+    def get_context_data(self, **kwargs):
+        context = {'books_list': self.queryset, "form" : self.get_form(self.form_class)}
+        return super(BookListView, self).get_context_data(**context)
 
-    def get_form_kwargs(self, request=None, form_class=None):
-        return super(AddBookView, self).get_form_kwargs()
+    @method_decorator(login_required())
+    def post(self, request, *args):
+        form = forms.SearchForm(request.POST)
+        filtered = models.Book.books.all()
+        if form.is_valid():
+            if form.cleaned_data['keywords']:
+                keywords = form['keywords']
+                keywords = list(set(keywords.data.split(' ')))  #deleting equals
+                #base_found = True
+                for keyword in keywords:
+                    filtered = filtered.filter(title__icontains=keyword)
+                    filtered = filtered | models.Book.books.filter(isbn__iexact=keyword)
+                    filtered = filtered | models.Book.books.filter(description__icontains=keyword)
+                    for author in models.Author.authors.filter(first_name__iexact=keyword):
+                        filtered = filtered | author.books.all()
+                    for author in models.Author.authors.filter(last_name__iexact=keyword):
+                        filtered = filtered | author.books.all()
+                    for author in models.Author.authors.filter(middle_name__iexact=keyword):
+                        filtered = filtered | author.books.all()
+                    for tag in models.Book_Tag.tags.filter(tag__iexact=keyword):
+                        filtered = filtered | tag.books.all()
+                    # if not base_found:
+                    #     books = filtered
+                    #     if books:
+                    #         base_found = True
+                    # else:
+                    #     books = filtered
+            filtered.order_by("title")
+            self.busy = form.cleaned_data['busy']
+            if not self.busy is None:
+                if self.busy:
+                    filtered = filtered.filter(busy=True)
+                else:
+                    filtered = filtered.filter(busy=False)
+            return self.render_to_response({'books_list': filtered, 'form': forms.SearchForm})
 
-    def get_initial(self, request=None):
-        return super(AddBookView, self).get_initial()
 
-    def get_success_url(self, request=None, user=None):
-        # We need to be able to use the request and the new user when
-        # constructing success_url.
-        return super(AddBookView, self).get_success_url()
+class BookStoryListView(ListView):
 
-    def form_valid(self, form, request=None):
-        return super(AddBookView, self).form_valid(form)
+    @method_decorator(login_required())
+    def get(self, request, *args, **kwargs):
+        return super(BookStoryListView, self).get(request, *args, **kwargs)
 
-    def form_invalid(self, form, request=None):
-        return super(AddBookView, self).form_invalid(form)
+    model = models.Client_Story_Record
 
-
-
-def main_view(request):
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('profile:profile'))
-    else:
-        template = loader.get_template('main/mainpage.html')
-        context = RequestContext(request,)
-        return HttpResponse(template.render(context))
+    def get_context_data(self, **kwargs):
+        context = {}
+        pk = self.kwargs['pk']
+        records_list = models.Client_Story_Record.records.filter(book__id=pk)
+        context['object_list'] = records_list
+        context['pk'] = pk
+        return super(BookStoryListView, self).get_context_data(**context)

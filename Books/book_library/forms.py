@@ -1,8 +1,31 @@
 from django.forms import ModelForm
-from models import Book
+from models import Book, Book_Tag, Author
+from django import forms
 
-class ArticleForm(ModelForm):
+
+class BookForm(ModelForm):
 
     class Meta:
         model = Book
-        fields = ['isbn', 'title', 'e_version_exists', 'paperback_version_exists', 'description', 'picture', 'authors', 'tags']
+        exclude = ['busy', 'users']
+
+
+class Book_TagForm(ModelForm):
+
+    class Meta:
+        model = Book_Tag
+
+
+class AuthorForm(ModelForm):
+
+    class Meta:
+        model = Author
+
+
+class SureForm(forms.Form):
+    confirm = forms.BooleanField(label='Are you sure?', required=False)
+
+
+class SearchForm(forms.Form):
+    busy = forms.NullBooleanField(label="Busy")
+    keywords = forms.CharField(label="Search", max_length=45, required=False)

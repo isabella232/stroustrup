@@ -1,10 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <head>
 {% if user.is_authenticated %}
-    <title>
-        {{ user.username }}'s profile
-    </title>
-</head>
     {% block content %}{% endblock %}
 {% else %}
     <title>

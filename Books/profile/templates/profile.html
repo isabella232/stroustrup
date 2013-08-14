@@ -1,10 +1,40 @@
 {% extends 'profilebase.html' %}
 {% block content %}
-    <h1>{{ user.username }}'s profile</h1>
+    <title>
+        {{ profile.username }}'s profile
+    </title>
+    <h1>{{ profile.username }}'s profile</h1>
 
-        <p>First name: {{ user.first_name }}</p>
-        <p>Last name: {{ user.last_name }}</p>
-        <p><a href="{% url 'profile:change' %}">Change profile's data</a>
+    <p align="left">
+        Go to <a href="{% url 'books:list' %}">list of books</a>.
+        {% if profile.is_staff%}
+            <img src="/static/admin.jpg"height="100" align="left" alt="Book image"/><br>
+        {% else %}
+            <img src="/static/user.png"height="100" align="left" alt="Book image"/><br>
+        {% endif %}
+        First name: {{ profile.first_name }}<br>
+        Last name: {{ profile.last_name }}<br>
+        E-mail: {{ profile.email }}<br>
+    {% if books %}
+        Books:
+    <ul>
+            {% for book in books%}
+                <li>
+                <a href={% url "books:book:book" book.id %}>{{ book.title }}</a>
+                {% for author in book.authors.all %}
+                        <a href={% url "books:author" author.id %}>{{ author.first_name }} {{ author.last_name }}</a>
+                {% endfor %}
+                keeps about {{ book.taken_about }} days.
+                {% if user.pk != profile.pk %}
+                    <a href={% url "profile:ask" profile.id book.id %}>Ask this book.</a>
+                {% endif %}
+                </li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+    {% if user.pk == profile.pk %}
+        <a href="{% url 'profile:change' user.pk %}">Change profile's data</a>
+    {% endif %}
         <a href="{% url 'authorisation:auth_password_change' %}">Change password</a><br>
         <a href="{% url 'authorisation:auth_logout' %}">Logout</a></p>
 {% endblock %}
