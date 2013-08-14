@@ -7,7 +7,7 @@
         {% endif %}
     </p>
     {% if not search_flag %}
-        <form action="" method="POST">
+        <form action="" method="get">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Search"/>
