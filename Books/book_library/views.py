@@ -16,10 +16,6 @@ from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
-@dajaxice_register
-def example(request):
-    return simplejson.dumps({'message': 'Hello from Python!'})
-
 
 class BookFormView(FormView):
     form_class = forms.BookForm
