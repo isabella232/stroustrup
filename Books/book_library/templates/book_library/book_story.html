@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+{% block title %}Book story.{% endblock %}
+{% block content %}
+    {% if object_list %}
+        <ul>
+            {% for record in object_list %}
+                <li>
+                    <p>Taken : {{ record.book_taken }} by {{ record.user.username}}
+                    </p>
+                    {% if record.book_returned %}
+                        <p>Returned : {{ record.book_returned }}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No records are available.</p>
+    {% endif %}
+    <p>Return to <a href="{% url "books:book:book" pk %}">book</a> page.</p>
+{% endblock %}

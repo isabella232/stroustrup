@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+<script type="text/javascript">
+    function my_js_callback(data){
+        alert(data.message);
+}
+</script>
+{% block title %}All books.{% endblock %}
+{% block content %}
+    <button type="button" onclick="Dajaxice.book_library.sayhello(my_js_callback);">Click Me!</button>
+    <p>Go to <a href={% url "profile:profile" user.pk %}>profile</a>
+        {% if user.is_staff %}
+            <a href={% url "books:add" %}> Add book.</a>
+        {% endif %}
+    </p>
+    {% if not search_flag %}
+        <form action="" method="get">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Search"/>
+        </form>
+    {% endif %}
+    {% if books_list %}
+        <ul>
+            {% for book in books_list %}
+                <li><a href={% url "books:book:book" book.id %}>{{ book.title }}</a>
+                    {% for author in book.authors.all %}
+                        <a href={% url "books:author" author.id %}>{{ author.first_name }} {{ author.last_name }}</a>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No books are available.</p>
+    {% endif %}
+{% endblock %}

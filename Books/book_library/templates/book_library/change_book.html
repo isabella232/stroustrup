@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+{% block title %}Add book page{% endblock %}
+
+{% block content %}
+
+    <form enctype="multipart/form-data" method="post" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit"/>
+    </form>
+    <p>Or <a href={% url "books:book:book" book.id %}>cancel</a> if you changed your mind.</p>
+
+{% endblock %}

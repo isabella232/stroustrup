@@ -6,6 +6,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 dajaxice_autodiscover()
 
+
 import views,settings
 
 admin.autodiscover()

@@ -10,6 +10,11 @@ from profile.views import get_users_books
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 from dajaxice.decorators import dajaxice_register
+from django.core import mail
+from django.contrib.sites.models import RequestSite
+from django.shortcuts import render_to_response
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 @dajaxice_register
 def example(request):
@@ -83,27 +88,30 @@ class DeleteTag(Delete):
 class DeleteAuthor(Delete):
     model = models.Author
 
-
+@dajaxice_register()
 @login_required
 def take_book_view(request, **kwargs):
-    if not request.is_ajax():
-        book = models.Book.books.get(id=kwargs['pk'])
-        if not book.busy:
-            client = request.user
-            book.take_by(client)
-            book.save()
-        return HttpResponseRedirect(reverse('mainpage'))
-    return "text"
+    book = models.Book.books.get(id=kwargs['pk'])
+    if not book.busy:
+        client = request.user
+        book.take_by(client)
+        book.save()
+        if request.is_ajax():
+            return simplejson.dumps({'message': 'Book taken'})
+    return HttpResponseRedirect(reverse('mainpage'))
 
+@dajaxice_register
 @login_required
 def return_book_view(request, **kwargs):
-        book = models.Book.books.get(id=kwargs['pk'])
-        client = request.user
-        books = get_users_books(client)
-        if book.busy and books and book in books:
-            book.return_by(client)
-            book.save()
-        return HttpResponseRedirect(reverse('mainpage'))
+    book = models.Book.books.get(id=kwargs['pk'])
+    client = request.user
+    books = get_users_books(client)
+    if book.busy and books and book in books:
+        book.return_by(client)
+        book.save()
+        if request.is_ajax():
+            return simplejson.dumps({'message': 'Book returned'})
+    return HttpResponseRedirect(reverse('mainpage'))
 
 
 class BookListView(FormView):
@@ -122,17 +130,13 @@ class BookListView(FormView):
                     keywords = form['keywords']
                     keywords = list(set(keywords.data.split(' ')))  #deleting equals
                     for keyword in keywords:
-                        filtered = filtered.filter(title__icontains=keyword)
-                        filtered = filtered | models.Book.books.filter(isbn__iexact=keyword)
-                        filtered = filtered | models.Book.books.filter(description__icontains=keyword)
-                        for author in models.Author.authors.filter(first_name__iexact=keyword):
-                            filtered = filtered | author.books.all()
-                        for author in models.Author.authors.filter(last_name__iexact=keyword):
-                            filtered = filtered | author.books.all()
-                        for author in models.Author.authors.filter(middle_name__iexact=keyword):
-                            filtered = filtered | author.books.all()
-                        for tag in models.Book_Tag.tags.filter(tag__iexact=keyword):
-                            filtered = filtered | tag.books.all()
+                        query = Q(isbn__iexact=keyword)
+                        if not models.Book.books.filter(query):
+                            query = Q(description__icontains=keyword) | Q(title__icontains=keyword)
+                            query = query | Q(authors__first_name__iexact=keyword) | Q(authors__last_name__iexact=keyword) |\
+                                     Q(authors__middle_name__iexact=keyword)
+                            query = query | Q(tags__tag__iexact=keyword)
+                filtered = models.Book.books.filter(query)
                 filtered.order_by("title")
                 self.busy = form.cleaned_data['busy']
                 if not self.busy is None:
@@ -147,42 +151,6 @@ class BookListView(FormView):
     def get_context_data(self, **kwargs):
         context = {'books_list': self.queryset, "form" : self.get_form(self.form_class)}
         return super(BookListView, self).get_context_data(**context)
-
-    @method_decorator(login_required())
-    def post(self, request, *args):
-        form = forms.SearchForm(request.POST)
-        filtered = models.Book.books.all()
-        if form.is_valid():
-            if form.cleaned_data['keywords']:
-                keywords = form['keywords']
-                keywords = list(set(keywords.data.split(' ')))  #deleting equals
-                #base_found = True
-                for keyword in keywords:
-                    filtered = filtered.filter(title__icontains=keyword)
-                    filtered = filtered | models.Book.books.filter(isbn__iexact=keyword)
-                    filtered = filtered | models.Book.books.filter(description__icontains=keyword)
-                    for author in models.Author.authors.filter(first_name__iexact=keyword):
-                        filtered = filtered | author.books.all()
-                    for author in models.Author.authors.filter(last_name__iexact=keyword):
-                        filtered = filtered | author.books.all()
-                    for author in models.Author.authors.filter(middle_name__iexact=keyword):
-                        filtered = filtered | author.books.all()
-                    for tag in models.Book_Tag.tags.filter(tag__iexact=keyword):
-                        filtered = filtered | tag.books.all()
-                    # if not base_found:
-                    #     books = filtered
-                    #     if books:
-                    #         base_found = True
-                    # else:
-                    #     books = filtered
-            filtered.order_by("title")
-            self.busy = form.cleaned_data['busy']
-            if not self.busy is None:
-                if self.busy:
-                    filtered = filtered.filter(busy=True)
-                else:
-                    filtered = filtered.filter(busy=False)
-            return self.render_to_response({'books_list': filtered, 'form': forms.SearchForm})
 
 
 class BookStoryListView(ListView):
@@ -200,3 +168,30 @@ class BookStoryListView(ListView):
         context['object_list'] = records_list
         context['pk'] = pk
         return super(BookStoryListView, self).get_context_data(**context)
+
+def ask_to_return(request, **kwargs):
+    book = get_object_or_404(models.Book, pk=kwargs['pk'])
+    if book.busy:
+        profile = book.taken_by()
+        if request.user != profile:
+            authors_string = ""
+            for author in book.authors.all():
+                authors_string += author.__unicode__()
+            site = RequestSite(request)
+            server_email = "testemail@" + site.domain
+            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) asks you"
+                                                             " to return the book %(book)s %(author)s."
+                                                             " You can return it by click on this link: %(link)s"%
+                                                             {'username': request.user.username,
+                                                              'firstname': request.user.first_name,
+                                                              'lastname': request.user.last_name,
+                                                              'book': book.__unicode__(),
+                                                              'author': authors_string,
+                                                              'link': "http:/%(site)s/books/%(id)s/return/"
+                                                                      % {'id': book.id, 'site': site.domain}
+                                                             },
+                                      server_email,
+                                      [profile.email])
+            email.send()
+            return render_to_response('asked_successfully.html', {'book': book})
+    return HttpResponseRedirect("..")
