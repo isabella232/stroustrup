@@ -18,7 +18,6 @@ class Author(models.Model):
 
     first_name = models.CharField(max_length=45, verbose_name="First name")
     last_name = models.CharField(max_length=45, verbose_name="Last name")
-    middle_name = models.CharField(max_length=45, blank=True)
 
     def __unicode__(self):
         return self.first_name+' '+self.last_name
@@ -71,7 +70,7 @@ class Book(models.Model):
 class Book_Tag(models.Model):
     tags = models.Manager()
 
-    tag = models.CharField(max_length=20)
+    tag = models.CharField(max_length=20, unique=True, error_messages={'unique': 'Tag already exists.'})
 
     def __unicode__(self):
         return self.tag

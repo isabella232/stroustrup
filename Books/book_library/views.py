@@ -59,6 +59,7 @@ class TagAdd(AddView):
 class BookAdd(AddView):
     model = models.Book
     form_class = forms.BookForm
+    object = None
 
 
 class BookUpdate(UpdateView):
@@ -118,7 +119,6 @@ class BookListView(FormView):
     busy = None
     form_class = forms.SearchForm
     object_list = None
-    queryset = models.Book.books.all()
 
     @method_decorator(login_required())
     def get(self, request, *args, **kwargs):
@@ -126,6 +126,7 @@ class BookListView(FormView):
             form = forms.SearchForm(request.GET)
             filtered = models.Book.books.all()
             if form.is_valid():
+                query = Q()
                 if form.cleaned_data['keywords']:
                     keywords = form['keywords']
                     keywords = list(set(keywords.data.split(' ')))  #deleting equals
@@ -133,11 +134,13 @@ class BookListView(FormView):
                         query = Q(isbn__iexact=keyword)
                         if not models.Book.books.filter(query):
                             query = Q(description__icontains=keyword) | Q(title__icontains=keyword)
-                            query = query | Q(authors__first_name__iexact=keyword) | Q(authors__last_name__iexact=keyword) |\
-                                     Q(authors__middle_name__iexact=keyword)
+                            query = query | Q(authors__first_name__iexact=keyword) | Q(authors__last_name__iexact=keyword)
                             query = query | Q(tags__tag__iexact=keyword)
-                filtered = models.Book.books.filter(query)
-                filtered.order_by("title")
+                if query:
+                    filtered = models.Book.books.filter(query).order_by("title")
+                    filtered = set(filtered)  #deleting equals
+                else:
+                    filtered = models.Book.books.all()
                 self.busy = form.cleaned_data['busy']
                 if not self.busy is None:
                     if self.busy:
@@ -149,7 +152,7 @@ class BookListView(FormView):
             return super(BookListView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = {'books_list': self.queryset, "form" : self.get_form(self.form_class)}
+        context = {'books_list': models.Book.books.all(), "form" : self.get_form(self.form_class)}
         return super(BookListView, self).get_context_data(**context)
 
 

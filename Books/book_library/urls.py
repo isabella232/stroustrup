@@ -2,7 +2,7 @@ from django.conf.urls import patterns
 from django.conf.urls import include
 from django.conf.urls import url
 from models import Author, Book_Tag
-from django.views.generic import DetailView
+from django.views.generic import DetailView, DeleteView
 import book_urls
 
 import views
@@ -28,7 +28,6 @@ urlpatterns = patterns('',
                                                                          template_name="book_library/author.html",
                                                                          ),
                            name='author'),
-
                        url(r'^tags/(?P<pk>\d+)/$', DetailView.as_view(model=Book_Tag,
                                                                       template_name="book_library/tag.html",
                                                                       ),
