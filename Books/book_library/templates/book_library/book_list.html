@@ -5,8 +5,14 @@
             <a href={% url "books:add" %}> Add book.</a>
         {% endif %}
     </p>
-    {% if not search_flag %}
+    {% if busy == none %}
         <form action="" method="get">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Search"/>
+        </form>
+    {% else %}
+    <form action=".." method="get">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Search"/>

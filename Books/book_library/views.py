@@ -15,6 +15,7 @@ from django.contrib.sites.models import RequestSite
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.shortcuts import redirect
 
 
 class BookFormView(FormView):
@@ -114,7 +115,8 @@ def return_book_view(request, **kwargs):
 class BookListView(FormView):
     busy = None
     form_class = forms.SearchForm
-    object_list = None
+    object_list = models.Book.books.all()
+    success_url = None
 
     @method_decorator(login_required())
     def get(self, request, *args, **kwargs):
@@ -138,18 +140,20 @@ class BookListView(FormView):
                 else:
                     filtered = models.Book.books.all()
                 self.busy = form.cleaned_data['busy']
-                if not self.busy is None:
-                    if self.busy:
-                        filtered = filtered.filter(busy=True)
-                    else:
-                        filtered = filtered.filter(busy=False)
-                return self.render_to_response({'books_list': filtered, 'form': forms.SearchForm})
+                self.object_list = filtered
+                return self.render_to_response(self.get_context_data(form=forms.SearchForm))
         else:
             return super(BookListView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = {'books_list': models.Book.books.all(), "form" : self.get_form(self.form_class)}
+        if not self.busy is None:
+            if self.busy:
+                self.object_list = self.object_list.filter(busy=True)
+            else:
+                self.object_list = self.object_list.filter(busy=False)
+        context = {'books_list': self.object_list, "form": self.get_form(self.form_class), "busy": self.busy}
         return super(BookListView, self).get_context_data(**context)
+
 
 
 class BookStoryListView(ListView):
