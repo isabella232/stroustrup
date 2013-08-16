@@ -1,7 +1,9 @@
-{% extends 'main/base.html' %}
-{% block title %}Acces denied{% endblock %}
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}Access denied{% endblock %}
 
 {% block content %}
-    <p>You have no book to return.</p>
-    <p>Return to <a href="{% url 'books:list' %}">all books</a> page.</p>
+    <div class="row errorlist"> You have no book to return.</div>
+         <div class="row">
+         <a class="button radius alert" href="{% url 'books:list' %}"> Fall back </a>
+         </div>
 {% endblock %}

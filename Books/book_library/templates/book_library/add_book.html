@@ -1,21 +1,71 @@
-{% extends 'main/base.html' %}
-{% block title %}Add book page{% endblock %}
 
+
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}Add book page{% endblock %}
+{% block location %} Add book to collection {% endblock %}
+{% block link_extension %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/add_book.css' %}"/>
+
+{% endblock %}
 {% block content %}
     {% if user.is_staff %}
-        <p>Add new authors and tags first if you need to use it</p>
-        <p>Add tag <a href="{% url 'books:add_tag' %}" target="_blank"><img src="/static/icon_addlink.gif" width="10"
-                                                                            height="10" alt="Add Another"/></a></p>
-        <p>Add author <a href="{% url 'books:add_author' %}" target="_blank"><img src="/static/icon_addlink.gif"
-                                                                                  width="10" height="10"
-                                                                                  alt="Add Another"/></a></p>
-        <form enctype="multipart/form-data" method="post" action="">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Submit"/>
-        </form>
-        <p>Or <a href="{% url 'books:list' %}">cancel</a> if you changed your mind.</p>
+        <div class="row work_label">
+            <div class="row work_area">
+                {# v repair to Jquery below v #}
+
+
+                <a href="{% url 'books:add_tag' %}"  class="button comment_button take">
+                    Add Tag
+                </a>
+                <br>
+                <a href="{% url 'books:add_author' %}"class="button comment_button take">
+                    Add Author
+                </a>
+
+
+
+                {# ^ repair to Jquery above ^ #}
+
+            </div>
+            <div class="row">
+                <form enctype="multipart/form-data" method="post" action="">
+                    <label id="second">
+                        {% csrf_token %}
+                        <div class="row work_area">
+                            {{ form.as_p }}
+                        </div>
+                        <div class="small-12 column work_area">
+                            <div class="row">
+                                <ul class="button-group">
+                                    <li class="half_length ">
+                                        <button type="submit" class="button success full_row left_button">
+                                            Add
+                                            {% load staticfiles %}
+                                            <img src="{% static 'image/yes.png'%}" class="icon"/>
+                                        </button>
+                                    </li>
+                                    <li class="half_length ">
+                                        <a class="button alert full_row right_button" href="{% url 'books:list' %}">
+                                            Cancel
+                                            {% load staticfiles %}
+                                            <img src="{% static 'image/no.png'%}" class="icon"/>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </label>
+                </form>
+            </div>
+        </div>
+
+
     {% else %}
-        <p>go to <a href="{% url 'mainpage' %}">main page</a> and log in.</p>
+        <script language="JavaScript">
+            window.location.assign('mainpage');
+        </script>
     {% endif %}
 {% endblock %}

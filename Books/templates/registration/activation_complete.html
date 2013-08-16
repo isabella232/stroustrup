@@ -1,7 +1,20 @@
 {% extends 'main/base.html' %}
-{% block title %}Book added{% endblock %}
+{% block title %} Crystalnix library: Activation {% endblock %}
 
 {% block content %}
-    <p>Your account is active now.</p>
-    <p><a href="{% url 'authorisation:auth_login' %}">Login</a> with your new account.</p>
+    <div class="row pin_header">
+
+        • Success!
+    </div>
+    <div class="offset_row"></div>
+    <div class="success_box">Your account has been activated.</div>
+    <div class="row">
+        <div class="small-offset-1 column">
+            <a href="{% url 'authorisation:auth_login' %}">
+                {% load staticfiles %}
+                <img src="{% static 'image/arrow.png'%}">
+                Return
+            </a>
+        </div>
+    </div>
 {% endblock %}

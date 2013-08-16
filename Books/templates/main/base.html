@@ -1,11 +1,52 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html class="no-js" lang="eng">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<head>
 
-{% load dajaxice_templatetags %}
-<html lang="en">
     <title>{% block title %}{% endblock %}</title>
-    {% block content %}{% endblock %}
-    {% dajaxice_js_import %}
-    {% block footer %}
-    <hr>
-    {% endblock %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/normalize.css'%}"/>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/foundation.css'%}" />
+    {% load staticfiles %}
+    <script src="{%static 'js/vendor/custom.modernizr.js'%}"></script>
+    {% load staticfiles %}
+    <script src="{% static 'js/the_source.js'%}"></script>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/authorisation.css' %}"/>
+    {# <link rel="stylesheet" href=" css/authorisation.css" /> #}
+</head>
+
+
+<body>
+<div class="row top_offset" ></div>
+<div class="large-4 columns side_offset" ></div>
+<div class="large-1 columns" >
+    <div class="row main_row" id="main_row">
+
+
+        {% block content %}{% endblock %}
+
+
+        {% block footer %}
+
+        {% endblock %}
+
+    </div>
+    <div class="offset_row"></div>
+</div>
+
+{% load staticfiles %}
+<script src="{% static 'js/zepto.js'%}"></script>
+{% load staticfiles %}
+<script src="{% static 'js/foundation/foundation.js'%}"></script>
+{% load staticfiles %}
+<script src="{% static 'js/jquery.js'%}"></script>
+<script>
+    $(document).foundation();
+</script>
+</body>
+
+
 </html>

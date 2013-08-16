@@ -1,13 +1,24 @@
-{% extends 'main/base.html' %}
-{% block title %}Add book page{% endblock %}
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}Change book{% endblock %}
+{% block location %}Change book{% endblock %}
 
 {% block content %}
 
     <form enctype="multipart/form-data" method="post" action="">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Submit"/>
+        <ul class="button-group round">
+            <li>
+                <button type="submit" class="button success ">
+                    Confirm
+                </button>
+            </li>
+            <li>
+                <a class="button alert  " href="{% url 'books:book:book' book.id %}">
+                    Cancel
+                </a>
+            </li>
+        </ul>
     </form>
-    <p>Or <a href={% url "books:book:book" book.id %}>cancel</a> if you changed your mind.</p>
 
 {% endblock %}

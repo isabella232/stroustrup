@@ -2,7 +2,6 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import RegexValidator
-from django.contrib import auth
 
 
 class Client_Story_Record(models.Model):
@@ -76,10 +75,17 @@ class Book_Tag(models.Model):
     def __unicode__(self):
         return self.tag
 
-def get_users_books(self):
-    return self.books.filter(client_story_record__book_returned=None)
 
-auth.models.User.add_to_class('get_users_books', get_users_books)
+
+class Book_Request(models.Model): #SpaT_edition
+    requests = models.Manager()
+
+    url = models.URLField(null='')
+    title = models.CharField(max_length=30)
+    vote = models.IntegerField(default=0)
+    def __unicode__(self):
+        return self.title
+
 
 
 

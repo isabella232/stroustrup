@@ -1,0 +1,74 @@
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}Request new book.{% endblock %}
+{% block location %}Requests page{% endblock %}
+{% block link_extension %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/request.css' %}"/>
+{% endblock %}
+
+
+
+
+{% block content %}
+    <div class="row request_area">
+
+            <form  method="post" action="">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class=" request_button take" type="submit">
+                    Send!
+                </button>
+            </form>
+
+    </div>
+
+    <h4 class="exist_declaration">
+        Look, what is already has been ordered:
+    </h4>
+
+
+
+
+
+    {% if requests %}
+        {% for order in requests %}
+
+            <div class="row work_label" id="request{{ order.id }}">
+                <div class="small-10 columns request_link_area">
+                        <div class="row">
+                            <a target="_blank" href="{{ order.url }}"
+                               class="request_link">
+                                {{ order.title }}
+                            </a>
+                        </div>
+                        <div class="row">
+                            Request has been made by <a><span class="comment_name"> {{ order.id }} </span></a>
+                        </div>
+                </div>
+                <div class="small-1 column request_vote_area" >
+                    <div class="row">
+                        <a href="#{# AJAX post #}" id="button1" class="button success request_vote_button">
+                            +
+                        </a>
+                    </div>
+                    <div class="row">
+                        <div id="counter{{ order.id }}"  class="panel request_vote_counter">
+                           {{ order.vote}}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row offset"></div>
+
+        {% endfor %}
+    {% else %}
+        <h4>There is no orders yet :(.</h4>
+    {% endif %}
+{% endblock %}
+{% block pagination %}
+
+{% endblock %}

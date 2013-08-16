@@ -1,20 +1,34 @@
-{% extends 'main/base.html' %}
-{% block title %}Book story.{% endblock %}
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}Book Story.{% endblock %}
+{% block location %}Book Story{% endblock %}
+{% block link_extension %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+{% endblock %}
+
 {% block content %}
-    {% if object_list %}
-        <ul>
-            {% for record in object_list %}
-                <li>
-                    <p>Taken : {{ record.book_taken }} by {{ record.user.username}}
+    {% if records_list %}
+
+            {% for record in records_list %}
+                <div class="row work_label">
+                    <p> <span class="busy">  Taken : </span>  {{ record.book_taken }}  <span class="mine">  by </span>
+                        <a href="{% url 'profile:profile' record.user.pk  %}" class="comment_name">
+                            {{ record.user.username}}
+                        </a>
                     </p>
                     {% if record.book_returned %}
-                        <p>Returned : {{ record.book_returned }}</p>
+                        <p> <span class="free">  Returned : </span> {{ record.book_returned }}</p>
                     {% endif %}
-                </li>
+                </div>
+                <div class="offset"></div>
             {% endfor %}
-        </ul>
+
     {% else %}
-        <p>No records are available.</p>
+        <p>Nobody took this book. Yet...</p>
     {% endif %}
-    <p>Return to <a href="{% url "books:book:book" pk %}">book</a> page.</p>
+    <div class="row">
+        <a href="{% url 'books:book:book' pk %}" class="button alert radius">
+            Fall back
+        </a>
+    </div>
 {% endblock %}

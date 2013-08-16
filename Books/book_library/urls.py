@@ -1,7 +1,7 @@
 from django.conf.urls import patterns
 from django.conf.urls import include
 from django.conf.urls import url
-from models import Author, Book_Tag
+from models import Author, Book_Tag, Book_Request
 from django.views.generic import DetailView, DeleteView
 import book_urls
 
@@ -32,12 +32,10 @@ urlpatterns = patterns('',
                                                                       template_name="book_library/tag.html",
                                                                       ),
                            name='tag'),
-                       url(r'^busy/$', views.BookListView.as_view(busy=True,
-                                                                      template_name="book_library/book_list.html",
-                                                                      ),
-                           name='busy'),
-                       url(r'^free/$', views.BookListView.as_view(busy=False,
-                                                                  template_name="book_library/book_list.html",
-                                                                  ),
-                           name='free'),
+                        url(r'^request/$', views.requestBook.as_view(    success_url='/',
+                            model=Book_Request,
+                            template_name='book_library/request_new.html'
+                                                                    ),
+                        name='request'),
+                        #SpaT edition
                        )

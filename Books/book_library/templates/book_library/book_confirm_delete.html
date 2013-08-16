@@ -1,14 +1,27 @@
-{% extends 'main/base.html' %}
-{% block title %}Confirm{% endblock %}
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}Delete book{% endblock %}
+{% block location %}Delete book{% endblock %}
 
 {% block content %}
     {% if user.is_staff %}
        <form action="" method="post">{% csrf_token %}
             <p>Are you sure you want to delete "{{ object }}"?</p>
-            <input type="submit" value="Confirm" />
-        </form>
+           <ul class="button-group round">
+               <li>
+                   <button type="submit" class="button success ">
+                       Confirm
+                   </button>
+               </li>
+               <li>
+                   <a class="button alert  " href="javascript: window.history.back()">
+                       Cancel
+                   </a>
+               </li>
+           </ul>
+       </form>
     {% else %}
-        <p>You aren't staff.</p>
+        <p class="errorlist row">You aren't staff.</p>
     {% endif %}
 
 {% endblock %}
+

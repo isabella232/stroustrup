@@ -1,7 +1,25 @@
 {% extends 'main/base.html' %}
-{% block title %}Acces denied{% endblock %}
+{% block title %}Access denied{% endblock %}
 
 {% block content %}
-    <p>You are not user.</p>
-    <p>Return to <a href="{% url 'mainpage' %}">main</a> page to login.</p>
+    <div class="row pin_header">
+
+        • Access denied:
+    </div>
+    <div class="offset_row"></div>
+
+
+    <div class="panel error_box" id="wrong_email" >
+        You are not user.
+    </div>
+
+    <div class="row">
+        <div class="small-offset-0 column">
+            <a href="{% url 'book:list' %}">
+                {% load staticfiles %}
+                <img src="{% static 'image/arrow.png'%}">
+                Return
+            </a>
+        </div>
+    </div>
 {% endblock %}

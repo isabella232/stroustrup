@@ -1,12 +1,44 @@
 {% extends 'main/base.html' %}
+{% block title %} Crystalnix library: Welcome! {% endblock %}
 {% block content %}
-{% if error %}
-<p>{{ error }}</p>
-{% endif %}
+    <div class="row pin_header">
+
+        • Log in your account:
+    </div>
+    <div class="offset_row"></div>
+
+        {% if error %}
+            <div class="panel error_box" id="wrong_email" >
+                {{ error }}
+            </div>
+        {% endif %}
+
 
 <form action="" method="POST">{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Login" />
-<p><a href="{% url 'mainpage'%}">Forgot your password? (do not working for now)</a> You can also <a href="{% url 'registration_register'%}">sign up</a> or login via <a href="{% url 'openid-login' %}">google</a>.</p>
+    {{ form.as_p}}
+
+
+<button type="submit" class="submit_button success button" value="Login" >
+    {% load staticfiles %}
+    <img src="{% static 'image/arrow.png'%}" class="image">
+    Login!
+</button>
+
+    <div class="row">
+        <div class="small-1 column support_row"  >
+            <a href="{% url 'registration_register'%}" class="button success support_button left_support">
+
+                Haven't registered yet?
+                <hr/>
+            </a>
+
+            <a href="{% url 'mainpage'%}" class="button success support_button right_support">{# doesn't work for this time #}
+
+                Forgot your password?
+                <hr/>
+            </a>
+        </div>
+    </div>
+
 </form>
 {% endblock %}

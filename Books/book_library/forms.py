@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from models import Book, Book_Tag, Author
+from models import Book, Book_Tag, Author, Book_Request
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
@@ -64,3 +64,23 @@ class SureForm(forms.Form):
 class SearchForm(forms.Form):
     busy = forms.NullBooleanField(label="Busy")
     keywords = forms.CharField(label="Search", max_length=45, required=False)
+
+class Book_RequestForm(ModelForm): #SpaT_edition
+
+
+    class Meta:
+        model = Book_Request
+        fields = ['title', 'url']
+
+
+    def save(self, commit=True):
+        if self.cleaned_data['url'] and self.cleaned_data['title']:
+            _url=self.cleaned_data['url']
+            _title=self.cleaned_data['title']
+            req = Book_Request.requests.create(url=_url, title=_title)
+
+            req.save()
+            return req
+
+        else:
+            return super(Book_RequestForm, self).save(commit=True)

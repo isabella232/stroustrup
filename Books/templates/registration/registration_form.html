@@ -1,14 +1,45 @@
 {% extends 'main/base.html' %}
-{% block title %}Register page{% endblock %}
+{% block title %} Crystalnix library: Welcome! {% endblock %}
 
 {% block content %}
-{% if error %}
-<p>{{ error }}</p>
-{% endif %}
+    <div class="row pin_header">
 
-<form action="" method="POST">{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Submit" />
-<p>Or <a href="{% url 'authorisation:auth_login' %}">login</a> if you already have an account.</p>
-</form>
+        • Create new account:
+    </div>
+    <div class="offset_row"></div>
+
+    {% if error %}
+        <div class="panel error_box" id="wrong_email" >
+            {{ error }}
+        </div>
+    {% endif %}
+
+
+    <form action="" method="POST">{% csrf_token %}
+        {{ form.as_p}}
+
+
+        <button type="submit" class="submit_button success button" value="Login" >
+            {% load staticfiles %}
+            <img src="{% static 'image/arrow.png'%}" class="image">
+            Sign up!
+        </button>
+
+        <div class="row">
+            <div class="small-1 column support_row"  >
+                <a href="{% url 'authorisation:auth_login'%}" class="button success support_button left_support">
+
+                    Have you got account?
+
+                </a>
+
+                <a href="{% url 'mainpage'%}" class="button success support_button right_support">{# doesn't work for this time #}
+
+                    Forgot your password?
+
+                </a>
+            </div>
+        </div>
+
+    </form>
 {% endblock %}

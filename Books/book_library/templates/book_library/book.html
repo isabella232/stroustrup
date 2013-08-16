@@ -1,75 +1,211 @@
-{% extends 'main/base.html' %}
 
+
+{% extends 'book_library/books_mainpage.html' %}
 {% block title %}{{ book.title }}{% endblock %}
+{% block location %}Book: {{ book.title }}{% endblock %}
+{% block link_extension %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
 
+{% endblock %}
 
 {% block content %}
-    <body>
-    <p>
-        <script type="text/javascript">
-            function my_js_callback(data){
-                alert(data.message);
+    <script type="text/javascript">
+        function my_js_callback(data){
+            alert(data.message);
+        }
+    </script>
+    <div class="row work_label">
+
+        <div class="row">
+            <div class="small-5 columns activity_area">
+                <div class="row picture_row">
+                    <div class="panel picture_area">
+                        {% if book.picture%}
+                            <img src="{{ book.picture.url }}" alt="Book image"/><br>
+                        {% else %}
+                            {% load staticfiles %}
+                            <img src="{% static 'image/book_index.jpg'%}"/>
+                        {% endif %}
+                    </div>
+                </div>
+                {#  #}
+                <div class="row offset"></div>
+                <div class="row action_style">
+                    Status:
+                    {% if not book.busy %}
+                        <span class="free">Free</span>
+                    {% else %}
+                        {% if user in book.users.all %}
+                            <span class="mine">Belongs me</span>
+                        {% else %}
+                            <span class="busy">Busy</span>
+                        {% endif %}
+
+
+                        Owner:
+                        <span class="comment_name">
+                            <a href='{% url "profile:profile" user.id %}' class="comment_name">{{ user.username }}</a>
+                        </span>
+
+
+                    {% endif %}
+
+                </div>
+                <br/>
+            <span>
+                {% if not book.busy %}
+                    <a  class="take action_button"
+                        href="{% url "books:book:take" book.id %}"
+                       onclick="Dajaxice.book_library.views.take_book_view(my_js_callback, {'pk': {{ book.id }}});">
+                        Take!
+                    </a>
+                {% else %}
+                    {% if user in book.users.all %}
+                        <a href="{% url "books:book:return" book.id %}" onclick="Dajaxice.book_library.views.return_book_view(my_js_callback,{'pk': {{ book.id }}});"
+                           class="put action_button">
+                            Return...
+                        </a>
+                    {% else %}
+                        <a href="javascript:  " onclick=" cl(); open_modal_window('modalwindow1');"
+                           class="busy ask action_button"> Send a request! </a>
+                    {% endif %}
+                {% endif %}
+
+            </span>
+
+            </div>
+            <div class="small-6 columns description_area"  >
+
+                <div class="row offset"></div>
+                <h5><span class="first_letter">B</span>ook information:</h5>
+                <div class="row offset"></div>
+
+                <div class="row info_area">
+
+                    Name:
+                          <span class="declaration_area">
+                               {{ book.title }}
+                           </span>
+
+                </div>
+                <br/>
+                <div class="row info_area">
+
+                    Author(s):
+                    {% for author in book.authors.all %}
+                        <span class="declaration_area">
+                                <a href={% url "books:author" author.id %}>
+                                    {{ author.first_name }} {{ author.last_name }}
+                                </a>
+                          </span>;
+                    {% endfor %}
+                </div>
+                <br/>
+                {% if book.isbn%}
+                    <div class="row info_area">
+                        ISBN:
+                 <span class="declaration_area">
+                     {{ book.isbn }}
+                 </span>
+                    </div>
+                    <br/>
+                {% endif %}
+                <div class="row info_area">
+                    ID:
+                <span class="declaration_area">
+                    {{ book.id }}
+                </span>
+                </div>
+                <br/>
+                <div class="row info_area">
+
+                    Tags:
+                    {% for tag in book.tags.all %}
+                        <span class="declaration_area">
+                               <a href="{% url 'books:tag' tag.id %}" class="technology_href">{{ tag.tag }}</a>
+                    </span>,
+                    {% endfor %}
+
+
+                </div>
+                <br/>
+                <div class="row info_area">
+                    Versions:
+                <span class="row declaration_area">E-version
+                    {% if book.e_version_exists %}
+                        {% load staticfiles %}
+                        <img src="{% static 'image/yes.png'%}" class="icon"/>
+                    {% else %}
+                        {% load staticfiles %}
+                        <img src="{% static 'image/no.png'%}" class="icon"/>
+                    {% endif %}
+                    Paperback
+                    {% if book.paperback_version_exists %}
+                        {% load staticfiles %}
+                        <img src="{% static 'image/yes.png'%}" class="icon"/>
+                    {% else %}
+                        {% load staticfiles %}
+                        <img src="{% static 'image/no.png'%}" class="icon"/>
+                    {% endif %}
+                </span>
+                </div>
+                <br/>
+                <div class="row info_area">
+                    Description: <br/>
+                    <div class="panel block declaration_area">
+                        {{ book.description }}
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <hr/>
+        <div class="small-offset-2 column linear_column " >
+
+            <ul class="button-group linear_column round">
+                <li>
+                    <a href='{% url "books:book:story" book.id %}' class="button take">View story of book's takers </a>
+                </li>
+                {% if user.is_staff %}
+                    <li>
+                        <a class="button put" href="{% url 'books:book:change' book.id %}">
+                            Change
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="button put" href="{% url 'books:book:delete' book.id %}">
+                            Delete
+                        </a>
+                    </li>
+
+                {% endif %}
+                <li>
+                    <a class="button ask" href="{% url 'books:list' %}">
+                        Fall back to book list
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block extensions %}
+    <div class="modal_bg" id="modal_bg" onclick="close_modal_windows();"></div>
+    <div class="modal_window" id="modalwindow1">
+
+        {# v ajax v #}
+        <script>
+            function cl(){
+                ajax_loader('modalwindow1','{% url "books:book:ask" book.id %}');
             }
         </script>
-        {% if book.isbn%}
-            ISBN: {{ book.isbn }} <br>
-        {% endif %}
-        {% if book.picture%}
-            <img src="{{ book.picture.url }}" height="300" alt="Book image"/><br>
-        {% else %}
-            <img src="/static/No_Image_Available.gif" height="300" alt="Book image"/><br>
-        {% endif %}
-        Id: {{ book.id }}
+        {# ^ ajax ^ #}
 
-        Title: {{ book.title }} <br>
-        Authors:
-        <ls>
-            {% for author in book.authors.all %}
-                <a href={% url "books:author" author.id %}>{{ author.first_name }} {{ author.last_name }} </a><br>
-            {% endfor %}
-        </ls>
-        Description: {{ book.description }}<br>
-    </p>
-    <p>
-        {% if book.busy %}
-            Taken by <a href={% url "profile:profile" book_user.id %}>{{ book_user }}</a>
-            {% if user != book_user %}
-                <a href={% url "books:book:ask" book.id %}>Ask to return</a>
-            {% endif %}.
-            <br>
-        {% endif %}
-        <a href={% url "books:book:story" book.id %}>View story of book's takers </a><br>
-    </p>
-    <p>
-        Version:
-        {% if book.e_version_exists %}
-            E-version
-        {% endif %}
-        {% if book.paperback_version_exists %}
-            paperback version
-        {% endif %}
-    </p>
-        Tags:
-        <ls>
-            {% for tag in book.tags.all %}
-                <a href={% url "books:tag" tag.pk %}>{{ tag.tag }}</a>
-            {% endfor %}
-        </ls>
-        <br>
-    {% if not book.busy %}
-        <ul><a href="{% url "books:book:take" book.id %}"><img src="/static/Take_book.jpg" id="myDiv" alt="Book image" /></a></ul>
-        <button type="button" onclick="Dajaxice.book_library.views.take_book_view(my_js_callback, {'pk': {{ book.id }}});">Take book.</button>
-    {% else %}
-        {% if user == book_user %}
-            <ul><a href="{% url "books:book:return" book.id %}"><img src="/static/Return_book.jpg" id="myDiv" alt="Book image"/></a></ul>
-            <button type="button" onclick="Dajaxice.book_library.views.return_book_view(my_js_callback,{'pk': {{ book.id }}});">Return book.</button>
-        {% endif %}
-    {% endif %}
-    <p><a href="{% url 'books:list' %}">Return </a>to list of books.</p>
-    {% if user.is_staff %}
-        <p><a href="{% url 'books:book:change' book.id %}">Change book</a></p>
-        <p><a href="{% url 'books:book:delete' book.id %}">Delete book</a></p>
-    {% endif %}
-
-</body>
+    </div>
 {% endblock %}

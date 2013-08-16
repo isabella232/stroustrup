@@ -1,7 +1,34 @@
-<head>
-<title>Activation</title>
-    <body>
-    <p>You are successfully logged out.</p>
-    <p><a href="{% url 'authorisation:auth_login' %}">Login</a> or go to the <a href="{% url 'mainpage' %}">mainpage</a></p>
-    </body>
-</head>
+
+{% extends 'main/base.html' %}
+{% block title %} Crystalnix library: Welcome! {% endblock %}
+
+{% block content %}
+    <div class="row pin_header">
+
+        • Log out:
+    </div>
+
+    <div class="offset_row"></div>
+
+    <div class="success_box">You have successfully logged out.</div>
+
+    <div class="offset_row"></div>
+
+    <div class="row">
+        <div class="small-1 column support_row"  >
+            <a  href="{% url 'authorisation:auth_login' %}"
+                class="success button support_button big_font" type="submit">
+                {% load staticfiles %}
+                <img src="{% static 'image/arrow.png'%}" class="image">
+                Sign in!
+            </a>
+
+            <a  href="{% url 'mainpage' %}"
+                class="success button support_button big_font" type="submit">
+                {% load staticfiles %}
+                <img src="{% static 'image/arrow_up.png'%}" class="image">
+                Main page
+            </a>
+        </div>
+    </div>
+{% endblock %}

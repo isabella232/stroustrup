@@ -1,34 +1,194 @@
-{% extends 'main/base.html' %}
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}All books.{% endblock %}
+{% block location %}Books page{% endblock %}
+
+{% block filter %}
+
+    <div class="filter row" >
+        <dl class="sub-nav" >
+            <dt class="filter_statement" >
+                Filter:</dt>
+            <dd class="active"><a href="#">All</a></dd>
+            <dd><a class="filter_link" href="{# url 'books:free' #}">Free</a></dd>
+            <dd><a class="filter_link" href="{# url 'books:busy' #}">Busy</a></dd>
+            <dd>
+                <a href="#" data-dropdown="drop1" class="button dropdown secondary filter_button">
+
+                    Tag
+                </a>
+                <br>
+
+                <ul id="drop1" class="f-dropdown" data-dropdown-content>
+                    {% if books_list %}
+                        {% for book in books_list %}
+
+                            {% for tag in book.tags.all %}
+                                <li>
+                                    <a href={% url "books:tag" tag.id %}>
+                                        {{ tag.tag }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                        {% endfor %}
+                    {% else %}
+                        <li><hr/><br/>There is no books.<br/><hr/></li>
+                    {% endif %}
+                </ul>
+            </dd>
+            <dd>
+                <a href="#" data-dropdown="drop2" class="button dropdown secondary filter_button">
+                    Author
+                </a>
+                <br>
+
+                <ul id="drop2" class="f-dropdown" data-dropdown-content>
+                    {% if books_list %}
+
+                            {% for book in books_list %}
+
+                                    {% for author in book.authors.all %}
+                                        <li>
+                                        <a href={% url "books:author" author.id %}>
+                                            {{ author.first_name }} {{ author.last_name }}
+                                        </a>
+                                        </li>
+                                    {% endfor %}
+
+                            {% endfor %}
+
+                    {% else %}
+                        <li><hr/><br/>There is no books.<br/><hr/></li>
+                    {% endif %}
+                </ul>
+            </dd>
+
+        </dl>
+
+
+
+    </div>
+
+{% endblock %}
+
 {% block content %}
-    <p>Go to <a href={% url "profile:profile" user.pk %}>profile</a>
-        {% if user.is_staff %}
-            <a href={% url "books:add" %}> Add book.</a>
-        {% endif %}
-    </p>
-    {% if busy == none %}
-        <form action="" method="get">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Search"/>
-        </form>
-    {% else %}
-    <form action=".." method="get">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Search"/>
-        </form>
-    {% endif %}
-    {% if books_list %}
-        <ul>
-            {% for book in books_list %}
-                <li><a href={% url "books:book:book" book.id %}>{{ book.title }}</a>
+{% if books_list %}
+    {% for book in books_list %}
+    {# ################# #}
+        <div class="row work_label" id="book_{{ book.id }}">
+            <div class="small-5 columns work_label_left">
+                <div class="row">
+                    <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
+                        {% load staticfiles %}
+                        <img src="{% static 'image/book_index.png'%}" class="thumbnail"/>
+
+                    </a>
+                    <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
+                        <li>
+                            <a>
+                                {% load staticfiles %}
+                                <img src="{% static 'image/book_index.png'%}"/>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="small-5 columns work_label_middle">
+                <div class="row">
+                    <a href='{% url "books:book:book" book.id %}' class="book_href">
+                        {{ book.title }}
+                    </a>
+                    <hr/>
                     {% for author in book.authors.all %}
-                        <a href={% url "books:author" author.id %}>{{ author.first_name }} {{ author.last_name }}</a>
+                        <a href='{% url "books:author" author.id %}' class="author_href">
+                            {{ author.first_name }} {{ author.last_name }}
+                        </a>
+                        <br>
                     {% endfor %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No books are available.</p>
-    {% endif %}
+                    <hr/>
+                    {% for tag in book.tags.all %}
+                        <a href="{% url 'books:tag' tag.id %}" class="technology_href">{{ tag.tag }} </a>,
+                    {% endfor %}
+                    <div class="row offset"></div>
+
+                </div>
+            </div>
+            <div class="small-1 columns work_label_right">
+                <div class="row">
+                    <a  class="button spoiler_button"
+
+                        onclick="add_comment_list({{ book.id }})"
+                            >
+                        ▼
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <div class="row comment_panel_strip">
+            <div class="panel comment_panel" id="panel{{ book.id }}">
+                <div class="row row_panel" id="row_panel{{ book.id }}">
+
+                    <div class="row comment_branch" >
+                        <a href="#" class="comment_name"
+                           onclick=" comment_branch()">
+                            User1:
+                        </a>
+                        comment of first user.
+
+                        <div class="row comment_branch">
+                            <a href="#" class="comment_name"
+                               onclick=" comment_branch()">
+                                User2:
+                            </a>
+                            comment of second user.
+
+                            <div class="row comment_branch">
+                                <a href="#" class="comment_name"
+                                   onclick=" comment_branch()">
+                                    User1:
+                                </a>
+                                Answer of first user.
+
+                                <div class="row comment_branch">
+                                    <a href="#" class="comment_name"
+                                       onclick=" comment_branch()">
+                                        User2:
+                                    </a>
+                                    The Holywar has began.
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row comment_branch">
+                        <a href="#" class="comment_name"
+                           onclick=" comment_branch()">
+                            User3:
+                        </a>
+                        First sober comment
+
+                    </div>
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="small-2 columns input_comment_column">
+                            <input id="input{{ book.id }}"  type="text" class="input_comment">
+                        </div>
+                        <div class="small-2 columns">
+                            <button type="submit" class="comment_button" onclick="comment({{ book.id }})"> Send! </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    {# ################# #}
+    {% endfor %}
+{% else %}
+    <h4>There is no books yet :(.</h4>
+{% endif %}
+{% endblock %}
+{% block pagination %}
+
 {% endblock %}

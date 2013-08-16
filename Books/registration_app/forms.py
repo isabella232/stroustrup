@@ -14,6 +14,7 @@ class CustomRegistrationForm(RegistrationForm):
                                 min_length=8)
     captcha = ReCaptchaField()
 
+
     def clean_email(self):
         existing = User.objects.filter(email__iexact=self.cleaned_data['email'])
         if existing.exists():

@@ -1,14 +1,112 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+
+<!DOCTYPE html>
+<html class="no-js" lang="eng">
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
 <head>
-{% if user.is_authenticated %}
-    {% block content %}{% endblock %}
-{% else %}
+    {% if  not user.is_authenticated %}
+        <script type="text/javascript">
+            window.location.assign('authorisation:auth_login')
+        </script>
+    {% endif %}
+
     <title>
-        Aninymous's profile
+        Crystalnix library: {% block tittle %}{% endblock %}
     </title>
+
+
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/normalize.css'%}"/>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/foundation.css'%}" />
+    {% load staticfiles %}
+    <script src="{%static 'js/vendor/custom.modernizr.js'%}"></script>
+    {% load staticfiles %}
+    <script src="{% static 'js/the_source.js'%}"></script>
+    {% load staticfiles %}
+    <script src="{% static 'js/jquery.js'%}"></script>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/top_bar.css' %}"/>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/library.css' %}"/>
+    {% block link_extension %}{% endblock %}
 </head>
-    <p>Welcome, new user. Please <a href="{% url 'authorisation:auth_login' %}">log in</a>.</p>
-{% endif %}
-    {% block footer %}
-    <hr>
-    {% endblock %}
+
+
+<body>
+
+<header>
+
+    <div class="top_bar_row" >
+        <div class="top_bar_left_side" >
+            <a  class="active button active_bar_button " >{% block location %}{% endblock %}</a>
+        </div>
+
+        <div class="top_bar_left_side" >
+            <a class="button bar_button"  href="{% url 'books:list' %}" >Books page</a>
+        </div>
+
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="{#  url 'user_list' #}" >Users page</a>
+        </div>
+
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="{# url 'books:request' #}" > Request a new book</a>
+        </div>
+
+        <div class="top_bar_left_side">
+            <a class="button bar_button" href="{%  url 'books:add' %}" > Add a new book</a>
+        </div>
+
+        <div class="top_bar_left_side" >
+            <a class="button bar_button" href="my_books.html"  > My books</a>
+        </div>
+
+        <div class="top_bar_right_side">
+            <a class="button bar_right_button" href="{% url 'authorisation:auth_logout' %}" >Log out</a>
+        </div>
+
+        <div class="top_bar_right_side user_label">
+            You are logged as:
+            <br/><br/>
+            <a href="{% url "profile:profile" user.pk %}" class="bar_username_style"> {{ user }} </a>
+        </div>
+
+
+    </div>
+
+</header>
+
+{% block filter %}{% endblock %}
+<div class="row main_strip_row" >
+    <div class="small-offset-12 columns main_strip_column"  >
+        <div class="row background_strip" >
+            {% block content1 %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+
+
+{% block extensions %}
+{% endblock %}
+
+
+{% load staticfiles %}
+<script src="{% static 'js/zepto.js'%}"></script>
+{% load staticfiles %}
+<script src="{% static 'js/foundation/foundation.js'%}"></script>
+{% load staticfiles %}
+<script src="{% static 'js/foundation/foundation.alerts.js'%}"></script>
+{% load staticfiles %}
+<script src="{% static 'js/foundation/foundation.dropdown.js'%}"></script>
+
+<script>
+    $(document).foundation();
+</script>
+</body>
+
+
+</html>

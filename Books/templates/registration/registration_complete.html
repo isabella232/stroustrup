@@ -1,7 +1,20 @@
-<head>
-<title>Activation</title>
-    <body>
-    <p>Activation mail was sent at your email. Click on the link inside. It will be available about 48 hours</p>
-    <p>Return to <a href="{% url 'mainpage' %}">main</a> page.</p>
-    </body>
-</head>
+{% extends 'main/base.html' %}
+{% block title %} Crystalnix library: Welcome! {% endblock %}
+
+{% block content %}
+    <div class="row pin_header">
+
+        • Success!
+    </div>
+    <div class="offset_row"></div>
+    <div class="success_box">Your account has been activated.</div>
+    <div class="row">
+        <div class="small-offset-0 column">
+            <a href="{% url 'authorisation:auth_login' %}" class="button success submit_button">
+                {% load staticfiles %}
+                <img src="{% static 'image/arrow.png'%}">
+                Return
+            </a>
+        </div>
+    </div>
+{% endblock %}

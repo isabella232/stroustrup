@@ -1,10 +1,12 @@
 from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
+import forms, models
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
+from profile.views import get_users_books
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 from dajaxice.decorators import dajaxice_register
@@ -13,9 +15,6 @@ from django.contrib.sites.models import RequestSite
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from django.contrib.auth.models import User
-
-import forms, models
 
 
 class BookFormView(FormView):
@@ -103,7 +102,7 @@ def take_book_view(request, **kwargs):
 def return_book_view(request, **kwargs):
     book = models.Book.books.get(id=kwargs['pk'])
     client = request.user
-    books = client.get_users_books()
+    books = get_users_books(client)
     if book.busy and books and book in books:
         book.return_by(client)
         book.save()
@@ -115,12 +114,10 @@ def return_book_view(request, **kwargs):
 class BookListView(FormView):
     busy = None
     form_class = forms.SearchForm
-    object_list = models.Book.books.all()
-    success_url = None
+    object_list = None
 
     @method_decorator(login_required())
     def get(self, request, *args, **kwargs):
-        self.object_list = models.Book.books.all()
         if request.GET:
             form = forms.SearchForm(request.GET)
             filtered = models.Book.books.all()
@@ -141,18 +138,17 @@ class BookListView(FormView):
                 else:
                     filtered = models.Book.books.all()
                 self.busy = form.cleaned_data['busy']
-                self.object_list = filtered
-                return self.render_to_response(self.get_context_data(form=forms.SearchForm))
+                if not self.busy is None:
+                    if self.busy:
+                        filtered = filtered.filter(busy=True)
+                    else:
+                        filtered = filtered.filter(busy=False)
+                return self.render_to_response({'books_list': filtered, 'form': forms.SearchForm})
         else:
             return super(BookListView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        if not self.busy is None:
-            if self.busy:
-                self.object_list = self.object_list.filter(busy=True)
-            else:
-                self.object_list = self.object_list.filter(busy=False)
-        context = {'books_list': self.object_list, "form": self.get_form(self.form_class), "busy": self.busy}
+        context = {'books_list': models.Book.books.all(), "form" : self.get_form(self.form_class)}
         return super(BookListView, self).get_context_data(**context)
 
 
@@ -199,11 +195,16 @@ def ask_to_return(request, **kwargs):
             return render_to_response('asked_successfully.html', {'book': book})
     return HttpResponseRedirect("..")
 
+class requestBook(AddView): #SpaT_edition
+    model = models.Book_Request
+    form_class = forms.Book_RequestForm
+    object = None
+    queryset = models.Book_Request.requests.all()
 
-class UsersView(ListView):
-    model = models.User
-    queryset = User.objects.all()
 
-    @method_decorator(login_required())
-    def get(self, request, *args, **kwargs):
-        return super(UsersView, self).get(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        #self.queryset._result_cache=self.queryset
+        context = {'requests': self.queryset, "form" : self.get_form(self.form_class)}
+        print('i can\'t add your books cuz i\'m a jerk ')
+
+        return super(requestBook, self).get_context_data(**context)

@@ -1,40 +1,149 @@
-{% extends 'profilebase.html' %}
-{% block content %}
-    <title>
-        {{ profile.username }}'s profile
-    </title>
-    <h1>{{ profile.username }}'s profile</h1>
 
-    <p align="left">
-        Go to <a href="{% url 'books:list' %}">list of books</a>.
-        {% if profile.is_staff%}
-            <img src="/static/admin.jpg"height="100" align="left" alt="Book image"/><br>
-        {% else %}
-            <img src="/static/user.png"height="100" align="left" alt="Book image"/><br>
-        {% endif %}
-        First name: {{ profile.first_name }}<br>
-        Last name: {{ profile.last_name }}<br>
-        E-mail: {{ profile.email }}<br>
-    {% if books %}
-        Books:
-    <ul>
-            {% for book in books%}
-                <li>
-                <a href={% url "books:book:book" book.id %}>{{ book.title }}</a>
-                {% for author in book.authors.all %}
-                        <a href={% url "books:author" author.id %}>{{ author.first_name }} {{ author.last_name }}</a>
-                {% endfor %}
-                keeps about {{ book.taken_about }} days.
-                {% if user.pk != profile.pk %}
-                    <a href={% url "books:book:ask" book.id %}>Ask this book.</a>
+{% extends 'profilebase.html' %}
+
+{% block tittle %}
+    {{ profile.username }}'s profile
+{% endblock %}
+
+{% block location %}
+    Your Profile
+{% endblock %}
+
+{% block link_extension %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+
+{% endblock %}
+
+{% block content1 %}
+
+
+
+
+    <div class="row work_label">
+        <div class="row">
+            <div class="small-6 columns">
+                <div class="row picture_row">
+                    <div class="panel picture_area">
+                        {% if profile.is_staff%}
+
+                            {% load staticfiles %}
+                            <img src="{% static 'image/admin.jpg'%}"/>
+                        {% else %}
+                            {% load staticfiles %}
+                            <img src="{% static 'image/user.jpeg'%}" />
+                        {% endif %}
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="small-6 columns activity_area"  >
+                <div class="row offset"></div>
+                <div class="row info_area">
+
+                    Username:
+                           <span class="declaration_area">
+                              {{ profile.username }}
+                           </span>
+
+                </div>
+                <div class="row info_area">
+
+                    Name:
+                          <span class="declaration_area">
+                               {{ profile.first_name }} {{ profile.last_name }}
+                           </span>
+
+                </div>
+                <div class="row info_area">
+
+                    E-mail:
+                          <span class="declaration_area">
+                               {{ profile.email }}
+                           </span>
+
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="small-2 column">
+                <a href="{% url 'authorisation:auth_logout' %}" class="button success comment_button"> Logout<br/></a>
+            </div>
+            <div class="small-4 column">
+                {% if user.pk == profile.pk %}
+                    <a href="{% url 'profile:change' user.pk %}" class="button comment_button">Change profile's data</a>
                 {% endif %}
-                </li>
-            {% endfor %}
-    </ul>
+            </div>
+            <div class="small-4 column">
+                <a href="{% url 'authorisation:auth_password_change' %}" class="button ask comment_button">Change password</a>
+            </div>
+
+            <div class="small-2 column"><br/></div>
+        </div>
+
+    </div>
+    <div class="offset"></div>
+    {% if books %}
+        {% for book in books %}
+            <div class="offset_row "><br/></div>
+            <div class="work_label row">
+                <div class="small-5 columns work_label_left">
+                    <div class="row">
+                        {% if book.picture.url %}
+                        <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
+                            <img src="{{ book.picture.url }}" class="thumbnail">
+                        </a>
+                        <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
+                            <li>
+                                <a >
+                                    <img src="{{ book.picture.url }}"/>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                </div>
+                <div class="small-5 columns work_label_middle">
+                    <div class="row">
+
+
+
+
+                        <a href="{% url "books:book:book" book.id %}" class="book_href">
+                            {{ book.title }}
+                        </a>
+                        {% for author in book.authors.all %}
+                            <br>
+                            <a href='{% url "books:author" author.id %}' class="author_href" >
+                                {{ author.first_name }} {{ author.last_name }}
+                            </a>
+
+                        {% endfor %}
+                        <br>
+                        {# thing with tags   <a href="#" class="technology_href"> </a>  #}
+
+                        <div class="row offset">
+
+                        </div>
+                             <span>
+                                 Status:   keeps about
+                                 <span class="status_free">{{ book.taken_about }} </span>   days.
+                             </span>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
     {% endif %}
-    {% if user.pk == profile.pk %}
-        <a href="{% url 'profile:change' user.pk %}">Change profile's data</a>
-    {% endif %}
-        <a href="{% url 'authorisation:auth_password_change' %}">Change password</a><br>
-        <a href="{% url 'authorisation:auth_logout' %}">Logout</a></p>
+
+
+
+
+
 {% endblock %}
