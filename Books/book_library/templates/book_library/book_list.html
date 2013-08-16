@@ -1,19 +1,18 @@
 {% extends 'main/base.html' %}
-<script type="text/javascript">
-    function my_js_callback(data){
-        alert(data.message);
-}
-</script>
-{% block title %}All books.{% endblock %}
 {% block content %}
-    <button type="button" onclick="Dajaxice.book_library.sayhello(my_js_callback);">Click Me!</button>
     <p>Go to <a href={% url "profile:profile" user.pk %}>profile</a>
         {% if user.is_staff %}
             <a href={% url "books:add" %}> Add book.</a>
         {% endif %}
     </p>
-    {% if not search_flag %}
+    {% if busy == none %}
         <form action="" method="get">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Search"/>
+        </form>
+    {% else %}
+    <form action=".." method="get">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Search"/>

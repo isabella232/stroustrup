@@ -2,6 +2,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import RegexValidator
+from django.contrib import auth
 
 
 class Client_Story_Record(models.Model):
@@ -18,7 +19,6 @@ class Author(models.Model):
 
     first_name = models.CharField(max_length=45, verbose_name="First name")
     last_name = models.CharField(max_length=45, verbose_name="Last name")
-    middle_name = models.CharField(max_length=45, blank=True)
 
     def __unicode__(self):
         return self.first_name+' '+self.last_name
@@ -71,11 +71,15 @@ class Book(models.Model):
 class Book_Tag(models.Model):
     tags = models.Manager()
 
-    tag = models.CharField(max_length=20)
+    tag = models.CharField(max_length=20, unique=True, error_messages={'unique': 'Tag already exists.'})
 
     def __unicode__(self):
         return self.tag
 
+def get_users_books(self):
+    return self.books.filter(client_story_record__book_returned=None)
+
+auth.models.User.add_to_class('get_users_books', get_users_books)
 
 
 
