@@ -21,11 +21,11 @@
             <div class="small-5 columns activity_area">
                 <div class="row picture_row">
                     <div class="panel picture_area">
-                        {% if book.picture%}
+                        {% if book.picture %}
                             <img src="{{ book.picture.url }}" alt="Book image"/><br>
                         {% else %}
                             {% load staticfiles %}
-                            <img src="{% static 'image/book_index.jpg'%}"/>
+                            <img src="{% static 'image/book_index.png'%}"/>
                         {% endif %}
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                 <br/>
             <span>
                 {% if not book.busy %}
-                    <a  class="take action_button"
+                    <a  class="take action_button button"
                         href="{% url "books:book:take" book.id %}"
                        onclick="Dajaxice.book_library.views.take_book_view(my_js_callback, {'pk': {{ book.id }}});">
                         Take!
@@ -63,12 +63,12 @@
                 {% else %}
                     {% if user in book.users.all %}
                         <a href="{% url "books:book:return" book.id %}" onclick="Dajaxice.book_library.views.return_book_view(my_js_callback,{'pk': {{ book.id }}});"
-                           class="put action_button">
+                           class="put action_button button">
                             Return...
                         </a>
                     {% else %}
                         <a href="javascript:  " onclick=" cl(); open_modal_window('modalwindow1');"
-                           class="busy ask action_button"> Send a request! </a>
+                           class="busy ask action_button button"> Send a request! </a>
                     {% endif %}
                 {% endif %}
 

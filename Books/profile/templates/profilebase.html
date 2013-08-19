@@ -48,21 +48,17 @@
             <a class="button bar_button"  href="{% url 'books:list' %}" >Books page</a>
         </div>
 
-        <div class="top_bar_left_side">
-            <a class="button bar_button" href="{#  url 'user_list' #}" >Users page</a>
-        </div>
+
 
         <div class="top_bar_left_side">
-            <a class="button bar_button" href="{# url 'books:request' #}" > Request a new book</a>
+            <a class="button bar_button" href="{% url 'books:request' %}" > Request a new book</a>
         </div>
 
         <div class="top_bar_left_side">
             <a class="button bar_button" href="{%  url 'books:add' %}" > Add a new book</a>
         </div>
 
-        <div class="top_bar_left_side" >
-            <a class="button bar_button" href="my_books.html"  > My books</a>
-        </div>
+
 
         <div class="top_bar_right_side">
             <a class="button bar_right_button" href="{% url 'authorisation:auth_logout' %}" >Log out</a>
@@ -78,6 +74,7 @@
     </div>
 
 </header>
+
 
 {% block filter %}{% endblock %}
 <div class="row main_strip_row" >

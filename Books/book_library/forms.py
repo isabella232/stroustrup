@@ -19,12 +19,12 @@ class NameField(forms.CharField):
                          Q(last_name__iexact=lname)
             if Author.authors.filter(filter):
                 raise ValidationError(["Author already exists."])
-        else:
-            raise ValidationError(["Enter first name and last name with namespace."])
+
 
 
 class BookForm(ModelForm):
-    author_name = NameField(max_length=90, required=False, label="New author first name")
+    author_name = NameField(max_length=90, required=False, label="Add authors full names (to seprate use a comma):")
+    tag = forms.CharField(max_length=90, required = False, label = 'Add tags (to separate use a comma):')
     authors = forms.ModelMultipleChoiceField(queryset=Author.authors.all(), required=False, label="Authors")
 
     class Meta:
@@ -32,17 +32,27 @@ class BookForm(ModelForm):
         exclude = ['busy', 'users']
 
     def save(self, commit=True):
+        if self.cleaned_data['tag']:
+            strings=self.cleaned_data['tag'].split(',')
+            for string in strings:
+                tag=Book_Tag.tags.create(tag = string)
+                book = super(BookForm, self).save(commit=True)
+                book.tags.add(tag)
+                book.save()
+
         if self.cleaned_data['author_name']:
-            strings = self.cleaned_data['author_name'].split(' ')
-            fname = strings[0]
-            lname = strings[1]
-            author = Author.authors.create(first_name=fname, last_name=lname)
-            book = super(BookForm, self).save(commit=True)
-            book.authors.add(author)
-            book.save()
-            return book
-        else:
-            return super(BookForm, self).save(commit=True)
+            strings = self.cleaned_data['author_name'].split(',')
+            for string in strings:
+                string = string.split(' ')
+                fname = string[0]
+                lname = string[1]
+                author = Author.authors.create(first_name=fname, last_name=lname)
+                book = super(BookForm, self).save(commit=True)
+                book.authors.add(author)
+                book.save()
+
+
+        return super(BookForm, self).save(commit=True)
 
 
 class Book_TagForm(ModelForm):
@@ -62,7 +72,8 @@ class SureForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    busy = forms.NullBooleanField(label="Busy")
+    busy = forms.BooleanField(label='Busy', required=False)
+    free = forms.BooleanField(label='Free', required=False)
     keywords = forms.CharField(label="Search", max_length=45, required=False)
 
 class Book_RequestForm(ModelForm): #SpaT_edition

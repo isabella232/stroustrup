@@ -113,15 +113,15 @@ def return_book_view(request, **kwargs):
 
 class BookListView(FormView):
     busy = None
+    free = None
     form_class = forms.SearchForm
     object_list = None
 
     @method_decorator(login_required())
     def get(self, request, *args, **kwargs):
         if request.GET:
-            form = forms.SearchForm(request.GET)
-            filtered = models.Book.books.all()
-            if form.is_valid():
+                form = forms.SearchForm(request.GET)
+                filtered = models.Book.books.all()
                 query = Q()
                 if form.cleaned_data['keywords']:
                     keywords = form['keywords']
@@ -137,12 +137,19 @@ class BookListView(FormView):
                     filtered = set(filtered)  #deleting equals
                 else:
                     filtered = models.Book.books.all()
-                self.busy = form.cleaned_data['busy']
-                if not self.busy is None:
-                    if self.busy:
-                        filtered = filtered.filter(busy=True)
-                    else:
-                        filtered = filtered.filter(busy=False)
+                try:
+                    self.busy = form.cleaned_data['busy']
+                except KeyError:
+                    self.busy = False
+                try:
+                    self.free = form.cleaned_data['free']
+                except KeyError:
+                    self.free = False
+                if not ( self.busy == self.free ):
+                        if self.busy:
+                            filtered = filtered.filter(busy=True)
+                        else:
+                            filtered = filtered.filter(busy=False)
                 return self.render_to_response({'books_list': filtered, 'form': forms.SearchForm})
         else:
             return super(BookListView, self).get(request, *args, **kwargs)
@@ -203,8 +210,21 @@ class requestBook(AddView): #SpaT_edition
 
 
     def get_context_data(self, **kwargs):
-        #self.queryset._result_cache=self.queryset
-        context = {'requests': self.queryset, "form" : self.get_form(self.form_class)}
-        print('i can\'t add your books cuz i\'m a jerk ')
-
+        context = {'requests': models.Book_Request.requests.all(), "form" : self.get_form(self.form_class)}
         return super(requestBook, self).get_context_data(**context)
+
+
+@login_required
+def LikeRequest(request, number):
+    queryset = models.Book_Request.requests.all()
+    user=request.user
+    for req in queryset:
+        if req.id == int(number):
+            if user in req.users.all():
+                break
+            req.vote+=1
+            req.users.add(user)
+            req.save()
+            break
+
+    return HttpResponseRedirect('../../request')

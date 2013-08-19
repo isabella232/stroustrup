@@ -32,10 +32,12 @@ urlpatterns = patterns('',
                                                                       template_name="book_library/tag.html",
                                                                       ),
                            name='tag'),
-                        url(r'^request/$', views.requestBook.as_view(    success_url='/',
+                       url(r'^request/', views.requestBook.as_view(success_url='//',
                             model=Book_Request,
                             template_name='book_library/request_new.html'
-                                                                    ),
-                        name='request'),
-                        #SpaT edition
+                       ), name='request'
+                            ),
+                       url(r'^like/(\d+)/$', views.LikeRequest,
+                            name='like'),
+                       #SpaT edition
                        )

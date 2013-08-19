@@ -2,69 +2,38 @@
 {% block title %}All books.{% endblock %}
 {% block location %}Books page{% endblock %}
 
+{% block extensions %}
+    <script language="JavaScript">
+        $(document).ready((function(){
+
+            $('input[type=checkbox]').wrap('<div class="small-1 column "> </div>')
+            $('input[type=text]').css('border-radius','8px')
+            $('label').wrap('<div class="small-1 column  filter_link"> </div>')
+            $('input[name="keywords"]').wrap('<div class="small-4 column "> </div>')
+        }))
+    </script>
+{% endblock %}
+
 {% block filter %}
 
     <div class="filter row" >
         <dl class="sub-nav" >
             <dt class="filter_statement" >
                 Filter:</dt>
-            <dd class="active"><a href="#">All</a></dd>
-            <dd><a class="filter_link" href="{# url 'books:free' #}">Free</a></dd>
-            <dd><a class="filter_link" href="{# url 'books:busy' #}">Busy</a></dd>
-            <dd>
-                <a href="#" data-dropdown="drop1" class="button dropdown secondary filter_button">
 
-                    Tag
-                </a>
-                <br>
-
-                <ul id="drop1" class="f-dropdown" data-dropdown-content>
-                    {% if books_list %}
-                        {% for book in books_list %}
-
-                            {% for tag in book.tags.all %}
-                                <li>
-                                    <a href={% url "books:tag" tag.id %}>
-                                        {{ tag.tag }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-
-                        {% endfor %}
-                    {% else %}
-                        <li><hr/><br/>There is no books.<br/><hr/></li>
-                    {% endif %}
-                </ul>
-            </dd>
-            <dd>
-                <a href="#" data-dropdown="drop2" class="button dropdown secondary filter_button">
-                    Author
-                </a>
-                <br>
-
-                <ul id="drop2" class="f-dropdown" data-dropdown-content>
-                    {% if books_list %}
-
-                            {% for book in books_list %}
-
-                                    {% for author in book.authors.all %}
-                                        <li>
-                                        <a href={% url "books:author" author.id %}>
-                                            {{ author.first_name }} {{ author.last_name }}
-                                        </a>
-                                        </li>
-                                    {% endfor %}
-
-                            {% endfor %}
-
-                    {% else %}
-                        <li><hr/><br/>There is no books.<br/><hr/></li>
-                    {% endif %}
-                </ul>
-            </dd>
 
         </dl>
+        {% if not search_flag %}
+            <form action="" method="get">
+                {% csrf_token %}
+                {{ form }}
+                <div class="small-2 column">
+                <input type="submit" value="Search" class='comment_button button'/>
+                </div>
+            </form>
 
+
+        {% endif %}
 
 
     </div>
@@ -78,19 +47,33 @@
         <div class="row work_label" id="book_{{ book.id }}">
             <div class="small-5 columns work_label_left">
                 <div class="row">
-                    <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
-                        {% load staticfiles %}
-                        <img src="{% static 'image/book_index.png'%}" class="thumbnail"/>
+                    {% if book.picture%}
+                        <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
+                            <img src="{{ book.picture.url }}" class="thumbnail">
+                        </a>
+                        <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
+                            <li>
+                                <a >
+                                    <img src="{{ book.picture.url }}"/>
+                                </a>
+                            </li>
+                        </ul>
+                    {% else %}
 
-                    </a>
-                    <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
-                        <li>
-                            <a>
+                            <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
                                 {% load staticfiles %}
-                                <img src="{% static 'image/book_index.png'%}"/>
+                                <img src="{% static 'image/book_index.png' %}" class="thumbnail">
                             </a>
-                        </li>
-                    </ul>
+                            <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
+                                <li>
+                                    <a >
+                                        {% load staticfiles %}
+                                        <img src="{% static 'image/book_index.png' %}"/>
+                                    </a>
+                                </li>
+                            </ul>
+
+                    {% endif %}
                 </div>
             </div>
             <div class="small-5 columns work_label_middle">
@@ -110,6 +93,18 @@
                         <a href="{% url 'books:tag' tag.id %}" class="technology_href">{{ tag.tag }} </a>,
                     {% endfor %}
                     <div class="row offset"></div>
+                     <span>
+                         Status:
+                         {% if book.busy %}
+                             {% if user in book.users.all %}
+                                 <span class="status_mine"> Mine </span>
+                             {% else %}
+                                 <span class="status_busy"> Busy </span>
+                             {% endif %}
+                         {% else %}
+                             <span class="status_free"> Free </span>
+                         {% endif %}
+                     </span>
 
                 </div>
             </div>
@@ -190,5 +185,5 @@
 {% endif %}
 {% endblock %}
 {% block pagination %}
-
+    {# here will be a pagination #}
 {% endblock %}
