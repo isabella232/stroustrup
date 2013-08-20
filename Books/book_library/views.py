@@ -123,7 +123,7 @@ class BookListView(FormView):
                 form = forms.SearchForm(request.GET)
                 filtered = models.Book.books.all()
                 query = Q()
-                if form.cleaned_data['keywords']:
+                if form['keywords'].data:
                     keywords = form['keywords']
                     keywords = list(set(keywords.data.split(' ')))  #deleting equals
                     for keyword in keywords:
@@ -138,11 +138,11 @@ class BookListView(FormView):
                 else:
                     filtered = models.Book.books.all()
                 try:
-                    self.busy = form.cleaned_data['busy']
+                    self.busy = form['busy'].data
                 except KeyError:
                     self.busy = False
                 try:
-                    self.free = form.cleaned_data['free']
+                    self.free = form['free'].data
                 except KeyError:
                     self.free = False
                 if not ( self.busy == self.free ):
@@ -202,7 +202,13 @@ def ask_to_return(request, **kwargs):
             return render_to_response('asked_successfully.html', {'book': book})
     return HttpResponseRedirect("..")
 
-class requestBook(AddView): #SpaT_edition
+class AddRequestView(CreateView):
+    @method_decorator(login_required())
+    def get(self, request, *args, **kwargs):
+        return super(AddRequestView, self).get(self, request, *args, **kwargs)
+
+
+class requestBook(AddRequestView): #SpaT_edition
     model = models.Book_Request
     form_class = forms.Book_RequestForm
     object = None
@@ -212,19 +218,39 @@ class requestBook(AddView): #SpaT_edition
     def get_context_data(self, **kwargs):
         context = {'requests': models.Book_Request.requests.all(), "form" : self.get_form(self.form_class)}
         return super(requestBook, self).get_context_data(**context)
+    def post(self, request, *args, **kwargs):
+
+        if request.POST['url'] and request.POST['title']:
+            _url=request.POST['url']
+            _title=request.POST['title']
+            req = models.Book_Request.requests.create(url=_url, title=_title, user=request.user)
+
+            req.save()
+            return HttpResponseRedirect('//')
+        return super(AddRequestView, self).post(request, *args, **kwargs)
 
 
-@login_required
+
 def LikeRequest(request, number):
     queryset = models.Book_Request.requests.all()
     user=request.user
     for req in queryset:
+        for user1 in req.users.all():
+            print(user1,'\n')
         if req.id == int(number):
-            if user in req.users.all():
+
+            flag = True
+            for user1 in req.users.all():
+                if user1.id == user.id:
+                    flag=False
+                    break
+            if not flag:
                 break
             req.vote+=1
             req.users.add(user)
             req.save()
+            for user1 in req.users.all():
+                print(user1,'\n')
             break
 
     return HttpResponseRedirect('../../request')

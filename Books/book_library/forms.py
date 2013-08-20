@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.forms.fields import FileField
 from django.forms.models import save_instance
 from django.db.models import Q
-
+from django.contrib.auth import models
 
 class NameField(forms.CharField):
 
@@ -83,15 +83,15 @@ class Book_RequestForm(ModelForm): #SpaT_edition
         model = Book_Request
         fields = ['title', 'url']
 
-
     def save(self, commit=True):
         if self.cleaned_data['url'] and self.cleaned_data['title']:
             _url=self.cleaned_data['url']
             _title=self.cleaned_data['title']
+
             req = Book_Request.requests.create(url=_url, title=_title)
 
             req.save()
             return req
 
         else:
-            return super(Book_RequestForm, self).save(commit=True)
+            return super(Book_RequestForm, self).save( commit=True)

@@ -3,12 +3,12 @@
 {% block location %}Books page{% endblock %}
 
 {% block extensions %}
-    <script language="JavaScript">
+    <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
 
             $('input[type=checkbox]').wrap('<div class="small-1 column "> </div>')
             $('input[type=text]').css('border-radius','8px')
-            $('label').wrap('<div class="small-1 column  filter_link"> </div>')
+            $('label').wrap('<div class="small-1 column filter_link"> </div>')
             $('input[name="keywords"]').wrap('<div class="small-4 column "> </div>')
         }))
     </script>
@@ -16,20 +16,20 @@
 
 {% block filter %}
 
-    <div class="filter row" >
-        <dl class="sub-nav" >
-            <dt class="filter_statement" >
-                Filter:</dt>
+    <div class="filter row" id="filter" >
+
+            <span class="filter_statement" >
+                Filter:</span>
 
 
-        </dl>
+
         {% if not search_flag %}
             <form action="" method="get">
                 {% csrf_token %}
                 {{ form }}
-                <div class="small-2 column">
-                <input type="submit" value="Search" class='comment_button button'/>
-                </div>
+                <span>
+                <input type="submit" value=" ☜ Go! " class='comment_button button'/>
+                </span>
             </form>
 
 
@@ -45,6 +45,7 @@
     {% for book in books_list %}
     {# ################# #}
         <div class="row work_label" id="book_{{ book.id }}">
+            <div class="row">
             <div class="small-5 columns work_label_left">
                 <div class="row">
                     {% if book.picture%}
@@ -96,11 +97,11 @@
                      <span>
                          Status:
                          {% if book.busy %}
-                             {% if user in book.users.all %}
+                             {% ifequal user book.taken_by %}
                                  <span class="status_mine"> Mine </span>
                              {% else %}
                                  <span class="status_busy"> Busy </span>
-                             {% endif %}
+                             {% endifequal %}
                          {% else %}
                              <span class="status_free"> Free </span>
                          {% endif %}
@@ -108,15 +109,15 @@
 
                 </div>
             </div>
-            <div class="small-1 columns work_label_right">
-                <div class="row">
-                    <a  class="button spoiler_button"
+            <div class="work_label_right"></div>
+            </div>
+            <div class="row stock">
+            <a  class="button spoiler_button right"
 
-                        onclick="add_comment_list({{ book.id }})"
-                            >
-                        ▼
-                    </a>
-                </div>
+                href="javascript: add_comment_list({{ book.id }})"
+                    >
+                ▼
+            </a>
             </div>
 
         </div>

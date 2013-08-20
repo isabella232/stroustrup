@@ -44,7 +44,7 @@
                             </a>
                         </div>
                         <div class="row">
-                            Request has been made by <a><span class="comment_name"> {{ order.id }} </span></a>
+                            Request has been made by <a href="{% url "profile:profile" order.user.pk  %}">  <span class="comment_name"> {{ order.user }} </span></a>
                         </div>
                 </div>
                 <div class="small-1 column request_vote_area" >

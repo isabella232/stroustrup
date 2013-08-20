@@ -79,7 +79,8 @@ class Book_Tag(models.Model):
 
 class Book_Request(models.Model): #SpaT_edition
     requests = models.Manager()
-    users = models.ManyToManyField(User, symmetrical=True, related_name="request", default=None, blank=True)
+    user = models.ForeignKey(User, default=None, blank=True)
+    users = models.ManyToManyField(User, related_name="request", default=None, blank=True)
     url = models.URLField(null='')
     title = models.CharField(max_length=30)
     vote = models.IntegerField(default=0)
