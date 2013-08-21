@@ -2,6 +2,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import RegexValidator
+from django.contrib import auth
 
 
 class Client_Story_Record(models.Model):
@@ -26,7 +27,7 @@ class Author(models.Model):
 class Book(models.Model):
     books = models.Manager()
 
-    isbn = models.CharField(help_text="13 digit", max_length=13, blank=True,
+    isbn = models.CharField(help_text="13 digits number", max_length=13, blank=True,
                             validators=[RegexValidator(regex="\d{13,13}", message="please just 13 digits")],
                             )
     title = models.CharField(max_length=45)
@@ -35,9 +36,9 @@ class Book(models.Model):
     paperback_version_exists = models.BooleanField(default=True, verbose_name="paper version")
     description = models.TextField(max_length=45, default="No description available.")
     picture = models.FileField(upload_to='book_images', blank=True)
-    authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
+    authors = models.ManyToManyField(Author, symmetrical=True, default=None, related_name="books")
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
-    tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)
+    tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", default=None, blank=True)
 
     def __unicode__(self):
         return self.title
@@ -76,6 +77,13 @@ class Book_Tag(models.Model):
         return self.tag
 
 
+def get_users_books(self):
+    return self.books.filter(client_story_record__book_returned=None)
+
+auth.models.User.add_to_class('get_users_books', get_users_books)
+
+
+
 
 class Book_Request(models.Model): #SpaT_edition
     requests = models.Manager()
@@ -86,8 +94,6 @@ class Book_Request(models.Model): #SpaT_edition
     vote = models.IntegerField(default=0)
     def __unicode__(self):
         return self.title + ' ' + self.url
-
-
 
 
 

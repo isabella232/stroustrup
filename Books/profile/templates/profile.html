@@ -69,14 +69,15 @@
             </div>
         </div>
         <hr/>
+        {% if user.pk == profile.pk %}
         <div class="row">
             <div class="small-2 column">
                 <a href="{% url 'authorisation:auth_logout' %}" class="button success comment_button"> Logout<br/></a>
             </div>
             <div class="small-4 column">
-                {% if user.pk == profile.pk %}
+
                     <a href="{% url 'profile:change' user.pk %}" class="button comment_button">Change profile's data</a>
-                {% endif %}
+
             </div>
             <div class="small-4 column">
                 <a href="{% url 'authorisation:auth_password_change' %}" class="button ask comment_button">Change password</a>
@@ -84,7 +85,7 @@
 
             <div class="small-2 column"><br/></div>
         </div>
-
+        {% endif %}
     </div>
     <div class="offset"></div>
     {% if books %}
@@ -114,7 +115,7 @@
 
 
 
-                        <a href="{% url "books:book:book" book.id %}" class="book_href">
+                        <a href="{% url "books:book" book.id %}" class="book_href">
                             {{ book.title }}
                         </a>
                         {% for author in book.authors.all %}
@@ -141,9 +142,5 @@
         {% endfor %}
 
     {% endif %}
-
-
-
-
 
 {% endblock %}

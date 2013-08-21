@@ -75,10 +75,16 @@ a{
     padding: 5px;
     font-size: 12pt;
     border-radius: 5px;
-    background: #2184b0;
+    background: rgba(127, 0, 234, 0.49);
     margin: 15px;
+    border-color: #280036;
+}
+
+.bar_right_button:hover{
+    background: #7f00ea;
 }
 
 .bar_username_style{
     color: #2184b0;
+
 }

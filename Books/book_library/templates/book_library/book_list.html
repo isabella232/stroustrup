@@ -6,10 +6,10 @@
     <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
 
-            $('input[type=checkbox]').wrap('<div class="small-1 column "> </div>')
-            $('input[type=text]').css('border-radius','8px')
-            $('label').wrap('<div class="small-1 column filter_link"> </div>')
-            $('input[name="keywords"]').wrap('<div class="small-4 column "> </div>')
+            $('input[type=checkbox]').wrap('<div class="small-1 column "> </div>').end()
+            $('input[type=text]').css('border-radius','8px').end()
+            $('label').wrap('<div class="small-1 column filter_link"> </div>').end()
+            $('input[name="keywords"]').wrap('<div class="small-4 column "> </div>').end()
         }))
     </script>
 {% endblock %}
@@ -41,59 +41,59 @@
 {% endblock %}
 
 {% block content %}
-{% if books_list %}
-    {% for book in books_list %}
-    {# ################# #}
-        <div class="row work_label" id="book_{{ book.id }}">
-            <div class="row">
-            <div class="small-5 columns work_label_left">
+    {% if object_list %}
+        {% for book in object_list %}
+            {# ################# #}
+            <div class="row work_label" id="book_{{ book.id }}">
                 <div class="row">
-                    {% if book.picture%}
-                        <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
-                            <img src="{{ book.picture.url }}" class="thumbnail">
-                        </a>
-                        <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
-                            <li>
-                                <a >
-                                    <img src="{{ book.picture.url }}"/>
+                    <div class="small-5 columns work_label_left">
+                        <div class="row">
+                            {% if book.picture%}
+                                <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
+                                    <img src="{{ book.picture.url }}" class="thumbnail">
                                 </a>
-                            </li>
-                        </ul>
-                    {% else %}
+                                <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
+                                    <li>
+                                        <a >
+                                            <img src="{{ book.picture.url }}"/>
+                                        </a>
+                                    </li>
+                                </ul>
+                            {% else %}
 
-                            <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
-                                {% load staticfiles %}
-                                <img src="{% static 'image/book_index.png' %}" class="thumbnail">
+                                <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
+                                    {% load staticfiles %}
+                                    <img src="{% static 'image/book_index.png' %}" class="thumbnail">
+                                </a>
+                                <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
+                                    <li>
+                                        <a >
+                                            {% load staticfiles %}
+                                            <img src="{% static 'image/book_index.png' %}"/>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="small-5 columns work_label_middle">
+                        <div class="row">
+                            <a href='{% url "books:book" book.id %}' class="book_href">
+                                {{ book.title }}
                             </a>
-                            <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
-                                <li>
-                                    <a >
-                                        {% load staticfiles %}
-                                        <img src="{% static 'image/book_index.png' %}"/>
-                                    </a>
-                                </li>
-                            </ul>
-
-                    {% endif %}
-                </div>
-            </div>
-            <div class="small-5 columns work_label_middle">
-                <div class="row">
-                    <a href='{% url "books:book:book" book.id %}' class="book_href">
-                        {{ book.title }}
-                    </a>
-                    <hr/>
-                    {% for author in book.authors.all %}
-                        <a href='{% url "books:author" author.id %}' class="author_href">
-                            {{ author.first_name }} {{ author.last_name }}
-                        </a>
-                        <br>
-                    {% endfor %}
-                    <hr/>
-                    {% for tag in book.tags.all %}
-                        <a href="{% url 'books:tag' tag.id %}" class="technology_href">{{ tag.tag }} </a>,
-                    {% endfor %}
-                    <div class="row offset"></div>
+                            <hr/>
+                            {% for author in book.authors.all %}
+                                <a href='{% url "books:author" author.id %}' class="author_href">
+                                    {{ author.first_name }} {{ author.last_name }}
+                                </a>
+                                <br>
+                            {% endfor %}
+                            <hr/>
+                            {% for tag in book.tags.all %}
+                                <a href="{% url 'books:tag' tag.id %}" class="technology_href">{{ tag.tag }} </a>,
+                            {% endfor %}
+                            <div class="row offset"></div>
                      <span>
                          Status:
                          {% if book.busy %}
@@ -107,83 +107,83 @@
                          {% endif %}
                      </span>
 
+                        </div>
+                    </div>
+                    <div class="work_label_right"></div>
                 </div>
+                <div class="row stock">
+                    <a  class="button spoiler_button right"
+
+                        href="javascript: add_comment_list({{ book.id }})"
+                            >
+                        Comments ▼
+                    </a>
+                </div>
+
             </div>
-            <div class="work_label_right"></div>
-            </div>
-            <div class="row stock">
-            <a  class="button spoiler_button right"
+            <div class="row comment_panel_strip">
+                <div class="panel comment_panel" id="panel{{ book.id }}">
+                    <div class="row row_panel" id="row_panel{{ book.id }}">
 
-                href="javascript: add_comment_list({{ book.id }})"
-                    >
-                ▼
-            </a>
-            </div>
-
-        </div>
-        <div class="row comment_panel_strip">
-            <div class="panel comment_panel" id="panel{{ book.id }}">
-                <div class="row row_panel" id="row_panel{{ book.id }}">
-
-                    <div class="row comment_branch" >
-                        <a href="#" class="comment_name"
-                           onclick=" comment_branch()">
-                            User1:
-                        </a>
-                        comment of first user.
-
-                        <div class="row comment_branch">
+                        <div class="row comment_branch" >
                             <a href="#" class="comment_name"
                                onclick=" comment_branch()">
-                                User2:
+                                User1:
                             </a>
-                            comment of second user.
+                            comment of first user.
 
                             <div class="row comment_branch">
                                 <a href="#" class="comment_name"
                                    onclick=" comment_branch()">
-                                    User1:
+                                    User2:
                                 </a>
-                                Answer of first user.
+                                comment of second user.
 
                                 <div class="row comment_branch">
                                     <a href="#" class="comment_name"
                                        onclick=" comment_branch()">
-                                        User2:
+                                        User1:
                                     </a>
-                                    The Holywar has began.
+                                    Answer of first user.
 
+                                    <div class="row comment_branch">
+                                        <a href="#" class="comment_name"
+                                           onclick=" comment_branch()">
+                                            User2:
+                                        </a>
+                                        The Holywar has began.
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row comment_branch">
-                        <a href="#" class="comment_name"
-                           onclick=" comment_branch()">
-                            User3:
-                        </a>
-                        First sober comment
+                        <div class="row comment_branch">
+                            <a href="#" class="comment_name"
+                               onclick=" comment_branch()">
+                                User3:
+                            </a>
+                            First sober comment
 
+                        </div>
                     </div>
+                    <form>
+                        <div class="row">
+                            <div class="small-2 columns input_comment_column">
+                                <input id="input{{ book.id }}"  type="text" class="input_comment">
+                            </div>
+                            <div class="small-2 columns">
+                                <button type="submit" class="comment_button" onclick="comment({{ book.id }})"> Send! </button>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
-                <form>
-                    <div class="row">
-                        <div class="small-2 columns input_comment_column">
-                            <input id="input{{ book.id }}"  type="text" class="input_comment">
-                        </div>
-                        <div class="small-2 columns">
-                            <button type="submit" class="comment_button" onclick="comment({{ book.id }})"> Send! </button>
-                        </div>
-                    </div>
-                </form>
-
             </div>
-        </div>
-    {# ################# #}
-    {% endfor %}
-{% else %}
-    <h4>There is no books yet :(.</h4>
-{% endif %}
+            {# ################# #}
+        {% endfor %}
+    {% else %}
+        <h4>There is no books yet :(.</h4>
+    {% endif %}
 {% endblock %}
 {% block pagination %}
     {# here will be a pagination #}

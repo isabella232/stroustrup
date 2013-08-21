@@ -1,24 +1,12 @@
-{% extends 'book_library/books_mainpage.html' %}
-{% block title %}Add new book{% endblock %}
-{% block location %}Add new book{% endblock %}
+{% extends 'main/base.html' %}
+{% block title %}Add book page{% endblock %}
 
 {% block content %}
 
-    <form enctype="multipart/form-data" method="post" action="">
-        {% csrf_token %}
+    <form action="" method="POST">{% csrf_token %}
         {{ form.as_p }}
-        <ul class="button-group round">
-            <li>
-                <button type="submit" class="button success ">
-                    Confirm
-                </button>
-            </li>
-            <li>
-                <a class="button alert  " href="javascript: window.history.back()">
-                    Cancel
-                </a>
-            </li>
-        </ul>
+        <input type="submit" value="Submit"/>
     </form>
+    <p>Or <a href="{% url 'books:list' %}">cancel</a> if you changed your mind.</p>
 
 {% endblock %}

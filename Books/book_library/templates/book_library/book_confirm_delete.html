@@ -1,26 +1,34 @@
 {% extends 'book_library/books_mainpage.html' %}
 {% block title %}Delete book{% endblock %}
 {% block location %}Delete book{% endblock %}
+{% block link_extension %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+
+{% endblock %}
 
 {% block content %}
     {% if user.is_staff %}
-       <form action="" method="post">{% csrf_token %}
+        <form action="" method="post">{% csrf_token %}
             <p>Are you sure you want to delete "{{ object }}"?</p>
-           <ul class="button-group round">
-               <li>
-                   <button type="submit" class="button success ">
-                       Confirm
-                   </button>
-               </li>
-               <li>
-                   <a class="button alert  " href="javascript: window.history.back()">
-                       Cancel
-                   </a>
-               </li>
-           </ul>
-       </form>
+            <ul class="button-group round">
+                <li>
+                    <button type="submit" class="button success ">
+                        Confirm
+                    </button>
+                </li>
+                <li>
+                    <a class="button alert  " href="javascript: window.history.back()">
+                        Cancel
+                    </a>
+                </li>
+            </ul>
+        </form>
     {% else %}
         <p class="errorlist row">You aren't staff.</p>
+        <a class="button uibutton" href="javascript: window.history.back()">
+            Fall back
+        </a>
     {% endif %}
 
 {% endblock %}

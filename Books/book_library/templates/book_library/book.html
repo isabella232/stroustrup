@@ -56,13 +56,13 @@
             <span>
                 {% if not book.busy %}
                     <a  class="take action_button button"
-                        href="{% url "books:book:take" book.id %}"
-                       onclick="Dajaxice.book_library.views.take_book_view(my_js_callback, {'pk': {{ book.id }}});">
+                        href="{% url "books:take" book.id %}"
+                        onclick="Dajaxice.book_library.views.take_book_view(my_js_callback, {'pk': {{ book.id }}});">
                         Take!
                     </a>
                 {% else %}
                     {% if user in book.users.all %}
-                        <a href="{% url "books:book:return" book.id %}" onclick="Dajaxice.book_library.views.return_book_view(my_js_callback,{'pk': {{ book.id }}});"
+                        <a href="{% url "books:return" book.id %}" onclick="Dajaxice.book_library.views.return_book_view(my_js_callback,{'pk': {{ book.id }}});"
                            class="put action_button button">
                             Return...
                         </a>
@@ -166,17 +166,17 @@
 
             <ul class="button-group linear_column round">
                 <li>
-                    <a href='{% url "books:book:story" book.id %}' class="button take">View story of book's takers </a>
+                    <a href='{% url "books:story" book.id %}' class="button take">View story of book's takers </a>
                 </li>
                 {% if user.is_staff %}
                     <li>
-                        <a class="button put" href="{% url 'books:book:change' book.id %}">
+                        <a class="button put" href="{% url 'books:change' book.id %}">
                             Change
                         </a>
                     </li>
 
                     <li>
-                        <a class="button put" href="{% url 'books:book:delete' book.id %}">
+                        <a class="button put" href="{% url 'books:delete' book.id %}">
                             Delete
                         </a>
                     </li>
@@ -202,7 +202,7 @@
         {# v ajax v #}
         <script>
             function cl(){
-                ajax_loader('modalwindow1','{% url "books:book:ask" book.id %}');
+                ajax_loader('modalwindow1','{% url "books:ask" book.id %}');
             }
         </script>
         {# ^ ajax ^ #}
