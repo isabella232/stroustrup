@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from models import Book, Book_Tag, Author, Book_Request
+from models import Book, Book_Tag, Author, Book_Request, Book_Comment, Book_Rating
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
@@ -42,7 +42,7 @@ class BookForm(ModelForm):
 
     class Meta:
         model = Book
-        exclude = ['busy', 'users', 'authors', 'tags']
+        exclude = ['busy', 'users', 'authors', 'tags', 'book_rating', 'comments']
 
     def save(self, commit=True):
         authors = self.cleaned_data['authors_names']
@@ -125,3 +125,14 @@ class Book_RequestForm(ModelForm): #SpaT_edition
             return req
         else:
             return super(Book_RequestForm, self).save(commit=True)
+
+class Book_RatingForm(ModelForm):
+
+    class Meta:
+        model = Book_Rating
+
+class Book_CommentForm(ModelForm):
+
+    class Meta:
+        model = Book_Comment
+        fields = ['comment']

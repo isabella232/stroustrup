@@ -121,8 +121,11 @@ def return_book_view(request, **kwargs):
         book.save()
         if request.is_ajax():
             return simplejson.dumps({'message': 'Book returned'})
-    return HttpResponseRedirect(reverse('mainpage'))
+    return  HttpResponseRedirect(reverse('mainpage'))
 
+def rating_post(request, **kwargs):
+
+    return False
 
 class BookListView(LoginRequiredView, ListView):
     busy = None
@@ -252,6 +255,26 @@ class requestBook(AddRequestView): #SpaT_edition
             return HttpResponseRedirect('//')
         return super(AddRequestView, self).post(request, *args, **kwargs)
 
+
+def CommentAdd(request, number, *args):
+    queryset = Book.books.all()
+    number=int(number)
+    book = None
+    for _book in queryset:
+        if number == _book.id:
+            book = _book
+            break
+
+    if not book:
+        raise ValueError
+
+    message = request.REQUEST.dicts[1]['Comment']
+    _user=request.user
+
+    com = Book_Comment.comments.create(user = _user, comment = message)
+    book.comments.add(com)
+    com.save()
+    return HttpResponseRedirect('../..')
 
 
 def LikeRequest(request, number): #SpaT_edition

@@ -1,0 +1,7 @@
+<form  method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="success round button" type="submit">
+        Send!
+    </button>
+</form>

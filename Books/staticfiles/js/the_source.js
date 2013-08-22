@@ -23,10 +23,34 @@ function add_comment_list(num)
 
 
 }
+
+function enter(num)
+{
+    if (event.keyCode == 13)
+        return comment(num)
+    return false;
+}
+
 function comment(num)
 {
 
-    /*add text to a field*/
+    var _comment = $('#input'+num).val();
+
+    if(_comment!='')
+    {
+    jQuery.ajax({
+        type: 'get',
+        url: 'comment/'+num.toString()+'/',
+        data: {Comment:_comment},
+        success: function(){
+
+
+        }
+
+    });
+        $('#input'+num).val('');
+        $('<div class="row comment_branch" ><a href="#" class="comment_name">'+'You'+': </a>'+_comment + '</div>').appendTo('#row_panel'+num);
+    }
     return false;
 
 }

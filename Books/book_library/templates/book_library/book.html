@@ -62,7 +62,7 @@
                     </a>
                 {% else %}
                     {% if user in book.users.all %}
-                        <a href="{% url "books:return" book.id %}" onclick="Dajaxice.book_library.views.return_book_view(my_js_callback,{'pk': {{ book.id }}});"
+                        <a href="{%  url "books:return" book.id %}" onclick="Dajaxice.book_library.views.return_book_view(my_js_callback,{'pk': {{ book.id }}});"
                            class="put action_button button">
                             Return...
                         </a>

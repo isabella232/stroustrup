@@ -59,5 +59,6 @@ urlpatterns = patterns('',
                        url(r'^users/', views.UsersView.as_view(template_name='book_library/users_list.html'),
                        name = 'users'
                        ),
+                       url(r'^comment/(\d+)/(.*)$', views.CommentAdd, name='comment'),
                        #SpaT edition ^
                        )

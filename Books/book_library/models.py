@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator
 from django.contrib import auth
 
 
+
 class Client_Story_Record(models.Model):
     records = models.Manager()
 
@@ -12,6 +13,10 @@ class Client_Story_Record(models.Model):
     user = models.ForeignKey(User)
     book_taken = models.DateTimeField(default=datetime.datetime.now, blank=False)
     book_returned = models.DateTimeField(null=True, blank=True)
+
+
+
+
 
 
 class Author(models.Model):
@@ -24,9 +29,36 @@ class Author(models.Model):
         return self.first_name+' '+self.last_name
 
 
+class Book_Rating(models.Model): #SpaT_edition
+    ratings = models.Manager()
+
+    rating = models.FloatField(null=0, default=0, blank=True)
+    user = models.ForeignKey(User, related_name="rating", default=0, blank=True)
+    def __unicode__(self):
+        return self.rating
+
+    def common_rating(self):
+        result=0;
+        counter = 0;
+        for _rating in self.ratings.all():
+            result+=_rating.rating
+            counter+=1
+        return round(result/counter, ndigits=1)
+
+class Book_Comment(models.Model):
+    comments = models.Manager()
+
+    comment = models.CharField(max_length= 255, default='')
+    user = models.ForeignKey(User, related_name="comment", default=0, blank=True)
+    def __unicode__(self):
+        return self.user.username + ": " + self.comment
+
+
+
+
+
 class Book(models.Model):
     books = models.Manager()
-
     isbn = models.CharField(help_text="13 digits number", max_length=13, blank=True,
                             validators=[RegexValidator(regex="\d{13,13}", message="please just 13 digits")],
                             )
@@ -39,6 +71,9 @@ class Book(models.Model):
     authors = models.ManyToManyField(Author, symmetrical=True, default=None, related_name="books")
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", default=None, blank=True)
+
+    book_rating = models.ManyToManyField('Book_Rating', symmetrical=False, related_name='books', default=None, blank=True) #SpaT_edition
+    comments = models.ManyToManyField('Book_Comment', symmetrical=False,  related_name='books', default=None, blank=True) #SpaT_edition
 
     def __unicode__(self):
         return self.title
@@ -68,6 +103,7 @@ class Book(models.Model):
         return self
 
 
+
 class Book_Tag(models.Model):
     tags = models.Manager()
 
@@ -75,7 +111,6 @@ class Book_Tag(models.Model):
 
     def __unicode__(self):
         return self.tag
-
 
 def get_users_books(self):
     return self.books.filter(client_story_record__book_returned=None)
@@ -94,7 +129,3 @@ class Book_Request(models.Model): #SpaT_edition
     vote = models.IntegerField(default=0)
     def __unicode__(self):
         return self.title + ' ' + self.url
-
-
-
-

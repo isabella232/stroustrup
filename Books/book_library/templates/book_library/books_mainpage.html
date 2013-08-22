@@ -19,9 +19,13 @@
     {% load staticfiles %}
     <script src="{% static 'js/jquery.js'%}"></script>
     {% load staticfiles %}
+    <script src="{% static 'js/jquery.rating-2.0.js' %}"></script>
+    {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'css/top_bar.css' %}"/>
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'css/library.css' %}"/>
+    {% load staticfiles %}
+    <link href="{% static 'styles/jquery.rating.css' %}" rel="stylesheet" type="text/css" />
     {% block link_extension %}{% endblock %}
 </head>
 
@@ -50,8 +54,6 @@
         <div class="top_bar_left_side">
             <a class="button bar_button" href="{%  url 'books:add' %}" > Add a new book</a>
         </div>
-
-
 
         <div class="top_bar_right_side">
             <a class="button bar_right_button" href="{% url 'authorisation:auth_logout' %}" >Log out</a>
