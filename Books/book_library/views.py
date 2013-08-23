@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
@@ -15,6 +15,8 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
 import settings
+import datetime
+import json
 
 from forms import *
 from models import *
@@ -123,9 +125,7 @@ def return_book_view(request, **kwargs):
             return simplejson.dumps({'message': 'Book returned'})
     return  HttpResponseRedirect(reverse('mainpage'))
 
-def rating_post(request, **kwargs):
 
-    return False
 
 class BookListView(LoginRequiredView, ListView):
     busy = None
@@ -256,7 +256,7 @@ class requestBook(AddRequestView): #SpaT_edition
         return super(AddRequestView, self).post(request, *args, **kwargs)
 
 
-def CommentAdd(request, number, *args):
+def CommentAdd(request, number, *args): #SpaT_edition
     queryset = Book.books.all()
     number=int(number)
     book = None
@@ -264,14 +264,12 @@ def CommentAdd(request, number, *args):
         if number == _book.id:
             book = _book
             break
-
     if not book:
         raise ValueError
-
     message = request.REQUEST.dicts[1]['Comment']
     _user=request.user
-
-    com = Book_Comment.comments.create(user = _user, comment = message)
+    _time = datetime.datetime.now()
+    com = Book_Comment.comments.create(user = _user, comment = message, sent_time = _time)
     book.comments.add(com)
     com.save()
     return HttpResponseRedirect('../..')
@@ -300,3 +298,30 @@ def LikeRequest(request, number): #SpaT_edition
             break
 
     return HttpResponseRedirect('../../request')
+
+def rating_post(request, *args, **kwargs):
+    number = int(args[0])
+    queryset = Book.books.all()
+    book = None
+    for _book in queryset:
+        if number == _book.id:
+            book = _book
+            break
+    if not book:
+        raise ValueError
+    _user = request.user
+    _rate = request.GET['score']
+    _rate = float(_rate)
+    for elem in book.book_rating.records.records.all():
+        if elem.user.id == _user.id:
+            #Finish it......
+            break
+
+
+    return HttpResponse(content=json.dumps({
+        'status':'OK',
+        'score': request.GET['score'],
+        'votes': request.GET['votes'],
+        'val': request.GET['val'],
+        'msg': 'Your vote has been approved',
+    }, sort_keys = True))

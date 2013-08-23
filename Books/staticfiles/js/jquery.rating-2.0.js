@@ -3,30 +3,31 @@
  *  Copyright (c) 2011 Шамшур Иван (http://twitter.com/ivanshamshur)
  *  Dual licensed under the MIT and GPL licenses
  */
- 
+
 ;(function($){
 	
 	
-	$.rating = function(e, o){
-		
+	$.rating = function(e, o, cur, votes){
+
 		this.options = $.extend({
 		    fx: 'half',
             image:"../static/images/stars.png",
 			stars: 5,
             minimal: 0,
-			titles: ['vote(s)'],
+			titles: ['vote','votes','votes'],
 			readOnly: false,
-			url: 'book_library/rating_post.html',
-            type: 'post',
+			url: 'rating/'+ o.toString()+'/',
+            type: 'get',
             loader: "../static/images/ajax-loader.gif",
 			click: function(){
             },
             callback: function(responce){
-                this.vote_success.fadeOut(2000);
-                alert('Common rate: '+this._data.val);
+                this.vote_success.fadeOut(100);
+                //alert('Common rate: '+this._data.val);
             }
 
         }, o || {});
+
 		
 		this.el = $(e);
         this.left = 0;
@@ -42,23 +43,26 @@
             self._data[$this.attr('name')] = $this.val();
             
         });
-        
+
         this._data.val = parseFloat(this._data.val) || 0;
         this._data.votes = parseFloat(this._data.votes) || '';
-
-        
+        /*
+        this._data.val = cur;
+        this._data.votes = votes;
+        */
         if(this._data.val > this.options.stars) this._data.val = this.options.stars;
         if(this._data.val < 0) this._data.val = 0;
         
         this.old = this._data.val;
+     //   alert('dataval' + this._data.val);
 
 		this.vote_wrap = $('<div class="vote-wrap"></div>');
 		this.vote_block = $('<div class="vote-block"></div>');
         this.vote_hover = $('<div class="vote-hover"></div>');
 		this.vote_stars = $('<div class="vote-stars"></div>');
 		this.vote_active = $('<div class="vote-active"></div>');
-		this.vote_result = $('<div class="vote-result"></div>');
-		this.vote_success = $('<div class="vote-success"></div>');
+		this.vote_result = $('<br/><div class="vote-result"></div>');
+		this.vote_success = $('<div class="row"><div class="vote-success"></div></div>');
         this.loader = $('<img src="'+this.options.loader+'" alt="load...">');
 
         this.el.html(this.loader);
@@ -73,7 +77,7 @@
         };
 		
 	};
-	
+
 	
 	var $r = $.rating;
 
@@ -95,7 +99,7 @@
 
     		this.vote_hover.bind('mousemove mouseover',function(e){
 
-    			if(self.options.readOnly) return;
+    			if(self.options.readOnly){ alert('ro'); return;}
 
     			var $this = $(this),
     		    	score = 0;
@@ -141,7 +145,7 @@
 
                  if(score > self.options.stars) score = self.options.stars;
                  if(score < 0) score = 0;
-                 
+
                  self.old = self._data.val;
     			 self._data.val = (self._data.val*self._data.votes +score)/(self._data.votes + 1);
                  self._data.val = Math.round( self._data.val * 100 ) / 100;
@@ -159,11 +163,12 @@
     		
     	},
         set: function(){
-            alert('set')//DELETE
+         //   alert('set')//DELETE
     		this.vote_active.css({
     			'width':this._data.val*this.width,
     			'background-position':'left bottom'
     		});
+
     	},
     	reset: function(){
     		this.vote_active.css({
@@ -172,7 +177,7 @@
     		});
     	},
         setvoters: function(){
-            this.vote_result.html(this.declOfNum(this._data.votes));  
+            this.vote_result.html(this.declOfNum(this._data.votes));
         },
     	render: function(){
     		
@@ -207,29 +212,32 @@
             this.vote_result.html(this.loader);
             
             this._data.votes++;
-            alert(this._data.votes) //DELETE
+
     		$.ajax({
     			url: self.options.url,
     			type: self.options.type,
     			data: this._data,
                 dataType: 'json',
     			success: function(data){
+               //     alert('Success');
+                  //  alert(data);
 		            if(data.status == 'OK') {
-		             // alert('OK') //DELETE
+                   //   alert('ok');
 		              self.set();
-		            }  
+		            }
                     else{
-                        //alert('RRESET') //DELETE
-                        self._data.votes--;
+                    //    alert('not ok');
                         self.reset();
-                    }      
-                    
+                        self._data.votes--;
+                       //self.reset();
+                    }
+
                     self.setvoters();
-                       
+
     				if(data.msg)self.vote_success.html(data.msg);
-                    
+
                     if(typeof self.options.callback == 'function'){
-                        
+
                         self.options.callback.apply(self,[data]);
                     }
     			}

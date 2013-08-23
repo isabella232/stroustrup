@@ -154,7 +154,9 @@
                 <div class="row info_area">
                     Description: <br/>
                     <div class="panel block declaration_area">
-                        {{ book.description }}
+                        <div class="panel_content">
+                            {{ book.description }}
+                        </div>
                     </div>
                 </div>
 
@@ -188,6 +190,48 @@
                     </a>
                 </li>
             </ul>
+        </div>
+        <div class="row stock">
+
+            <a  class="button spoiler_button right"
+
+                onclick=" add_comment_list({{ book.id }})"
+                    >
+                Comments ▼
+            </a>
+        </div>
+    </div>
+    <div class="row comment_panel_strip">
+        <div class="panel comment_panel" id="panel{{ book.id }}">
+            <div class="row row_panel" id="row_panel{{ book.id }}">
+                {#####}
+
+                {#####}
+                {% if book.comments.all %}
+                    {% for comment in book.comments.all %}
+                        <div class="row comment_branch" >
+
+                            <a href="{% url 'profile:profile' comment.user.pk %}" class="comment_name">
+                                {{ comment.user }}:
+                            </a>
+                            {{ comment.comment }}
+                            <div class="row comment_time">
+                                {{comment.sent_time}}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="small-2 columns input_comment_column">
+                    <input id="input{{ book.id }}" onkeydown="enter({{ book.id }}, {{ user.pk }})" type="text" class="input_comment">
+                </div>
+                <div class="small-2 columns">
+                    <a class="comment_button button" onclick="  comment({{ book.id }}, {{ user.pk }});"> Send! </a>
+                </div>
+            </div>
+
         </div>
     </div>
 

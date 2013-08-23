@@ -24,17 +24,18 @@ function add_comment_list(num)
 
 }
 
-function enter(num)
+function enter(num, id)
 {
     if (event.keyCode == 13)
-        return comment(num)
+        return comment(num, id)
     return false;
 }
 
-function comment(num)
+function comment(num, user_id)
 {
 
     var _comment = $('#input'+num).val();
+    $('#input'+num).css('background', '#FFDFFD');
 
     if(_comment!='')
     {
@@ -43,15 +44,26 @@ function comment(num)
         url: 'comment/'+num.toString()+'/',
         data: {Comment:_comment},
         success: function(){
-
+            $('#input'+num).animate({opacity: 0}, 'fast', function() {
+                $(this)
+                    .css({'background': 'white'})
+                    .animate({opacity: 1});
+            });
 
         }
 
     });
         $('#input'+num).val('');
-        $('<div class="row comment_branch" ><a href="#" class="comment_name">'+'You'+': </a>'+_comment + '</div>').appendTo('#row_panel'+num);
+        $('<div class="row comment_branch" ><a onclick="'+'document.location.assign(\'/profile/'+user_id.toString()+'\')\"'+
+            ' class="comment_name">'+'You'+': </a>'+_comment + '<div class="row comment_time">'+'Just now'+'</div'+
+            '</div>').fadeIn(600).appendTo('#row_panel'+num);
     }
     return false;
+
+}
+
+function rate_it(id)
+{
 
 }
 

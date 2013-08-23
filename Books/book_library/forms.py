@@ -27,6 +27,11 @@ class TagField(forms.CharField):
     def to_python(self, value):
         if value:
             value = value.split(',')
+            for index in range(len(value)):
+                value[index]=value[index].split(' ')
+                while '' in value[index]:
+                    value[index].remove('')
+                value[index]=str(value[index][0])
 
 
         return value
@@ -50,7 +55,8 @@ class BookForm(ModelForm):
         book= super(BookForm, self).save(commit)
         book.authors.clear()
         book.tags.clear()
-
+        book.authors.remove( )
+        book.tags.remove( )
 
         for author in authors:
         # all inputs checks to belong to db

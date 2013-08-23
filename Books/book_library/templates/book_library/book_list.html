@@ -120,8 +120,9 @@
                                 {% load staticfiles %}
                                 <img src="{% static 'images/stars.png' %}"/>
 
-                                <input type="hidden" class="val" value="2.75"/>
-                                <input type="hidden" class="votes" value="2"/>
+                                <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+
+
                             </div>
                         </div>
                     </div>
@@ -138,7 +139,11 @@
 
             </div>
             <script>
-                $('div.rating_'+'{{ book.id }}').rating();
+                {% if book.book_rating.common_rating and book.book_rating.votes %}
+$('div.rating_'+'{{ book.id }}').rating({{ book.id }},{{ book.book_rating.common_rating }},{{  book.book_rating.votes }});
+                {% else %}
+$('div.rating_'+'{{ book.id }}').rating({{ book.id }},{{0}},{{0}},{{0}});
+                {% endif %}
             </script>
             <div class="row comment_panel_strip">
                 <div class="panel comment_panel" id="panel{{ book.id }}">
@@ -150,10 +155,13 @@
                         {% for comment in book.comments.all %}
                         <div class="row comment_branch" >
 
-                            <a href="#" class="comment_name">
+                            <a href="{% url 'profile:profile' comment.user.pk %}" class="comment_name">
                                 {{ comment.user }}:
                             </a>
                             {{ comment.comment }}
+                            <div class="row comment_time">
+                                {{comment.sent_time}}
+                            </div>
                         </div>
                         {% endfor %}
                     {% endif %}
@@ -161,10 +169,10 @@
 
                     <div class="row">
                         <div class="small-2 columns input_comment_column">
-                            <input id="input{{ book.id }}" onkeydown="enter({{ book.id }})" type="text" class="input_comment">
+                            <input id="input{{ book.id }}" onkeydown="enter({{ book.id }}, {{ user.pk }})" type="text" class="input_comment">
                         </div>
                         <div class="small-2 columns">
-                            <a class="comment_button button" onclick="  comment({{ book.id }});"> Send! </a>
+                            <a class="comment_button button" onclick="  comment({{ book.id }}, {{ user.pk }});"> Send! </a>
                         </div>
                     </div>
 

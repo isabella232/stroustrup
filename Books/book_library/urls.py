@@ -59,6 +59,7 @@ urlpatterns = patterns('',
                        url(r'^users/', views.UsersView.as_view(template_name='book_library/users_list.html'),
                        name = 'users'
                        ),
-                       url(r'^comment/(\d+)/(.*)$', views.CommentAdd, name='comment'),
+                       url(r'comment/(\d+)/(.*)$', views.CommentAdd, name='comment'),
+                       url(r'^rating/(\d+)', views.rating_post, name='rating'),
                        #SpaT edition ^
                        )

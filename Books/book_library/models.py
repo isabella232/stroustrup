@@ -28,26 +28,28 @@ class Author(models.Model):
     def __unicode__(self):
         return self.first_name+' '+self.last_name
 
+class Rating_Record(models.Model):
+    records = models.Manager()
+    rating = models.FloatField(null=0, default=0, blank=True)
+    user = models.ForeignKey(User, related_name="rating", default=0, blank=True)
+
+    def __unicode__(self):
+        return  self.user.username + ': '+ str(self.rating)
 
 class Book_Rating(models.Model): #SpaT_edition
     ratings = models.Manager()
+    records = models.ManyToManyField(Rating_Record)
+    common_rating = models.FloatField(null = 0, default = 0, blank=True )
+    votes = models.IntegerField(null = 0, default = 0, blank=True )
 
-    rating = models.FloatField(null=0, default=0, blank=True)
-    user = models.ForeignKey(User, related_name="rating", default=0, blank=True)
     def __unicode__(self):
-        return self.rating
+        return 'total=' + str(self.common_rating)+ ' by ' + str(self.votes) + ' vote(s)'
 
-    def common_rating(self):
-        result=0;
-        counter = 0;
-        for _rating in self.ratings.all():
-            result+=_rating.rating
-            counter+=1
-        return round(result/counter, ndigits=1)
+
 
 class Book_Comment(models.Model):
     comments = models.Manager()
-
+    sent_time = models.DateField()
     comment = models.CharField(max_length= 255, default='')
     user = models.ForeignKey(User, related_name="comment", default=0, blank=True)
     def __unicode__(self):
@@ -68,11 +70,11 @@ class Book(models.Model):
     paperback_version_exists = models.BooleanField(default=True, verbose_name="paper version")
     description = models.TextField(max_length=45, default="No description available.")
     picture = models.FileField(upload_to='book_images', blank=True)
-    authors = models.ManyToManyField(Author, symmetrical=True, default=None, related_name="books")
+    authors = models.ManyToManyField(Author, symmetrical=False, default=None, related_name="books")
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
-    tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", default=None, blank=True)
+    tags = models.ManyToManyField("Book_Tag", symmetrical=False, related_name="books", default=None, blank=True)
 
-    book_rating = models.ManyToManyField('Book_Rating', symmetrical=False, related_name='books', default=None, blank=True) #SpaT_edition
+    book_rating = models.ManyToManyField('Book_Rating', symmetrical=False, related_name="books", default=None, blank=True) #SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', symmetrical=False,  related_name='books', default=None, blank=True) #SpaT_edition
 
     def __unicode__(self):

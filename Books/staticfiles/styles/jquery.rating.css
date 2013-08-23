@@ -1,5 +1,4 @@
 div.vote-wrap{
-    overflow: hidden;
 }
 
 div.vote-block{
@@ -28,7 +27,8 @@ div.vote-result{
     color: #ccc;
     font-size: 14px;
     margin-top: 12px;
-    padding-left: 190px;
+    padding-left: 0px;
+    float: right;
 }
 
 div.vote-success{

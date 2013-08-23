@@ -102,73 +102,69 @@
 
                     </div>
                 </div>
-                <div class="work_label_right"></div>
+                <div class="work_label_right">
+                    <div class="right">
+                        <div class="rating_{{ book.id }}">
+                            {% load staticfiles %}
+                            <img src="{% static 'images/ajax-loader.gif' %}"  />
+                            {% load staticfiles %}
+                            <img src="{% static 'images/stars.png' %}"/>
+
+                            <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row stock">
+
                 <a  class="button spoiler_button right"
 
-                    href="javascript: add_comment_list({{ book.id }})"
+                    onclick=" add_comment_list({{ book.id }})"
                         >
-                    ▼
+                    Comments ▼
                 </a>
             </div>
 
         </div>
+        <script>
+            {% if book.book_rating.common_rating and book.book_rating.votes %}
+                $('div.rating_'+'{{ book.id }}').rating({{ book.id }},{{ book.book_rating.common_rating }},{{  book.book_rating.votes }});
+            {% else %}
+                $('div.rating_'+'{{ book.id }}').rating({{ book.id }},{{0}},{{0}},{{0}});
+            {% endif %}
+        </script>
         <div class="row comment_panel_strip">
             <div class="panel comment_panel" id="panel{{ book.id }}">
                 <div class="row row_panel" id="row_panel{{ book.id }}">
+                    {#####}
 
-                    <div class="row comment_branch" >
-                        <a href="#" class="comment_name"
-                           onclick=" comment_branch()">
-                            User1:
-                        </a>
-                        comment of first user.
+                    {#####}
+                    {% if book.comments.all %}
+                        {% for comment in book.comments.all %}
+                            <div class="row comment_branch" >
 
-                        <div class="row comment_branch">
-                            <a href="#" class="comment_name"
-                               onclick=" comment_branch()">
-                                User2:
-                            </a>
-                            comment of second user.
-
-                            <div class="row comment_branch">
-                                <a href="#" class="comment_name"
-                                   onclick=" comment_branch()">
-                                    User1:
+                                <a href="{% url 'profile:profile' comment.user.pk %}" class="comment_name">
+                                    {{ comment.user }}:
                                 </a>
-                                Answer of first user.
-
-                                <div class="row comment_branch">
-                                    <a href="#" class="comment_name"
-                                       onclick=" comment_branch()">
-                                        User2:
-                                    </a>
-                                    The Holywar has began.
-
+                                {{ comment.comment }}
+                                <div class="row comment_time">
+                                    {{comment.sent_time}}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row comment_branch">
-                        <a href="#" class="comment_name"
-                           onclick=" comment_branch()">
-                            User3:
-                        </a>
-                        First sober comment
+                        {% endfor %}
+                    {% endif %}
+                </div>
 
+                <div class="row">
+                    <div class="small-2 columns input_comment_column">
+                        <input id="input{{ book.id }}" onkeydown="enter({{ book.id }}, {{ user.pk }})" type="text" class="input_comment">
+                    </div>
+                    <div class="small-2 columns">
+                        <a class="comment_button button" onclick="  comment({{ book.id }}, {{ user.pk }});"> Send! </a>
                     </div>
                 </div>
-                <form>
-                    <div class="row">
-                        <div class="small-2 columns input_comment_column">
-                            <input id="input{{ book.id }}"  type="text" class="input_comment">
-                        </div>
-                        <div class="small-2 columns">
-                            <button type="submit" class="comment_button" onclick="comment({{ book.id }})"> Send! </button>
-                        </div>
-                    </div>
-                </form>
 
             </div>
         </div>

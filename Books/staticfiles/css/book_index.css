@@ -21,6 +21,11 @@
     color: #0a0a0a;
 }
 
+.panel_content{
+    padding: 10px;
+
+}
+
 .activity_area{
     padding: 20px;
     font-size: 24pt;
