@@ -28,22 +28,18 @@ class Author(models.Model):
     def __unicode__(self):
         return self.first_name+' '+self.last_name
 
-class Rating_Record(models.Model):
-    records = models.Manager()
-    rating = models.FloatField(null=0, default=0, blank=True)
-    user = models.ForeignKey(User, related_name="rating", default=0, blank=True)
-
-    def __unicode__(self):
-        return  self.user.username + ': '+ str(self.rating)
 
 class Book_Rating(models.Model): #SpaT_edition
-    ratings = models.Manager()
-    records = models.ManyToManyField(Rating_Record)
+    rating_manager = models.Manager()
+    user_owner = models.ForeignKey(User, related_name="rating", default=0, blank=True)
+    user_rating = models.FloatField(null = 0, default = 0)
     common_rating = models.FloatField(null = 0, default = 0, blank=True )
     votes = models.IntegerField(null = 0, default = 0, blank=True )
 
     def __unicode__(self):
-        return 'total=' + str(self.common_rating)+ ' by ' + str(self.votes) + ' vote(s)'
+        return str('total=' + str(self.common_rating)+ ' by ' + str(self.votes) + ' vote(s)'+';\n'+'current_rate=' +
+            str(self.user_rating) + ' user: ' + self.user_owner.username )
+
 
 
 
@@ -74,7 +70,7 @@ class Book(models.Model):
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", symmetrical=False, related_name="books", default=None, blank=True)
 
-    book_rating = models.ManyToManyField('Book_Rating', symmetrical=False, related_name="books", default=None, blank=True) #SpaT_eedition
+    book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', symmetrical=False,  related_name='books', default=None, blank=True) #SpaT_edition
 
     def __unicode__(self):
@@ -103,6 +99,16 @@ class Book(models.Model):
         record.book_returned = datetime.datetime.now()
         record.save()
         return self
+
+    def common_rating(self):
+        if self.book_rating.latest('common_rating'):
+            return self.book_rating.latest('common_rating').common_rating
+        return 0
+
+    def votes_amount(self):
+        if self.book_rating.latest('votes'):
+            return self.book_rating.latest('votes').votes
+        return 0
 
 
 

@@ -2,6 +2,7 @@
 {% block title %} Crystalnix library: Welcome! {% endblock %}
 
 {% block content %}
+    {% load static %}
     <div class="row pin_header">
 
         • Create new account:
@@ -20,7 +21,7 @@
 
 
         <button type="submit" class="submit_button success button" value="Login" >
-            {% load staticfiles %}
+            
             <img src="{% static 'image/arrow.png'%}" class="image">
             Sign up!
         </button>

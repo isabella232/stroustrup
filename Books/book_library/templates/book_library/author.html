@@ -2,7 +2,7 @@
 {% block title %}{{ author.first_name }} {{ author.last_name }} 's books.{% endblock %}
 {% block location %}{{ author.first_name }} {{ author.last_name }} 's books.{% endblock %}
 {% block link_extension %}
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
 
 {% endblock %}
@@ -55,13 +55,13 @@
                         {% else %}
 
                             <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
-                                {% load staticfiles %}
+                                 
                                 <img src="{% static 'image/book_index.png' %}" class="thumbnail">
                             </a>
                             <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
                                 <li>
                                     <a >
-                                        {% load staticfiles %}
+                                         
                                         <img src="{% static 'image/book_index.png' %}"/>
                                     </a>
                                 </li>
@@ -105,9 +105,9 @@
                 <div class="work_label_right">
                     <div class="right">
                         <div class="rating_{{ book.id }}">
-                            {% load staticfiles %}
+                             
                             <img src="{% static 'images/ajax-loader.gif' %}"  />
-                            {% load staticfiles %}
+                             
                             <img src="{% static 'images/stars.png' %}"/>
 
                             <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
@@ -129,11 +129,15 @@
 
         </div>
         <script>
-            {% if book.book_rating.common_rating and book.book_rating.votes %}
-                $('div.rating_'+'{{ book.id }}').rating({{ book.id }},{{ book.book_rating.common_rating }},{{  book.book_rating.votes }});
-            {% else %}
-                $('div.rating_'+'{{ book.id }}').rating({{ book.id }},{{0}},{{0}},{{0}});
-            {% endif %}
+            var user_in_list_{{ book.id }}=false;
+            {%for elem in book.book_rating.all %}
+                {% ifequal elem.user_owner.id user.id%}
+                    user_in_list_{{ book.id }}=true;
+
+                {% endifequal %} {% endfor %}
+
+            $('div.rating_'+'{{ book.id }}').rating({{ book.id }}, '{{ book.common_rating}}', '{{ book.votes_amount}}', user_in_list_{{ book.id }});
+
         </script>
         <div class="row comment_panel_strip">
             <div class="panel comment_panel" id="panel{{ book.id }}">

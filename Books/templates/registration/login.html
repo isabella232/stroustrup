@@ -1,6 +1,7 @@
 {% extends 'main/base.html' %}
 {% block title %} Crystalnix library: Welcome! {% endblock %}
 {% block content %}
+    {% load static %}
     <div class="row pin_header">
 
         • Log in your account:
@@ -19,7 +20,7 @@
 
 
 <button type="submit" class="submit_button success button" value="Login" >
-    {% load staticfiles %}
+    
     <img src="{% static 'image/arrow.png'%}" class="image">
     Login!
 </button>

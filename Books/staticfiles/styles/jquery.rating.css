@@ -6,7 +6,7 @@ div.vote-block{
 }
 
 div.vote-hover{
-    float: left;
+    float: right;
     cursor:  pointer;
 }
 
@@ -24,16 +24,17 @@ div.vote-active{
 }
 
 div.vote-result{
-    color: #ccc;
-    font-size: 14px;
-    margin-top: 12px;
-    padding-left: 0px;
+    color: #b6b6b6;
     float: right;
+    font-size: 18px;
+    margin-top: 20px;
+    margin-right: 10px;
+    text-shadow: 0 0 3px #ff9300;
 }
 
 div.vote-success{
     clear: both;
-    color: #ccc;
+    color: #1ecc4e;
     font-size: 14px;
     margin: 10px 0 0 10px;
 }

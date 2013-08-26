@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block link_extension %}
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
 
 {% endblock %}
@@ -27,10 +27,10 @@
                     <div class="panel picture_area">
                         {% if profile.is_staff%}
 
-                            {% load staticfiles %}
+                            
                             <img src="{% static 'image/admin.jpg'%}"/>
                         {% else %}
-                            {% load staticfiles %}
+                            
                             <img src="{% static 'image/user.jpeg'%}" />
                         {% endif %}
                     </div>

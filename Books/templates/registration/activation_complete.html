@@ -2,6 +2,7 @@
 {% block title %} Crystalnix library: Activation {% endblock %}
 
 {% block content %}
+    {% load static %}
     <div class="row pin_header">
 
         • Success!
@@ -11,7 +12,7 @@
     <div class="row">
         <div class="small-offset-1 column">
             <a href="{% url 'authorisation:auth_login' %}">
-                {% load staticfiles %}
+                
                 <img src="{% static 'image/arrow.png'%}">
                 Return
             </a>

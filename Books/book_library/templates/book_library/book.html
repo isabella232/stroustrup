@@ -4,7 +4,7 @@
 {% block title %}{{ book.title }}{% endblock %}
 {% block location %}Book: {{ book.title }}{% endblock %}
 {% block link_extension %}
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
 
 {% endblock %}
@@ -24,7 +24,7 @@
                         {% if book.picture %}
                             <img src="{{ book.picture.url }}" alt="Book image"/><br>
                         {% else %}
-                            {% load staticfiles %}
+                            
                             <img src="{% static 'image/book_index.png'%}"/>
                         {% endif %}
                     </div>
@@ -134,18 +134,18 @@
                     Versions:
                 <span class="row declaration_area">E-version
                     {% if book.e_version_exists %}
-                        {% load staticfiles %}
+                        
                         <img src="{% static 'image/yes.png'%}" class="icon"/>
                     {% else %}
-                        {% load staticfiles %}
+                        
                         <img src="{% static 'image/no.png'%}" class="icon"/>
                     {% endif %}
                     Paperback
                     {% if book.paperback_version_exists %}
-                        {% load staticfiles %}
+                        
                         <img src="{% static 'image/yes.png'%}" class="icon"/>
                     {% else %}
-                        {% load staticfiles %}
+                        
                         <img src="{% static 'image/no.png'%}" class="icon"/>
                     {% endif %}
                 </span>

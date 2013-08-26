@@ -54,7 +54,7 @@ urlpatterns = patterns('',
                            template_name='book_library/request_new.html'
                        ), name='request'
                        ),
-                       url(r'^like/(\d+)/$', views.LikeRequest,
+                       url(r'^like/(\d+)/', views.LikeRequest,
                             name='like'),
                        url(r'^users/', views.UsersView.as_view(template_name='book_library/users_list.html'),
                        name = 'users'

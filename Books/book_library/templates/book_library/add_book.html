@@ -4,9 +4,9 @@
 {% block title %}Add book page{% endblock %}
 {% block location %} Add book to collection {% endblock %}
 {% block link_extension %}
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
-    {% load staticfiles %}
+    
     <link rel="stylesheet" href="{% static 'css/add_book.css' %}"/>
 
 {% endblock %}
@@ -27,14 +27,14 @@
                                 <li class="half_length ">
                                     <button type="submit" class="button success full_row left_button">
                                         Add
-                                        {% load staticfiles %}
+                                        
                                         <img src="{% static 'image/yes.png'%}" class="icon"/>
                                     </button>
                                 </li>
                                 <li class="half_length ">
                                     <a class="button alert full_row right_button" href="{% url 'books:list' %}">
                                         Cancel
-                                        {% load staticfiles %}
+                                        
                                         <img src="{% static 'image/no.png'%}" class="icon"/>
                                     </a>
                                 </li>

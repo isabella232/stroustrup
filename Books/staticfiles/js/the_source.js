@@ -59,17 +59,21 @@ function comment(num, user_id)
             '</div>').fadeIn(600).appendTo('#row_panel'+num);
     }
     return false;
-
 }
 
-function rate_it(id)
-{
 
-}
+function like(num){
+    alert('in'+num);
+    jQuery.ajax({
+        type: 'get',
+        url: 'like/'+num.toString()+'/',
+        data: 'like',
+        dataType: 'json',
+        success: function(){ alert('success')}
 
-function comment_branch(sender)
-{
 
+        });
+    alert('out');
 }
 
 function equals()

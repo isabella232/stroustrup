@@ -2,13 +2,21 @@
 {% block title %}Request new book.{% endblock %}
 {% block location %}Requests page{% endblock %}
 {% block link_extension %}
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
-    {% load staticfiles %}
+    
     <link rel="stylesheet" href="{% static 'css/request.css' %}"/>
 {% endblock %}
 
+{% block extensions %}
 
+    <script language="JavaScript">
+
+           /* jQuery trigger for likes*/
+
+
+    </script>
+{% endblock %}
 
 
 {% block content %}
@@ -38,18 +46,22 @@
             <div class="row work_label" id="request{{ order.id }}">
                 <div class="small-10 columns request_link_area">
                         <div class="row">
-                            <a target="_blank" href="{{ order.url }}"
+                            <a target="_blank" href="javascript: document.location.assign('{{ order.url }}');"
                                class="request_link">
                                 {{ order.title }}
                             </a>
                         </div>
                         <div class="row">
-                            Request has been made by <a href="{% url "profile:profile" order.user.pk  %}">  <span class="comment_name"> {{ order.user }} </span></a>
+                            Ordered by <a href="{% url "profile:profile" order.user.pk  %}">  <span class="comment_name"> {{ order.user }} </span></a>
                         </div>
                 </div>
                 <div class="small-1 column request_vote_area" >
                     <div class="row">
-                        <a href="{% url 'books:like' order.id %}" id="button1" class="button success request_vote_button">
+                        <a id="like_{{ order.id }}"
+                           href="{% url 'books:like' order.id %}"
+                           onclick="like({{ order.id }})"
+                           class="button success request_vote_button"
+                           alt='like_button'>
                             +
                         </a>
                     </div>

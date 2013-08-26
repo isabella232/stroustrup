@@ -17,19 +17,19 @@
     </title>
 
 
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/normalize.css'%}"/>
-    {% load staticfiles %}
+    
     <link rel="stylesheet" href="{% static 'css/foundation.css'%}" />
-    {% load staticfiles %}
+    
     <script src="{%static 'js/vendor/custom.modernizr.js'%}"></script>
-    {% load staticfiles %}
+    
     <script src="{% static 'js/the_source.js'%}"></script>
-    {% load staticfiles %}
+    
     <script src="{% static 'js/jquery.js'%}"></script>
-    {% load staticfiles %}
+    
     <link rel="stylesheet" href="{% static 'css/top_bar.css' %}"/>
-    {% load staticfiles %}
+    
     <link rel="stylesheet" href="{% static 'css/library.css' %}"/>
     {% block link_extension %}{% endblock %}
 </head>
@@ -93,13 +93,13 @@
 {% endblock %}
 
 
-{% load staticfiles %}
+
 <script src="{% static 'js/zepto.js'%}"></script>
-{% load staticfiles %}
+
 <script src="{% static 'js/foundation/foundation.js'%}"></script>
-{% load staticfiles %}
+
 <script src="{% static 'js/foundation/foundation.alerts.js'%}"></script>
-{% load staticfiles %}
+
 <script src="{% static 'js/foundation/foundation.dropdown.js'%}"></script>
 
 <script>

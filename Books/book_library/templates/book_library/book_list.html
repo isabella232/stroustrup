@@ -3,14 +3,15 @@
 {% block location %}Books page{% endblock %}
 
 {% block extensions %}
+    {% load static %}
     <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
 
-            $('input[type=checkbox]').wrap('<div class="small-1 column "> </div>').end()
-            $('input[type=text]').css('border-radius','8px').end()
-            $('label').wrap('<div class="small-1 column filter_link"> </div>').end()
-            $('input[name="keywords"]').wrap('<div class="small-4 column "> </div>').end()
-        }))
+            $('input[type=checkbox]').wrap('<div class="small-1 column "> </div>').end();
+            $('input[type=text]').css('border-radius','8px').end();
+            $('label').wrap('<div class="small-1 column filter_link"> </div>').end();
+            $('input[name="keywords"]').wrap('<div class="small-4 column "> </div>').end();
+        }));
         $('div.rating').rating();
     </script>
 {% endblock %}
@@ -62,16 +63,16 @@
                                         </a>
                                     </li>
                                 </ul>
-                            {% else %}
-
+                            {% endif%}
+                            {% if not book.picture%}
                                 <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
-                                    {% load staticfiles %}
+                                    
                                     <img src="{% static 'image/book_index.png' %}" class="thumbnail">
                                 </a>
                                 <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
                                     <li>
                                         <a >
-                                            {% load staticfiles %}
+                                            
                                             <img src="{% static 'image/book_index.png' %}"/>
                                         </a>
                                     </li>
@@ -113,20 +114,19 @@
                         </div>
                     </div>
                     <div class="work_label_right">
-                        <div class="right">
+
                             <div class="rating_{{ book.id }}">
-                                {% load staticfiles %}
-                                <img src="{% static 'images/ajax-loader.gif' %}"  />
-                                {% load staticfiles %}
-                                <img src="{% static 'images/stars.png' %}"/>
+                                
+
 
                                 <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
 
 
                             </div>
-                        </div>
+
                     </div>
                 </div>
+
                 <div class="row stock">
 
                     <a  class="button spoiler_button right"
@@ -139,11 +139,15 @@
 
             </div>
             <script>
-                {% if book.book_rating.common_rating and book.book_rating.votes %}
-$('div.rating_'+'{{ book.id }}').rating({{ book.id }},{{ book.book_rating.common_rating }},{{  book.book_rating.votes }});
-                {% else %}
-$('div.rating_'+'{{ book.id }}').rating({{ book.id }},{{0}},{{0}},{{0}});
-                {% endif %}
+                var user_in_list_{{ book.id }}=false;
+                {%for elem in book.book_rating.all %}
+                    {% ifequal elem.user_owner.id user.id%}
+                        user_in_list_{{ book.id }}=true;
+
+                         {% endifequal %} {% endfor %}
+
+                $('div.rating_'+'{{ book.id }}').rating({{ book.id }}, '{{ book.common_rating}}', '{{ book.votes_amount}}', user_in_list_{{ book.id }});
+
             </script>
             <div class="row comment_panel_strip">
                 <div class="panel comment_panel" id="panel{{ book.id }}">

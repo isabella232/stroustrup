@@ -275,7 +275,7 @@ def CommentAdd(request, number, *args): #SpaT_edition
     return HttpResponseRedirect('../..')
 
 
-def LikeRequest(request, number): #SpaT_edition
+def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
     user=request.user
     for req in queryset:
@@ -297,7 +297,9 @@ def LikeRequest(request, number): #SpaT_edition
                 print(user1,'\n')
             break
 
-    return HttpResponseRedirect('../../request')
+    return HttpResponse(content=json.dumps({
+        'msg': 'Success',
+        }, sort_keys = True))
 
 def rating_post(request, *args, **kwargs):
     number = int(args[0])
@@ -312,12 +314,43 @@ def rating_post(request, *args, **kwargs):
     _user = request.user
     _rate = request.GET['score']
     _rate = float(_rate)
-    for elem in book.book_rating.records.records.all():
-        if elem.user.id == _user.id:
-            #Finish it......
-            break
+    _votes = int(request.GET['votes'])
+    value = None
+    try:
+        value = book.book_rating.all()
+    except Exception:
+        return HttpResponse(content=json.dumps({
+            'status':'BAD_GATE',
+            'score': request.GET['score'],
+            'msg': 'Unexpected error',
+            }, sort_keys = True))
+    if (value):
+        for record in value:
+            if record.user_owner.id == _user.id:
+                _votes-=1
+                if _votes>1:
+                    common = (request.GET['val']*_votes-record.user_rating)/(_votes-1)
+                else:
+                    common=0
+                common+=_rate/_votes
+                book.book_rating.remove(record)
+                elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
+                elem.save()
+                book.book_rating.add(elem)
+
+                return HttpResponse(content=json.dumps({
+                    'status':'CHANGED',
+                    'score': request.GET['score'],
+                    'votes': request.GET['votes'],
+                    'val': common,
+                    'msg': 'Your vote has been changed',
+                    }, sort_keys = True))
 
 
+    common = float(request.GET['val'])
+    elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
+    elem.save()
+    book.book_rating.add(elem)
     return HttpResponse(content=json.dumps({
         'status':'OK',
         'score': request.GET['score'],

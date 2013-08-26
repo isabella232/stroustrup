@@ -3,6 +3,7 @@
 {% block location %}Users page{% endblock %}
 
 {% block extensions %}
+    {% load static %}
     <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
 
@@ -24,13 +25,13 @@
                         <div class="row">
                             {% if user.is_stuff%}
                                 <a href="#" data-dropdown="drop_pic{{user.id}}" data-options="is_hover:true">
-                                    {% load staticfiles %}
+                                    
                                     <img src="{% static 'image/admin.jpg'%}" class="thumbnail">
                                 </a>
                                 <ul id="drop_pic{{user.id}}" class="f-dropdown content large" data-dropdown-content>
                                     <li>
                                         <a >
-                                            {% load staticfiles %}
+                                            
                                             <img src="{% static 'image/admin.jpg'%}"/>
                                         </a>
                                     </li>
@@ -38,13 +39,13 @@
                             {% else %}
 
                                 <a href="#" data-dropdown="drop_pic{{book.id}}" data-options="is_hover:true">
-                                    {% load staticfiles %}
+                                    
                                     <img src="{% static 'image/user.jpeg'%}" class="thumbnail">
                                 </a>
                                 <ul id="drop_pic{{book.id}}" class="f-dropdown content large" data-dropdown-content>
                                     <li>
                                         <a>
-                                            {% load staticfiles %}
+                                            
                                             <img src="{% static 'image/user.jpeg'%}"/>
                                         </a>
                                     </li>

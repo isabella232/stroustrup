@@ -5,15 +5,15 @@
 
     <title>{% block title %}{% endblock %}</title>
 
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/normalize.css'%}"/>
-    {% load staticfiles %}
+    
     <link rel="stylesheet" href="{% static 'css/foundation.css'%}" />
-    {% load staticfiles %}
+    
     <script src="{%static 'js/vendor/custom.modernizr.js'%}"></script>
-    {% load staticfiles %}
+    
     <script src="{% static 'js/the_source.js'%}"></script>
-    {% load staticfiles %}
+    
     <link rel="stylesheet" href="{% static 'css/authorisation.css' %}"/>
     {# <link rel="stylesheet" href=" css/authorisation.css" /> #}
 </head>
@@ -37,11 +37,11 @@
     <div class="offset_row"></div>
 </div>
 
-{% load staticfiles %}
+
 <script src="{% static 'js/zepto.js'%}"></script>
-{% load staticfiles %}
+
 <script src="{% static 'js/foundation/foundation.js'%}"></script>
-{% load staticfiles %}
+
 <script src="{% static 'js/jquery.js'%}"></script>
 <script>
     $(document).foundation();

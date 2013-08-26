@@ -3,6 +3,7 @@
 {% block title %} Crystalnix library: Welcome! {% endblock %}
 
 {% block content %}
+    {% load static %}
     <div class="row pin_header">
 
         • Log out:
@@ -18,14 +19,14 @@
         <div class="small-1 column support_row"  >
             <a  href="{% url 'authorisation:auth_login' %}"
                 class="success button support_button big_font" type="submit">
-                {% load staticfiles %}
+                
                 <img src="{% static 'image/arrow.png'%}" class="image">
                 Sign in!
             </a>
 
             <a  href="{% url 'mainpage' %}"
                 class="success button support_button big_font" type="submit">
-                {% load staticfiles %}
+                
                 <img src="{% static 'image/arrow_up.png'%}" class="image">
                 Main page
             </a>

@@ -2,6 +2,7 @@
 {% block title %}Access denied{% endblock %}
 
 {% block content %}
+    {% load static %}
     <div class="row pin_header">
 
         • Access denied:
@@ -16,7 +17,7 @@
     <div class="row">
         <div class="small-offset-0 column">
             <a href="{% url 'book:list' %}">
-                {% load staticfiles %}
+                
                 <img src="{% static 'image/arrow.png'%}">
                 Return
             </a>
