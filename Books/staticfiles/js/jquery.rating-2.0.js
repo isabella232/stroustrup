@@ -23,7 +23,7 @@
             },
             callback: function(responce){
                 this.vote_success.fadeOut(100);
-                //alert('Common rate: '+this._data.val);
+
             }
 
         }, o || {});
@@ -99,7 +99,7 @@
 
     		this.vote_hover.bind('mousemove mouseover',function(e){
 
-    			//if(self.options.readOnly){ alert('RO'); return;}
+    			//if(self.options.readOnly){   return;}
 
     			var $this = $(this),
     		    	score = 0;
@@ -133,7 +133,6 @@
     		    
     		 })
     		 .bind('mouseout',function(){
-                   // alert('');
     			//if(self.options.readOnly) return;
     			self.reset();
                 self.vote_success.empty();
@@ -156,8 +155,8 @@
                  if(score < 0) score = 0;
 
                  self.old = self._data.val;
-    			 self._data.val = (self._data.val*self._data.votes +score)/(self._data.votes + 1);
-                 self._data.val = Math.round( self._data.val * 100 ) / 100;
+    			 //self._data.val = (self._data.val*self._data.votes +score)/(self._data.votes + 1);
+                // self._data.val = Math.round( self._data.val * 100 ) / 100;
                  self._data.score = score;
                  self.vote_success.html('<div class="row"> Your rate: '+score+'</div>');
 
@@ -233,6 +232,8 @@
 
 		            if(data.status == 'OK') {
 
+                        self._data.val = data.val;
+                        self.old=data.val;
 		              self.set();
 		            }
                     else{

@@ -49,17 +49,17 @@ urlpatterns = patterns('',
                            name='ask'),
 
                        #SpaT_edition v
-                       url(r'^request/', views.requestBook.as_view(success_url='//',
+                       url(r'^request/$', views.requestBook.as_view(success_url='//',
                            model=Book_Request,
                            template_name='book_library/request_new.html'
                        ), name='request'
                        ),
-                       url(r'^like/(\d+)/', views.LikeRequest,
+                       url(r'like/(\d+)/$', views.LikeRequest,
                             name='like'),
-                       url(r'^users/', views.UsersView.as_view(template_name='book_library/users_list.html'),
+                       url(r'^users/$', views.UsersView.as_view(template_name='book_library/users_list.html'),
                        name = 'users'
                        ),
                        url(r'comment/(\d+)/(.*)$', views.CommentAdd, name='comment'),
-                       url(r'^rating/(\d+)', views.rating_post, name='rating'),
+                       url(r'rating/(\d+)', views.rating_post, name='rating'),
                        #SpaT edition ^
                        )

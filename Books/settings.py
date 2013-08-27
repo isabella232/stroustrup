@@ -1,7 +1,7 @@
 # Django settings for Books project.
 
 DEBUG = True
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 import os.path
 

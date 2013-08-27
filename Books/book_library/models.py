@@ -101,8 +101,8 @@ class Book(models.Model):
         return self
 
     def common_rating(self):
-        if self.book_rating.latest('common_rating'):
-            return self.book_rating.latest('common_rating').common_rating
+        if self.book_rating.latest('votes'):
+            return self.book_rating.latest('votes').common_rating
         return 0
 
     def votes_amount(self):

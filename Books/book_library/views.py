@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 import settings
 import datetime
 import json
+import math
 
 from forms import *
 from models import *
@@ -278,11 +279,11 @@ def CommentAdd(request, number, *args): #SpaT_edition
 def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
     user=request.user
+    result_vote=0
     for req in queryset:
-        for user1 in req.users.all():
-            print(user1,'\n')
-        if req.id == int(number):
 
+        if req.id == int(number):
+            result_vote=req.vote
             flag = True
             for user1 in req.users.all():
                 if user1.id == user.id:
@@ -293,12 +294,12 @@ def LikeRequest(request, number, *args): #SpaT_edition
             req.vote+=1
             req.users.add(user)
             req.save()
-            for user1 in req.users.all():
-                print(user1,'\n')
+            result_vote=req.vote
             break
 
     return HttpResponse(content=json.dumps({
-        'msg': 'Success',
+        'status':'OK',
+        'vote':result_vote,
         }, sort_keys = True))
 
 def rating_post(request, *args, **kwargs):
@@ -329,10 +330,11 @@ def rating_post(request, *args, **kwargs):
             if record.user_owner.id == _user.id:
                 _votes-=1
                 if _votes>1:
-                    common = (request.GET['val']*_votes-record.user_rating)/(_votes-1)
+                    common = float(request.GET['val'])-record.user_rating/_votes
                 else:
                     common=0
-                common+=_rate/_votes
+                common += _rate/_votes
+                common = math.ceil(common*100)/100
                 book.book_rating.remove(record)
                 elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
                 elem.save()
@@ -347,7 +349,8 @@ def rating_post(request, *args, **kwargs):
                     }, sort_keys = True))
 
 
-    common = float(request.GET['val'])
+    common = (float(request.GET['val'])*(_votes-1)+_rate)/_votes
+    common = math.ceil(common*100)/100
     elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
     elem.save()
     book.book_rating.add(elem)
@@ -355,6 +358,6 @@ def rating_post(request, *args, **kwargs):
         'status':'OK',
         'score': request.GET['score'],
         'votes': request.GET['votes'],
-        'val': request.GET['val'],
+        'val': common,
         'msg': 'Your vote has been approved',
     }, sort_keys = True))

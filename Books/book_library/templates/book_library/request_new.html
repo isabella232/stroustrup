@@ -46,8 +46,7 @@
             <div class="row work_label" id="request{{ order.id }}">
                 <div class="small-10 columns request_link_area">
                         <div class="row">
-                            <a target="_blank" href="javascript: document.location.assign('{{ order.url }}');"
-                               class="request_link">
+                            <a  target="_blank" class="request_link" href='//{{ order.url }}'>
                                 {{ order.title }}
                             </a>
                         </div>
@@ -58,8 +57,8 @@
                 <div class="small-1 column request_vote_area" >
                     <div class="row">
                         <a id="like_{{ order.id }}"
-                           href="{% url 'books:like' order.id %}"
-                           onclick="like({{ order.id }})"
+                           href="#"
+                           onclick="like_request({{ order.id }})"
                            class="button success request_vote_button"
                            alt='like_button'>
                             +
