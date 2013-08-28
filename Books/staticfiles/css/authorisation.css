@@ -31,9 +31,10 @@ body{
 .main_row{
 
     width: 500px;
-    background: -webkit-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
-    background: -o-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
-    background: -ms-linear-gradient(top, #fdffdd 4%,#ffffff 50%,#fff7dd 100%);
+    background: -webkit-linear-gradient(top, rgb(220, 234, 159) 4%,#fff7e8 60%, rgb(234, 202, 181) 100%);
+    background: -o-linear-gradient(top, rgb(220, 234, 159) 4%,#fff7e8 60%, rgb(234, 202, 181) 100%);
+    background: -ms-linear-gradient(top, rgb(220, 234, 159) 4%,#fff7e8 60%, rgb(234, 202, 181) 100%);
+    background: -moz-linear-gradient(top, rgb(220, 234, 159) 4%,#fff7e8 60%, rgb(234, 202, 181) 100%);
     border-radius: 10px;
     box-shadow: 10px 10px 40px #000000;
     position: static;
@@ -51,6 +52,7 @@ body{
     font: SERIF;
     font-size: 18pt;
     color: black;
+    text-shadow: 0 0 10px #ff8e00;
     margin: 0;
     padding: 5pt;
     padding-left: 25px;
@@ -79,7 +81,9 @@ body{
 
 .submit_button{
 
-    border-radius: 15px;
+    border-radius: 30px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
     font-size: 18pt;
     color: #f5f5f5;
     font-weight: bold;
@@ -87,7 +91,12 @@ body{
     width: 150px;
     height: 45px;
     text-align: center;
-
+    background: -webkit-linear-gradient(top , rgb(212, 255, 189) 20%, rgb(60, 105, 22) 100%, rgb(62, 97, 53) 100%);
+    background: -moz-linear-gradient(top , rgb(212, 255, 189) 20%, rgb(60, 105, 22) 100%, rgb(62, 97, 53) 100%);
+    background: -o-linear-gradient(top , rgb(212, 255, 189) 20%, rgb(60, 105, 22) 100%, rgb(62, 97, 53) 100%);
+    background: -ms-linear-gradient(top , rgb(212, 255, 189) 20%, rgb(60, 105, 22) 100%, rgb(62, 97, 53) 100%);
+    box-shadow: 0 0 10px black;
+    text-shadow: 0 0 5px black;
 
 }
 
@@ -109,7 +118,9 @@ body{
 }
 
 .support_button{
-    border-radius: 15px;
+    border-radius: 30px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
     font-size: 12pt;
     color: #f5f5f5;
     font-weight: normal;
@@ -117,16 +128,24 @@ body{
     width: 200px;
     height: 45px;
     text-align: center;
+    background: -webkit-linear-gradient(top , rgb(212, 255, 189) 20%, rgb(60, 105, 22) 100%, rgb(62, 97, 53) 100%);
+    background: -moz-linear-gradient(top , rgb(212, 255, 189) 20%, rgb(60, 105, 22) 100%, rgb(62, 97, 53) 100%);
+    background: -o-linear-gradient(top , rgb(212, 255, 189) 20%, rgb(60, 105, 22) 100%, rgb(62, 97, 53) 100%);
+    background: -ms-linear-gradient(top , rgb(212, 255, 189) 20%, rgb(60, 105, 22) 100%, rgb(62, 97, 53) 100%);
+    box-shadow: 0 0 10px black;
+    text-shadow: 0 0 5px black;
 
 
 }
 .right_support{
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
+    font-weight: bolder;
 }
 .left_support{
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
+    font-weight: bolder;
 }
 
 .big_font{
@@ -194,22 +213,36 @@ body{
     background: #67a3ff;
     padding: 10px;
     margin-top: 20px;
-    border-top-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-radius: 50px 15px 50px 15px;
     width: 80%;
     margin-left: 10%;
     margin-right: 10%;
     color: #f5f5f5;
     font-size: 14pt;
     font-weight: bold;
+    -o-background-size: 40%;
+
+}
+.google_button.right{
+    width: 10%;
+    padding: 0;
+    margin: 0;
+}
+.google_button.left{
+    width: 90%;
+    padding: 0;
+    padding-left: 10px;
+    margin: 0;
 }
 .google_button:hover{
     background: #2F6FAF;
 }
 
 .google_logo{
+
     width: 30px;
     height: 30px;
     text-align: right;
     float: right;
+
 }

@@ -4573,9 +4573,9 @@ a.th {
     top: 50%;
     margin-top: -5px; } }
 @media only screen and (max-width: 767px) {
-  .f-dropdown {
-    max-width: 100%;
-    left: 0; } }
+    .f-dropdown {
+        max-width: 100%;
+        left: 0; } }
 /* Foundation Dropdowns */
 .f-dropdown {
   position: absolute;

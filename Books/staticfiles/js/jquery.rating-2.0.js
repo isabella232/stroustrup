@@ -61,7 +61,7 @@
         this.vote_hover = $('<div class="vote-hover"></div>');
 		this.vote_stars = $('<div class="vote-stars"></div>');
 		this.vote_active = $('<div class="vote-active"></div>');
-		this.vote_result = $('<br/><div class="vote-result"></div>');
+		this.vote_result = $('<div class="vote-result"></div>');
 		this.vote_success = $('<div class="row"><div class="vote-success"></div></div>');
         this.loader = $('<img src="'+this.options.loader+'" alt="load...">');
 

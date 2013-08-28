@@ -24,10 +24,12 @@ function add_comment_list(num)
 
 }
 
-function enter(num, id)
+function enter(event, num, id)
 {
-    if (event.keyCode == 13)
-        return comment(num, id)
+
+
+    if (event.keyCode == 13 || event.which == 13)
+        return comment(num, id);
     return false;
 }
 

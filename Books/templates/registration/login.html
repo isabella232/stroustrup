@@ -2,7 +2,7 @@
 {% block title %} Crystalnix library: Welcome! {% endblock %}
 {% block content %}
     {% load static %}
-    <div class="row pin_header">
+    <div class="row pin_header" xmlns="http://www.w3.org/1999/html">
 
         • Log in your account:
     </div>
@@ -19,11 +19,11 @@
     {{ form.as_p}}
 
 
-<button type="submit" class="submit_button success button" value="Login" >
-    
+<button type="submit" class="submit_button button" value="Login">
     <img src="{% static 'image/arrow.png'%}" class="image">
     Login!
 </button>
+</form>
 
     <div class="row">
         <div class="small-1 column support_row"  >
@@ -33,13 +33,12 @@
                 <hr/>
             </a>
 
-            <a href="{% url 'mainpage'%}" class="button success support_button right_support">{# doesn't work for this time #}
+            <a href="{% url 'mainpage'%}" class="button support_button right_support">{# doesn't work for this time #}
 
-                Forgot your password?
+                Fall back to main
                 <hr/>
             </a>
         </div>
     </div>
 
-</form>
 {% endblock %}

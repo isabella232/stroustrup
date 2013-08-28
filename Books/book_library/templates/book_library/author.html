@@ -103,18 +103,16 @@
                     </div>
                 </div>
                 <div class="work_label_right">
-                    <div class="right">
-                        <div class="rating_{{ book.id }}">
-                             
-                            <img src="{% static 'images/ajax-loader.gif' %}"  />
-                             
-                            <img src="{% static 'images/stars.png' %}"/>
 
-                            <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+                    <div class="rating_{{ book.id }}">
 
 
-                        </div>
+
+                        <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+
+
                     </div>
+
                 </div>
             </div>
             <div class="row stock">

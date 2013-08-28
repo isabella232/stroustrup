@@ -50,6 +50,7 @@
                                 {{ order.title }}
                             </a>
                         </div>
+                        <div class="offset"></div>
                         <div class="row">
                             Ordered by <a href="{% url "profile:profile" order.user.pk  %}">  <span class="comment_name"> {{ order.user }} </span></a>
                         </div>
@@ -59,9 +60,9 @@
                         <a id="like_{{ order.id }}"
                            href="#"
                            onclick="like_request({{ order.id }})"
-                           class="button success request_vote_button"
+                           class="button request_vote_button"
                            alt='like_button'>
-                            +
+                            ❤
                         </a>
                     </div>
                     <div class="row">
