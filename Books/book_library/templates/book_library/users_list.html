@@ -23,36 +23,20 @@
                 <div class="row">
                     <div class="small-5 columns work_label_left">
                         <div class="row">
-                            {% if user.is_stuff%}
-                                <a href="#" data-dropdown="drop_pic{{user.id}}" data-options="is_hover:true">
-                                    
-                                    <img src="{% static 'image/admin.jpg'%}" class="thumbnail">
+                            {% if user.is_staff%}
+                                <a class="dropdown_custom_thumb user" href="{% url "profile:profile" user.id %}">
+                                    <img src="{% static 'image/admin.jpg' %}" class="content user"/>
                                 </a>
-                                <ul id="drop_pic{{user.id}}" class="f-dropdown content large" data-dropdown-content>
-                                    <li>
-                                        <a >
-                                            
-                                            <img src="{% static 'image/admin.jpg'%}"/>
-                                        </a>
-                                    </li>
-                                </ul>
-                            {% else %}
+                            {% endif%}
+                            {% if not user.is_staff%}
 
-                                <a href="#" data-dropdown="drop_pic{{book.id}}" data-options="is_hover:true">
-                                    
-                                    <img src="{% static 'image/user.jpeg'%}" class="thumbnail">
+                                <a class="dropdown_custom_thumb user" href="{% url "profile:profile" user.id %}">
+                                    <img src="{% static 'image/user.jpeg'%}" class="content user"/>
                                 </a>
-                                <ul id="drop_pic{{book.id}}" class="f-dropdown content large" data-dropdown-content>
-                                    <li>
-                                        <a>
-                                            
-                                            <img src="{% static 'image/user.jpeg'%}"/>
-                                        </a>
-                                    </li>
-                                </ul>
 
                             {% endif %}
                         </div>
+
                     </div>
                     <div class="small-5 columns work_label_middle">
                         <div class="row">
@@ -86,16 +70,16 @@
                                 <div class="small-5 columns work_label_left">
                                     <div class="row">
                                         {% if book.picture%}
-                                            <a href="#" data-dropdown="drop_book{{book.id}}" data-options="is_hover:true">
-                                                <img src="{{ book.picture.url }}" class="thumbnail">
+                                            <a class="dropdown_custom_thumb" href="{% url "books:book" book.id %}">
+                                                <img src="{{ book.picture.url }}" class="content"/>
                                             </a>
-                                            <ul id="drop_book{{book.id}}" class="f-dropdown content large" data-dropdown-content>
-                                                <li>
-                                                    <a >
-                                                        <img src="{{ book.picture.url }}"/>
-                                                    </a>
-                                                </li>
-                                            </ul>
+                                        {% endif%}
+                                        {% if not book.picture%}
+
+                                            <a class="dropdown_custom_thumb" href="{% url "books:book" book.id %}">
+                                                <img src="{% static 'image/book_index.png' %}" class="content"/>
+                                            </a>
+
                                         {% endif %}
                                     </div>
 

@@ -6,6 +6,75 @@
  * To change this template use File | Settings | File Templates.
  */
 
+function book_action(action, url, book_id){
+
+    switch  (action)
+    {
+        case 'take':
+
+            jQuery.ajax({
+                type: 'get',
+                url: url,
+                data: {ID:book_id},
+                dataType: 'json',
+                success: function(data){
+                $('#take_return_send_button').animate({left:-999},'fast', function(){
+                    $(this).animate({left:0}, 'fast')
+                        .attr('class', 'put action_button button')
+                        .attr('onclick',"book_action('return','return/"+book_id+"',"+book_id+");")
+                        .text('Return...').end();
+                }).end();
+                $('#status_bar').animate({left:-999},'fast', function(){
+                    $(this).animate({left:0}, 'fast')
+                        .attr('class','mine')
+                        .text('Belongs me').end();
+                }).end();
+                $('#owner_label').fadeIn(600).end();
+                }
+
+            });
+            break;
+        case 'return':
+            jQuery.ajax({
+                type: 'get',
+                url: url,
+                data: 'take',
+                dataType: 'json',
+                success: function(data){
+                    $('#take_return_send_button').animate({left:-999},'fast', function(){
+                        $(this).animate({left:0}, 'fast')
+                            .attr('class', 'take action_button button')
+                            .attr('onclick',"book_action('take','take/"+book_id+"',"+book_id+");")
+                            .text('Take!').end();
+                    }).end();
+                    $('#status_bar').animate({left:-999},'fast', function(){
+                        $(this).animate({left:0}, 'fast')
+                            .attr('class','free')
+                            .text('Free').end();
+                    }).end();
+                    $('#owner_label').fadeOut(600).end();
+
+                }
+
+            });
+            break;
+        case  'ask':
+            jQuery.ajax({
+                type: 'get',
+                url: url,
+                data: 'take',
+                dataType: 'json',
+                success: function(data){
+
+                }
+
+            });
+            break;
+    }
+}
+
+
+
 function colored_button(id,color)
 {
 

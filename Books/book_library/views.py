@@ -101,29 +101,27 @@ class DeleteTag(Delete):
 class DeleteAuthor(Delete):
     model = Author
 
-@dajaxice_register()
+
 @login_required
-def take_book_view(request, **kwargs):
-    book = Book.books.get(id=kwargs['pk'])
+def take_book_view(request, number, *args, **kwargs):
+    book = Book.books.get(id=number)
     if not book.busy:
         client = request.user
         book.take_by(client)
         book.save()
-        if request.is_ajax():
-            return simplejson.dumps({'message': 'Book taken'})
+        return HttpResponse(content=json.dumps({'message': 'Book taken'}))
     return HttpResponseRedirect(reverse('mainpage'))
 
-@dajaxice_register
+
 @login_required
-def return_book_view(request, **kwargs):
-    book = Book.books.get(id=kwargs['pk'])
+def return_book_view(request, number, *args, **kwargs):
+    book = Book.books.get(id=number)
     client = request.user
     books = client.get_users_books()
     if book.busy and books and book in books:
         book.return_by(client)
         book.save()
-        if request.is_ajax():
-            return simplejson.dumps({'message': 'Book returned'})
+        return HttpResponse(content= json.dumps({'message': 'Book returned'}))
     return  HttpResponseRedirect(reverse('mainpage'))
 
 
@@ -189,8 +187,8 @@ class BookStoryListView(LoginRequiredView, ListView):
         return super(BookStoryListView, self).get_context_data(**context)
 
 @login_required()
-def ask_to_return(request, **kwargs):
-    book = get_object_or_404(Book, pk=kwargs['pk'])
+def ask_to_return(request, number, *args, **kwargs):
+    book = get_object_or_404(Book, id = number)
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:

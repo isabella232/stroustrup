@@ -20,34 +20,35 @@
         <div class="row">
             <div class="small-5 columns activity_area">
                 <div class="row picture_row">
-                    <div class="panel picture_area">
+                    <div class="picture_area">
                         {% if book.picture %}
-                            <img src="{{ book.picture.url }}" alt="Book image"/><br>
+                            <img src="{{ book.picture.url }}"class="auto_size" alt="Book image"/><br>
                         {% else %}
                             
                             <img src="{% static 'image/book_index.png'%}"/>
                         {% endif %}
                     </div>
                 </div>
-                {#  #}
-                <div class="row offset"></div>
+                <hr/>
+
                 <div class="row action_style">
                     Status:
                     {% if not book.busy %}
-                        <span class="free">Free</span>
+                        <span id="status_bar" class="free">Free</span>
                     {% else %}
                         {% if user in book.users.all %}
-                            <span class="mine">Belongs me</span>
+                            <span id="status_bar" class="mine">Belongs me</span>
                         {% else %}
-                            <span class="busy">Busy</span>
+                            <span id="status_bar" class="busy">Busy</span>
                         {% endif %}
 
-
+                        <p id="owner_label">
                         Owner:
-                        <span class="comment_name">
-                            <a href='{% url "profile:profile" user.id %}' class="comment_name">{{ user.username }}</a>
-                        </span>
 
+                        <span class="comment_name">
+                            <a href='{% url "profile:profile" book.taken_by.id %}' class="comment_name">{{ book.taken_by.username }}</a>
+                        </span>
+                        </p>
 
                     {% endif %}
 
@@ -55,19 +56,22 @@
                 <br/>
             <span>
                 {% if not book.busy %}
-                    <a  class="take action_button button"
-                        href="{% url "books:take" book.id %}"
-                        onclick="Dajaxice.book_library.views.take_book_view(my_js_callback, {'pk': {{ book.id }}});">
+                    <a  id="take_return_send_button" class="take action_button button"
+
+                        onclick="book_action('take','take/{{ book.id }}',{{ book.id }});">
                         Take!
                     </a>
                 {% else %}
                     {% if user in book.users.all %}
-                        <a href="{%  url "books:return" book.id %}" onclick="Dajaxice.book_library.views.return_book_view(my_js_callback,{'pk': {{ book.id }}});"
+                        <a id="take_return_send_button"
+
+                           onclick="book_action('return','return/{{ book.id }}',{{ book.id }});"
                            class="put action_button button">
                             Return...
                         </a>
                     {% else %}
-                        <a href="javascript:  " onclick=" cl(); open_modal_window('modalwindow1');"
+                        <a id="take_return_send_button"
+                           onclick=" book_action('ask','ask_to_return/{{ book.id }}',{{ book.id }});"
                            class="busy ask action_button button"> Send a request! </a>
                     {% endif %}
                 {% endif %}
@@ -78,7 +82,7 @@
             <div class="small-6 columns description_area"  >
 
                 <div class="row offset"></div>
-                <h5><span class="first_letter">B</span>ook information:</h5>
+                <h5> <span class="first_letter">B</span>ook information: </h5>
                 <div class="row offset"></div>
 
                 <div class="row info_area">
@@ -95,7 +99,7 @@
                     Author(s):
                     {% for author in book.authors.all %}
                         <span class="declaration_area">
-                                <a href={% url "books:author" author.id %}>
+                                <a href='{% url "books:author" author.id %}' class="author_href">
                                     {{ author.first_name }} {{ author.last_name }}
                                 </a>
                           </span>;

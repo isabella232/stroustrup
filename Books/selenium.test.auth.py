@@ -1,7 +1,7 @@
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import *
 import selenium.webdriver.support.ui as ui
 import time
@@ -9,10 +9,15 @@ import time
 class Authentefication(unittest.TestCase):
 
     def setUp(self):
-        #self.driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities=webdriver.DesiredCapabilities.HTMLUNIT)
+        print('FIREFOX')
         self.driver = webdriver.Firefox()
+        print('CHROME')
+        #self.chrome_search()
+        print('REMOTE')
+        #self.driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities=webdriver.DesiredCapabilities.HTMLUNIT)
 
-    def test_search_in_python_org(self):
+
+    def test_search_auth(self):
         driver = self.driver
         driver.get("http://127.0.0.1:8000/") #i suppose it's gonna be changed
         #self.assertIn("All books.", driver.title)
@@ -26,8 +31,11 @@ class Authentefication(unittest.TestCase):
         except NoSuchElementException:
             print('already log outed')
         print('passed2')
-        elem = driver.find_element_by_partial_link_text('Sign in')
-        elem.send_keys(Keys.RETURN)
+        elem = driver.find_element_by_partial_link_text('Sign')
+        try:
+            elem.send_keys(Keys.RETURN)
+        except Exception as e:
+            print('error: ', e)
         print('passed3')
 
         time.sleep(1)
@@ -88,12 +96,21 @@ class Authentefication(unittest.TestCase):
         self.assertIn('All books.', driver.title)
 
         print('success!')
+        #self.tearDown()
 
+    def chrome_search(self):
+        self.driver = webdriver.Chrome(executable_path='/Documents/custom_django_templates/chromedriver')
+        self.test_search_auth()
 
+    def fox_search(self):
+        self.driver = webdriver.Firefox()
+        self.test_search_auth()
 
 
     def tearDown(self):
-        self.driver.close()
-
+        try:
+            self.driver.close()
+        except Exception as e:
+            print('Closed')
 if __name__ == "__main__":
     unittest.main()
