@@ -1,5 +1,0 @@
-Hello and thanks for signing up for an, {{site}} account!
-To activate your account click this link within {{expiration_days}} days:
-
-
-http://{{site}}/accounts/activate/{{activation_key}}
