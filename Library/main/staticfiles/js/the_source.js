@@ -38,7 +38,7 @@ function book_action(action, url, book_id){
             jQuery.ajax({
                 type: 'get',
                 url: url,
-                data: 'take',
+                data: {ID:book_id},
                 dataType: 'json',
                 success: function(data){
                     $('#take_return_send_button').animate({left:-999},'fast', function(){
@@ -62,17 +62,17 @@ function book_action(action, url, book_id){
             jQuery.ajax({
                 type: 'get',
                 url: url,
-                data: 'take',
+                data: {ID:book_id},
                 dataType: 'json',
                 success: function(data){
-
+                    $('#take_return_send_button').animate({left:-999},'fast', function(){
+                        $(this).animate({left:0}, 'fast')});
                 }
 
             });
             break;
     }
 }
-
 
 
 function colored_button(id,color)
