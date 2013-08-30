@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+{% block title %} Crystalnix library: Welcome! {% endblock %}
+
+{% block content %}
+    {% load static %}
+    <div class="row pin_header">
+
+        • Success!
+    </div>
+    <div class="offset_row"></div>
+    <div class="success_box">Your account has been activated.</div>
+    <div class="row">
+        <div class="small-offset-0 column">
+            <a href="{% url 'authorisation:auth_login' %}" class="button success submit_button">
+                
+                <img src="{% static 'image/arrow.png'%}">
+                Return
+            </a>
+        </div>
+    </div>
+{% endblock %}

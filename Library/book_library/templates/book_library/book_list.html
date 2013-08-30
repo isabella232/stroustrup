@@ -1,0 +1,186 @@
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}All books.{% endblock %}
+{% block location %}Books page{% endblock %}
+
+{% block extensions %}
+    {% load static %}
+    <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
+        $(document).ready((function(){
+
+            $('input[type=checkbox]').wrap('<div class="small-1 column "> </div>').end();
+            $('input[type=text]').css('border-radius','8px').end();
+            $('label').wrap('<div class="small-1 column filter_link"> </div>').end();
+            $('input[name="keywords"]').wrap('<div class="small-4 column "> </div>').end();
+        }));
+        $('div.rating').rating();
+    </script>
+{% endblock %}
+
+{% block filter %}
+
+    <div class="filter row" id="filter" >
+
+            <span class="filter_statement" >
+                Filter:</span>
+
+
+
+        {% if not search_flag %}
+            <form action="" method="get">
+                {% csrf_token %}
+                {{ form }}
+                <span>
+                <input type="submit" value=" ☜ Go! " class='comment_button button'/>
+                </span>
+            </form>
+
+
+        {% endif %}
+
+
+    </div>
+
+{% endblock %}
+
+{% block content %}
+
+
+    {% if object_list %}
+        {% for book in object_list %}
+            {# ################# #}
+            <div class="row work_label" id="book_{{ book.id }}">
+                <div class="row">
+                    <div class="small-5 columns work_label_left">
+                        <div class="row">
+                            {% if book.picture%}
+                                <a class="dropdown_custom_thumb" href="{% url "books:book" book.id %}">
+                                    <img src="{{ book.picture.url }}" class="content"/>
+                                </a>
+                            {% endif%}
+                            {% if not book.picture%}
+
+                            <a class="dropdown_custom_thumb" href="{% url "books:book" book.id %}">
+                                <img src="{% static 'image/book_index.png' %}" class="content"/>
+                            </a>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="small-5 columns work_label_middle">
+                        <div class="row">
+                            <a href='{% url "books:book" book.id %}' class="book_href">
+                                {{ book.title }}
+                            </a>
+                            <hr/>
+                            {% for author in book.authors.all %}
+                                <a href='{% url "books:author" author.id %}' class="author_href">
+                                    {{ author.first_name }} {{ author.last_name }}
+                                </a>
+                                <br>
+                            {% endfor %}
+                            <hr/>
+                            <div class="row tags">
+                                {% for tag in book.tags.all %}
+
+                                        <a href="{% url 'books:tag' tag.id %}" class="technology_href">{{ tag.tag }} </a>,
+
+                                {% endfor %}
+                            </div>
+                                <div class="row offset"></div>
+
+                     <span>
+                         Status:
+                         {% if book.busy %}
+                             {% ifequal user book.taken_by %}
+                                 <span class="status_mine"> Mine </span>
+                             {% else %}
+                                 <span class="status_busy"> Busy </span>
+                             {% endifequal %}
+                         {% else %}
+                             <span class="status_free"> Free </span>
+                         {% endif %}
+                     </span>
+
+                        </div>
+                    </div>
+                    <div class="work_label_right">
+
+                            <div class="rating_{{ book.id }}">
+                                
+
+
+                                <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+
+
+                            </div>
+
+                    </div>
+                </div>
+
+                <div class="row stock">
+
+                    <a  class="button spoiler_button right"
+
+                        onclick=" add_comment_list({{ book.id }})"
+                            >
+                        Comments ▼
+                    </a>
+                </div>
+
+            </div>
+            <script>
+                var user_in_list_{{ book.id }}=false;
+                {%for elem in book.book_rating.all %}
+                    {% ifequal elem.user_owner.id user.id%}
+                        user_in_list_{{ book.id }}=true;
+
+                         {% endifequal %} {% endfor %}
+
+                $('div.rating_'+'{{ book.id }}').rating({{ book.id }}, '{{ book.common_rating}}', '{{ book.votes_amount}}', user_in_list_{{ book.id }});
+
+            </script>
+            <div class="row comment_panel_strip">
+                <div class="panel comment_panel" id="panel{{ book.id }}">
+                    <div class="row row_panel" id="row_panel{{ book.id }}">
+                    {#####}
+
+                    {#####}
+                    {% if book.comments.all %}
+                        {% for comment in book.comments.all %}
+                        <div class="row comment_branch" >
+
+                            <a href="{% url 'profile:profile' comment.user.pk %}" class="comment_name">
+                                {{ comment.user }}:
+                            </a>
+                            {{ comment.comment }}
+                            <div class="row comment_time">
+                                {{comment.sent_time}}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="small-2 columns input_comment_column">
+                            <input id="input{{ book.id }}"
+                                   onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"
+                                   onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"
+                                   type="text" class="input_comment">
+                        </div>
+                        <div class="small-2 columns">
+                            <a class="comment_button button" onclick="  comment({{ book.id }}, {{ user.pk }});"> Send! </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {# ################# #}
+        {% endfor %}
+    {% else %}
+        <h4>There is no books yet :(.</h4>
+    {% endif %}
+{% endblock %}
+{% block pagination %}
+    {# here will be a pagination #}
+{% endblock %}

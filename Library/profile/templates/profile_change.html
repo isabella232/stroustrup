@@ -1,0 +1,31 @@
+{% extends 'profilebase.html' %}
+{% block title %}Profile{% endblock %}
+{%  block location %} Your Profile {% endblock %}
+
+{% block link_extension %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+
+{% endblock %}
+
+{% block content1 %}
+
+    <form action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <ul class="button-group round">
+            <li>
+                <button type="submit" class="button success ">
+                    Confirm
+                </button>
+            </li>
+            <li>
+                <a class="button alert  " href="{% url 'profile:profile' user.pk %}">
+                    Cancel
+                </a>
+            </li>
+        </ul>
+    </form>
+
+
+
+{% endblock %}

@@ -1,0 +1,259 @@
+
+
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block location %}Book: {{ book.title }}{% endblock %}
+{% block link_extension %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+
+{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+        function my_js_callback(data){
+            alert(data.message);
+        }
+    </script>
+    <div class="row work_label">
+
+        <div class="row">
+            <div class="small-5 columns activity_area">
+                <div class="row picture_row">
+                    <div class="picture_area">
+                        {% if book.picture %}
+                            <img src="{{ book.picture.url }}"class="auto_size" alt="Book image"/><br>
+                        {% else %}
+                            
+                            <img src="{% static 'image/book_index.png'%}"/>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr/>
+
+                <div class="row action_style">
+                    Status:
+                    {% if not book.busy %}
+                        <span id="status_bar" class="free">Free</span>
+                    {% else %}
+                        {% if user in book.users.all %}
+                            <span id="status_bar" class="mine">Belongs me</span>
+                        {% else %}
+                            <span id="status_bar" class="busy">Busy</span>
+                        {% endif %}
+
+                        <p id="owner_label">
+                        Owner:
+
+                        <span class="comment_name">
+                            <a href='{% url "profile:profile" book.taken_by.id %}' class="comment_name">{{ book.taken_by.username }}</a>
+                        </span>
+                        </p>
+
+                    {% endif %}
+
+                </div>
+                <br/>
+            <span>
+                {% if not book.busy %}
+                    <a  id="take_return_send_button" class="take action_button button"
+
+                        onclick="book_action('take','take/{{ book.id }}',{{ book.id }});">
+                        Take!
+                    </a>
+                {% else %}
+                    {% if user in book.users.all %}
+                        <a id="take_return_send_button"
+
+                           onclick="book_action('return','return/{{ book.id }}',{{ book.id }});"
+                           class="put action_button button">
+                            Return...
+                        </a>
+                    {% else %}
+                        <a id="take_return_send_button"
+                           onclick=" book_action('ask','ask_to_return/{{ book.id }}',{{ book.id }});"
+                           class="busy ask action_button button"> Send a request! </a>
+                    {% endif %}
+                {% endif %}
+
+            </span>
+
+            </div>
+            <div class="small-6 columns description_area"  >
+
+                <div class="row offset"></div>
+                <h5> <span class="first_letter">B</span>ook information: </h5>
+                <div class="row offset"></div>
+
+                <div class="row info_area">
+
+                    Name:
+                          <span class="declaration_area">
+                               {{ book.title }}
+                           </span>
+
+                </div>
+                <br/>
+                <div class="row info_area">
+
+                    Author(s):
+                    {% for author in book.authors.all %}
+                        <span class="declaration_area">
+                                <a href='{% url "books:author" author.id %}' class="author_href">
+                                    {{ author.first_name }} {{ author.last_name }}
+                                </a>
+                          </span>;
+                    {% endfor %}
+                </div>
+                <br/>
+                {% if book.isbn%}
+                    <div class="row info_area">
+                        ISBN:
+                 <span class="declaration_area">
+                     {{ book.isbn }}
+                 </span>
+                    </div>
+                    <br/>
+                {% endif %}
+                <div class="row info_area">
+                    ID:
+                <span class="declaration_area">
+                    {{ book.id }}
+                </span>
+                </div>
+                <br/>
+                <div class="row info_area">
+
+                    Tags:
+                    {% for tag in book.tags.all %}
+                        <span class="declaration_area">
+                               <a href="{% url 'books:tag' tag.id %}" class="technology_href">{{ tag.tag }}</a>
+                    </span>,
+                    {% endfor %}
+
+
+                </div>
+                <br/>
+                <div class="row info_area">
+                    Versions:
+                <span class="row declaration_area">E-version
+                    {% if book.e_version_exists %}
+                        
+                        <img src="{% static 'image/yes.png'%}" class="icon"/>
+                    {% else %}
+                        
+                        <img src="{% static 'image/no.png'%}" class="icon"/>
+                    {% endif %}
+                    Paperback
+                    {% if book.paperback_version_exists %}
+                        
+                        <img src="{% static 'image/yes.png'%}" class="icon"/>
+                    {% else %}
+                        
+                        <img src="{% static 'image/no.png'%}" class="icon"/>
+                    {% endif %}
+                </span>
+                </div>
+                <br/>
+                <div class="row info_area">
+                    Description: <br/>
+                    <div class="panel block declaration_area">
+                        <div class="panel_content">
+                            {{ book.description }}
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <hr/>
+        <div class="small-offset-2 column linear_column " >
+
+            <ul class="button-group linear_column round">
+                <li>
+                    <a href='{% url "books:story" book.id %}' class="button take">View story of book's takers </a>
+                </li>
+                {% if user.is_staff %}
+                    <li>
+                        <a class="button put" href="{% url 'books:change' book.id %}">
+                            Change
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="button put" href="{% url 'books:delete' book.id %}">
+                            Delete
+                        </a>
+                    </li>
+
+                {% endif %}
+                <li>
+                    <a class="button ask" href="{% url 'books:list' %}">
+                        Fall back to book list
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="row stock">
+
+            <a  class="button spoiler_button right"
+
+                onclick=" add_comment_list({{ book.id }})"
+                    >
+                Comments ▼
+            </a>
+        </div>
+    </div>
+    <div class="row comment_panel_strip">
+        <div class="panel comment_panel" id="panel{{ book.id }}">
+            <div class="row row_panel" id="row_panel{{ book.id }}">
+                {#####}
+
+                {#####}
+                {% if book.comments.all %}
+                    {% for comment in book.comments.all %}
+                        <div class="row comment_branch" >
+
+                            <a href="{% url 'profile:profile' comment.user.pk %}" class="comment_name">
+                                {{ comment.user }}:
+                            </a>
+                            {{ comment.comment }}
+                            <div class="row comment_time">
+                                {{comment.sent_time}}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="small-2 columns input_comment_column">
+                    <input id="input{{ book.id }}" onkeydown="enter({{ book.id }}, {{ user.pk }})" type="text" class="input_comment">
+                </div>
+                <div class="small-2 columns">
+                    <a class="comment_button button" onclick="  comment({{ book.id }}, {{ user.pk }});"> Send! </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block extensions %}
+    <div class="modal_bg" id="modal_bg" onclick="close_modal_windows();"></div>
+    <div class="modal_window" id="modalwindow1">
+
+        {# v ajax v #}
+        <script>
+            function cl(){
+                ajax_loader('modalwindow1','{% url "books:ask" book.id %}');
+            }
+        </script>
+        {# ^ ajax ^ #}
+
+    </div>
+{% endblock %}

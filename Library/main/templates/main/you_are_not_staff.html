@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+{% block title %}Access denied{% endblock %}
+
+{% block content %}
+    {% load static %}
+    <div class="row pin_header">
+
+        • Access denied:
+    </div>
+    <div class="offset_row"></div>
+
+
+        <div class="panel error_box" id="wrong_email" >
+            You are not staff.
+        </div>
+
+    <div class="row">
+        <div class="small-offset-0 column">
+            <a href="{% url 'book:list' %}">
+                
+                <img src="{% static 'image/arrow.png'%}">
+                Return
+            </a>
+        </div>
+    </div>
+{% endblock %}

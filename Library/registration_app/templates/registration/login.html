@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+{% block title %} Crystalnix library: Welcome! {% endblock %}
+{% block content %}
+    {% load static %}
+    <div class="row pin_header" xmlns="http://www.w3.org/1999/html">
+
+        • Log in your account:
+    </div>
+    <div class="offset_row"></div>
+
+        {% if error %}
+            <div class="panel error_box" id="wrong_email" >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+<form action="" method="POST">{% csrf_token %}
+    {{ form.as_p}}
+
+
+<button type="submit" class="submit_button button" value="Login">
+    <img src="{% static 'image/arrow.png'%}" class="image">
+    Login!
+</button>
+</form>
+
+    <div class="row">
+        <div class="small-1 column support_row"  >
+            <a href="{% url 'registration_register'%}" class="button success support_button left_support">
+
+                Haven't registered yet?
+                <hr/>
+            </a>
+
+            <a href="{% url 'mainpage'%}" class="button support_button right_support">{# doesn't work for this time #}
+
+                Fall back to main
+                <hr/>
+            </a>
+        </div>
+    </div>
+
+{% endblock %}

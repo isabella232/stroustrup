@@ -1,0 +1,47 @@
+{% extends 'book_library/books_mainpage.html' %}
+{% block title %}Book Story.{% endblock %}
+{% block location %}Book Story{% endblock %}
+{% block link_extension %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+{% endblock %}
+
+{% block content %}
+    {% if object_list %}
+
+        {% for record in object_list %}
+            <div class="row work_label">
+                <div class="small-4 column left">
+                    <div class="row text-left">
+                        <span class="busy">  Taken :</span>  {{ record.book_taken }}
+                    </div>
+                    <br/>
+                    <div class="row text-left">
+                        <span class="mine">by</span>
+                        <a href="{% url 'profile:profile' record.user.pk  %}" class="comment_name">
+                            {{ record.user.username}}
+                        </a>
+                    </div>
+                </div>
+                <div class="small-6 column"><hr/></div>
+
+                {% if record.book_returned %}
+                    <div class="small-2 column right">
+                        <span class="free">  Returned : </span> {{ record.book_returned }}
+                    </div>
+                {% else %}
+                    <div class="small-2 column"><hr/></div>
+                {% endif %}
+            </div>
+            <div class="offset"></div>
+        {% endfor %}
+
+    {% else %}
+        <p>Nobody took this book. Yet...</p>
+    {% endif %}
+    <div class="row">
+        <a href="{% url 'books:book' pk %}" class=" uibutton">
+            Fall back
+        </a>
+    </div>
+{% endblock %}
