@@ -11,12 +11,8 @@ class Client_Story_Record(models.Model):
 
     book = models.ForeignKey('Book')
     user = models.ForeignKey(User)
-    book_taken = models.DateTimeField(default=datetime.datetime.now, blank=False)
+    book_taken = models.DateTimeField(auto_now_add=True, blank=False)
     book_returned = models.DateTimeField(null=True, blank=True)
-
-
-
-
 
 
 class Author(models.Model):
@@ -38,7 +34,7 @@ class Book_Rating(models.Model): #SpaT_edition
 
     def __unicode__(self):
         return str('total=' + str(self.common_rating)+ ' by ' + str(self.votes) + ' vote(s)'+';\n'+'current_rate=' +
-            str(self.user_rating) + ' user: ' + self.user_owner.username )
+                   str(self.user_rating) + ' user: ' + self.user_owner.username )
 
 
 
@@ -57,18 +53,19 @@ class Book_Comment(models.Model):
 
 class Book(models.Model):
     books = models.Manager()
-    isbn = models.CharField(help_text="13 digits number", max_length=13, blank=True,
+
+    isbn = models.CharField(help_text="13 digit", max_length=13, blank=True,
                             validators=[RegexValidator(regex="\d{13,13}", message="please just 13 digits")],
                             )
     title = models.CharField(max_length=45)
     busy = models.BooleanField(default=False)
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     paperback_version_exists = models.BooleanField(default=True, verbose_name="paper version")
-    description = models.TextField(max_length=45, default="No description available.")
+    description = models.TextField(max_length=255, default="No description available.")
     picture = models.FileField(upload_to='book_images', blank=True)
-    authors = models.ManyToManyField(Author, symmetrical=False, default=None, related_name="books")
+    authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
-    tags = models.ManyToManyField("Book_Tag", symmetrical=False, related_name="books", default=None, blank=True)
+    tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)
 
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', symmetrical=False,  related_name='books', default=None, blank=True) #SpaT_edition
@@ -88,7 +85,7 @@ class Book(models.Model):
 
     def take_by(self, client):
         self.busy = True
-        new_record = Client_Story_Record(book=self, user=client)
+        new_record = Client_Story_Record.records.create(book=self, user=client)
         new_record.save()
         client.save()
         return self
@@ -111,7 +108,6 @@ class Book(models.Model):
         return 0
 
 
-
 class Book_Tag(models.Model):
     tags = models.Manager()
 
@@ -120,11 +116,11 @@ class Book_Tag(models.Model):
     def __unicode__(self):
         return self.tag
 
+
 def get_users_books(self):
     return self.books.filter(client_story_record__book_returned=None)
 
 auth.models.User.add_to_class('get_users_books', get_users_books)
-
 
 
 

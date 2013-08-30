@@ -14,7 +14,8 @@ from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
-import settings
+from os import environ
+from main import settings
 import datetime
 import json
 import math
@@ -44,7 +45,7 @@ class BookFormView(StaffOnlyView, FormView):
         return super(BookFormView, self).get(self, request, *args, **kwargs)
 
 
-class BookView(DetailView):
+class BookView(LoginRequiredView, DetailView):
     model = Book
 
     def get_context_data(self, **kwargs):
@@ -52,6 +53,14 @@ class BookView(DetailView):
         if context['book'].busy:
             context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
         return context
+
+
+class TagView(LoginRequiredView, DetailView):
+    model = Book_Tag
+
+
+class AuthorView(LoginRequiredView, DetailView):
+    model = Author
 
 
 class AddView(StaffOnlyView, CreateView):
@@ -101,6 +110,9 @@ class DeleteTag(Delete):
 class DeleteAuthor(Delete):
     model = Author
 
+class DeleteAuthor(Delete):
+    model = Author
+
 
 @login_required
 def take_book_view(request, number, *args, **kwargs):
@@ -110,7 +122,7 @@ def take_book_view(request, number, *args, **kwargs):
         book.take_by(client)
         book.save()
         return HttpResponse(content=json.dumps({'message': 'Book taken'}))
-    return HttpResponseRedirect(reverse('mainpage'))
+    return HttpResponseRedirect(reverse('book:list'))
 
 
 @login_required
@@ -122,8 +134,7 @@ def return_book_view(request, number, *args, **kwargs):
         book.return_by(client)
         book.save()
         return HttpResponse(content= json.dumps({'message': 'Book returned'}))
-    return  HttpResponseRedirect(reverse('mainpage'))
-
+    return  HttpResponseRedirect(reverse('book:list'))
 
 
 class BookListView(LoginRequiredView, ListView):
@@ -133,7 +144,15 @@ class BookListView(LoginRequiredView, ListView):
 
     def get_queryset(self):
         self.queryset = Book.books.all()
-
+        if self.kwargs['slug']:
+            self.busy = self.kwargs['slug'] == "busy"
+        else:
+            if 'busy' in self.request.GET:
+                if self.request.GET['busy'] == '2':
+                    self.busy = True
+                else:
+                    if self.request.GET['busy'] == '1':
+                        self.busy = False
         form = SearchForm(self.request.GET)
         if form.is_valid():
             query = Q()
@@ -141,11 +160,12 @@ class BookListView(LoginRequiredView, ListView):
                 keywords = form['keywords']
                 keywords = list(set(keywords.data.split(' ')))  #deleting equals
                 for keyword in keywords:
-                    query = Q(isbn__iexact=keyword)
-                    if not Book.books.filter(query):
-                        query = Q(description__icontains=keyword) | Q(title__icontains=keyword)
+                    if not Book.books.filter(isbn__iexact=keyword):
+                        query = query | Q(description__icontains=keyword) | Q(title__icontains=keyword)
                         query = query | Q(authors__first_name__iexact=keyword) | Q(authors__last_name__iexact=keyword)
                         query = query | Q(tags__tag__iexact=keyword)
+                    else:
+                        query = Q(isbn__iexact=keyword)
 
             try:
                 self.busy = form['busy'].data
@@ -162,8 +182,6 @@ class BookListView(LoginRequiredView, ListView):
                     query = query | Q(busy=False)
             if query:
                 self.queryset = Book.books.filter(query)
-
-
         return self.queryset
 
     def get_context_data(self, **kwargs):
@@ -212,7 +230,7 @@ def ask_to_return(request, number, *args, **kwargs):
                                       [profile.email])
             email.send()
             return render_to_response('asked_successfully.html', {'book': book})
-    return HttpResponseRedirect("books:list")
+    return HttpResponseRedirect(reverse("books:list"))
 
 
 class UsersView(LoginRequiredView, ListView):
@@ -358,4 +376,4 @@ def rating_post(request, *args, **kwargs):
         'votes': request.GET['votes'],
         'val': common,
         'msg': 'Your vote has been approved',
-    }, sort_keys = True))
+        }, sort_keys = True))

@@ -18,9 +18,7 @@ class NameField(forms.CharField):
 
     def validate(self, value):
         if not value:
-            raise ValidationError(["Enter first name and last name with namespace. "
-                                   "Every author should be separated by comma from another author. "
-                                   "Probably you wrote single (last or first) name."])
+            raise ValidationError(["Enter first name and last name with namespace. Every author shold be separated by comma from another author. Probably you wrote single (last or first) name."])
 
 class TagField(forms.CharField):
 
