@@ -75,6 +75,7 @@ function book_action(action, url, book_id){
 }
 
 
+
 function colored_button(id,color)
 {
 
