@@ -229,10 +229,7 @@
 
             <div class="row">
                 <div class="small-2 columns input_comment_column">
-                    <input id="input{{ book.id }}"
-                           onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"
-                           onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"
-                           type="text" class="input_comment">
+                    <input id="input{{ book.id }}" onkeydown="enter({{ book.id }}, {{ user.pk }})" type="text" class="input_comment">
                 </div>
                 <div class="small-2 columns">
                     <a class="comment_button button" onclick="  comment({{ book.id }}, {{ user.pk }});"> Send! </a>

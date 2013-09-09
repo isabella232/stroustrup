@@ -3,18 +3,21 @@
 
 {% block content %}
     {% load static %}
-    <div class="row pin_header">
+    <hr/>
+    <div class="col-lg-offset-5 pull-left">
+        <div class="panel panel-danger">
+            <div class="panel-heading">Ops!</div>
+            <div class="panel-body">
 
-        • Sorry:
-    </div>
-    <div class="error_box"> It seems, that activation key is wrong. Check it out again.</div>
-    <div class="row">
-        <div class="small-offset-1 column">
-            <a href="{% url 'mainpage' %}"  class="success button support_button big_font" >
-                
-                <img src="{% static 'image/arrow.png'%}">
-                Return
-            </a>
+                It seems that you put invalid activation key!
+                <br/>
+                Make sure that you copied it completely.
+
+            </div>
         </div>
+
+        <a href="{% url 'mainpage' %}" class="btn btn-primary btn-lg btn-block">
+            Continue <span class="glyphicon glyphicon-hand-right"></span>
+        </a>
     </div>
 {% endblock %}

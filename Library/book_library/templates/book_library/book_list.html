@@ -27,7 +27,7 @@
 
         {% if not search_flag %}
             <form action="" method="get">
-
+                {% csrf_token %}
                 {{ form }}
                 <span>
                 <input type="submit" value=" ☜ Go! " class='comment_button button'/>
@@ -68,19 +68,17 @@
                     </div>
                     <div class="small-5 columns work_label_middle">
                         <div class="row">
-                            <div class="announcement">Title</div>
                             <a href='{% url "books:book" book.id %}' class="book_href">
                                 {{ book.title }}
                             </a>
-                            <div class="announcement"> Authors </div>
-
+                            <hr/>
                             {% for author in book.authors.all %}
                                 <a href='{% url "books:author" author.id %}' class="author_href">
                                     {{ author.first_name }} {{ author.last_name }}
                                 </a>
                                 <br>
                             {% endfor %}
-                            <div class="announcement">Tags</div>
+                            <hr/>
                             <div class="row tags">
                                 {% for tag in book.tags.all %}
 
@@ -184,5 +182,10 @@
     {% endif %}
 {% endblock %}
 {% block pagination %}
-    {# here will be a pagination #}
+    <h2> Pagination </h2>
+    <p>
+    {% for page_no in page.page_range %}
+        <a href="{% url 'books:list'%}{{ page_no }}"> {{ page_no }} </a>-
+    {% endfor %}
+    </p>
 {% endblock %}

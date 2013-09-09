@@ -38,7 +38,7 @@ function book_action(action, url, book_id){
             jQuery.ajax({
                 type: 'get',
                 url: url,
-                data: {ID:book_id},
+                data: 'take',
                 dataType: 'json',
                 success: function(data){
                     $('#take_return_send_button').animate({left:-999},'fast', function(){
@@ -62,11 +62,10 @@ function book_action(action, url, book_id){
             jQuery.ajax({
                 type: 'get',
                 url: url,
-                data: {ID:book_id},
+                data: 'take',
                 dataType: 'json',
                 success: function(data){
-                    $('#take_return_send_button').animate({left:-999},'fast', function(){
-                        $(this).animate({left:0}, 'fast')});
+
                 }
 
             });

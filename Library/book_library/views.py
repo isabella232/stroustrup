@@ -14,6 +14,7 @@ from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from os import environ
 from main import settings
 import datetime
@@ -22,6 +23,8 @@ import math
 
 from forms import *
 from models import *
+
+BOOKS_ON_PAGE = 5
 
 
 class StaffOnlyView(object):
@@ -141,6 +144,7 @@ class BookListView(LoginRequiredView, ListView):
     busy = None
     free = None
     form_class = SearchForm
+    page = 1
 
     def get_queryset(self):
         self.queryset = Book.books.all()
@@ -182,10 +186,17 @@ class BookListView(LoginRequiredView, ListView):
                     query = query | Q(busy=False)
             if query:
                 self.queryset = Book.books.filter(query)
+        if self.kwargs['page']:
+            self.page = int(self.kwargs['page'])
         return self.queryset
 
     def get_context_data(self, **kwargs):
-        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET), "busy": self.busy}
+        page = Paginator(self.queryset, BOOKS_ON_PAGE)
+        if self.page in page.page_range:
+            self.queryset = page.page(self.page).object_list
+        else:
+            self.queryset = []
+        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET), "busy": self.busy, "page": page}
         return super(BookListView, self).get_context_data(**context)
 
 
