@@ -185,7 +185,7 @@
     <h2> Pagination </h2>
     <p>
     {% for page_no in page.page_range %}
-        <a href="{% url 'books:list'%}{{ page_no }}"> {{ page_no }} </a>-
+        <a href="{% url 'books:list'%}page{{ page_no }}"> {{ page_no }} </a>-
     {% endfor %}
     </p>
 {% endblock %}
