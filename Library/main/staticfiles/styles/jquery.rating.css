@@ -24,17 +24,27 @@ div.vote-active{
 }
 
 div.vote-result{
-    color: #b6b6b6;
-    float: right;
+    position: relative;
+    color: black;
+    top: 45px;
     font-size: 18px;
-    margin-top: 20px;
-    margin-right: 10px;
-    text-shadow: 0 0 3px #ff9300;
+    float: right;
+    margin-left: 10px;
+    left: 150px;
+    padding: 5px;
+
 }
 
 div.vote-success{
-    clear: both;
-    color: #1ecc4e;
+
+    color: black;
     font-size: 14px;
     margin: 10px 0 0 10px;
+}
+
+div.your_rate{
+    position: relative;
+
+    float: right;
+    margin-right: 15px;
 }

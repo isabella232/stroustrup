@@ -124,10 +124,15 @@ function comment(num, user_id)
         }
 
     });
+        if($('#empty_board'+num))
+            $('#empty_board'+num).fadeOut('300');
         $('#input'+num).val('');
-        $('<div class="row comment_branch" ><a onclick="'+'document.location.assign(\'/profile/'+user_id.toString()+'\')\"'+
-            ' class="comment_name">'+'You'+': </a>'+_comment + '<div class="row comment_time">'+'Just now'+'</div'+
-            '</div>').fadeIn(600).appendTo('#row_panel'+num);
+        $('<div class="row" >'+'<span class="glyphicon glyphicon-time"> </span> Just now'+
+            '<div class="well well-sm">'+
+            '<a onclick="'+'document.location.assign(\'/profile/'+user_id.toString()+'\')\"'+
+            ' class="text-primary">'+'You'+': </a>'+_comment +
+            '</div></div>').fadeIn(600).appendTo('#row_panel'+num);
+
     }
     return false;
 }

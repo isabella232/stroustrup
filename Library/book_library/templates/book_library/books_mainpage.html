@@ -1,81 +1,67 @@
 <!DOCTYPE html>
-<html class="no-js" lang="eng">
-
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width" />
+<html xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>
-        Crystalnix library: {% block title %}{% endblock %}
-    </title>
-
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/normalize.css'%}"/>
-
-    <link rel="stylesheet" href="{% static 'css/foundation.css'%}" />
-
-    <script src="{%static 'js/vendor/custom.modernizr.js'%}"></script>
-
-    <script src="{% static 'js/the_source.js'%}"></script>
-
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/custom_styles.css' %}" rel="stylesheet" media="screen">
+    <!-- jQuery required -->
     <script src="{% static 'js/jquery.js'%}"></script>
-
+    <script src="{% static 'js/the_source.js'%}"></script>
     <script src="{% static 'js/jquery.rating-2.0.js' %}"></script>
-
-    <link rel="stylesheet" href="{% static 'css/top_bar.css' %}"/>
-
-    <link rel="stylesheet" href="{% static 'css/library.css' %}"/>
-
+    <link href="{% static 'styles/rating.styles.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'styles/jquery.rating.css' %}" rel="stylesheet" type="text/css" />
-    {% block link_extension %}{% endblock %}
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+
+    <![endif]-->
 </head>
-
-
 <body>
 
-<header>
-
-    <div class="top_bar_row" >
-        <div class="top_bar_left_side" >
-            <a  class="active button active_bar_button " >{% block location %}{% endblock %}</a>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand hidden-overflow-content" href="">
+                <img src="{% static 'image/crystalnix_small.png' %}" class="crystalnix-logo">
+            </a>
         </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li id="books_bar"><a href="{% url 'books:list' %}">Books Page</a></li>
+                <li id="users_bar"><a href="{% url 'books:users'  %}">Users Page</a></li>
+                <li id="request_bar"><a href="{% url 'books:request'  %}">Request book from shop</a></li>
+                {% if user.is_staff %}
+                <li id="add_bar"><a href="{%  url 'books:add' %}">Add book in Library</a></li>
+                {% endif %}
+            </ul>
+            <p class="navbar-text pull-right">
+                <a class="btn btn-xs btn-danger" href="{% url 'authorisation:auth_logout' %}">
+                    <span class="glyphicon glyphicon-off"></span>
+                </a>
+            </p>
+            <p class="navbar-text pull-right">Signed in as
+                <a href="{% url "profile:profile" user.pk %}" class="navbar-link"> {{ user }} </a></p>
 
-        <div class="top_bar_left_side" >
-            <a class="button bar_button"  href="{% url 'books:list' %}" >Books page</a>
-        </div>
+        </div><!--/.nav-collapse -->
+        {%  block filter %}
 
-        <div class="top_bar_left_side">
-            <a class="button bar_button" href="{% url 'books:users'  %}" > Users page</a>
-        </div>
-
-        <div class="top_bar_left_side">
-            <a class="button bar_button" href="{% url 'books:request'  %}" > Request a new book</a>
-        </div>
-
-        <div class="top_bar_left_side">
-            <a class="button bar_button" href="{%  url 'books:add' %}" > Add a new book</a>
-        </div>
-
-        <div class="top_bar_right_side">
-            <a class="button bar_right_button" href="{% url 'authorisation:auth_logout' %}" >Log out</a>
-        </div>
-
-        <div class="top_bar_right_side user_label">
-            You are logged as:
-            <br/><br/>
-            <a href="{% url "profile:profile" user.pk %}" class="bar_username_style"> {{ user }} </a>
-        </div>
-
+        {% endblock %}
 
     </div>
+</div>
 
-</header>
 
-{% block filter %}{% endblock %}
-<div class="row main_strip_row" >
-    <div class="small-offset-12 columns main_strip_column"  >
-        <div class="row background_strip" >
+
+<div class="container" >
+    <div class="books-content">
             {% block content %}{% endblock %}
-        </div>
     </div>
 </div>
 
@@ -84,21 +70,15 @@
 {% block pagination %}{% endblock %}
 
 
+
+
+
+
+
+
+<!-- Bootstrap features -->
+<script src="{% static 'js/bootstrap.js'%}"></script>
 {% block extensions %}{% endblock %}
-
-
-
-<script src="{% static 'js/zepto.js'%}"></script>
-<script src="{% static 'js/foundation/foundation.js'%}"></script>
-<script src="{% static 'js/foundation/foundation.alerts.js'%}"></script>
-<script src="{% static 'js/foundation/foundation.dropdown.js'%}"></script>
-
-<script>
-    $(document).foundation();
-
-</script>
-
-
 </body>
 
 

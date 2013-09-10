@@ -196,7 +196,15 @@ class BookListView(LoginRequiredView, ListView):
             self.queryset = page.page(self.page).object_list
         else:
             self.queryset = []
-        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET), "busy": self.busy, "page": page}
+
+        next_page=self.page+1
+        prev_page=self.page-1
+        if prev_page == 0:
+            prev_page = self.page
+        if next_page-1 == page.num_pages:
+            next_page = self.page
+        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET),
+                   "busy": self.busy, "current_page": self.page, "next_page":next_page, "prev_page":prev_page}
         return super(BookListView, self).get_context_data(**context)
 
 

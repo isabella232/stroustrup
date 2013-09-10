@@ -1,7 +1,18 @@
+html{
+    background: url(../image/wood_bg.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+}
+
 body {
     padding-top: 40px;
     padding-bottom: 40px;
-    background-color: #eee;
+    background: none;
 }
 
 .form-signin {
@@ -124,5 +135,8 @@ body {
     font-size: 14pt;
 }
 
+.page_number{
+    font-size: 20pt;
+}
 
 
