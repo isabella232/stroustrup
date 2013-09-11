@@ -5,255 +5,273 @@
 {% block location %}Book: {{ book.title }}{% endblock %}
 {% block link_extension %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+
 
 {% endblock %}
 
 {% block content %}
-    <script type="text/javascript">
-        function my_js_callback(data){
-            alert(data.message);
-        }
-    </script>
-    <div class="row work_label">
 
-        <div class="row">
-            <div class="small-5 columns activity_area">
-                <div class="row picture_row">
-                    <div class="picture_area">
-                        {% if book.picture %}
-                            <img src="{{ book.picture.url }}"class="auto_size" alt="Book image"/><br>
-                        {% else %}
-                            
-                            <img src="{% static 'image/book_index.png'%}"/>
-                        {% endif %}
+
+
+    <div class="main_container">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-book"></span> <a class="title">{{ book.title }}</a>
+            </div>
+            <div class="panel-body">
+                <div class="media">
+                    <div class="col-md-1">
+
+                                {% if book.picture%}
+                                    <a class="thumbnail">
+                                        <img data-src="holder.js/100%x320" src="{{ book.picture.url }}" alt="Image">
+                                    </a>
+
+                                {% endif%}
+                                {% if not book.picture%}
+
+                                    <a class="thumbnail">
+                                        <img data-src="holder.js/100%x180" src="{% static 'image/book_index.png' %}" alt="Image">
+                                    </a>
+
+                                {% endif %}
+
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading pull-left"> ID: {{ book.id }}</h4>
+
+                        <h4 class="media-heading pull-right">ISBN: {{ book.isbn }} </h4>
+                        <hr/>
+
+                        <ul id="myTab" class="nav nav-tabs">
+                            <li class="active"><a href="#authors" data-toggle="tab">Authors <span class="glyphicon glyphicon-user"></span></a></li>
+                            <li><a href="#description" data-toggle="tab">Description <span class="glyphicon glyphicon-info-sign"></span></a></li>
+                            <li><a href="#version" data-toggle="tab">Versions <span class="glyphicon glyphicon-tasks"></span> </a></li>
+                            <li><a href="#tags" data-toggle="tab">Tags <span class="glyphicon glyphicon-tags"></span></a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade in active" id="authors">
+                                {% for author in book.authors.all %}
+                                    <li class="list-group-item">
+                                        <a class="author" href="{% url "books:author" author.id %}">
+                                            <span class="glyphicon glyphicon-chevron-right"></span> {{ author.first_name }} {{ author.last_name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </div>
+                            <div class="tab-pane fade" id="description">
+                                <div class="panel panel-info">
+                                    <div class="panel-body">
+                                        {{ book.description }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="version">
+                                <div class="panel panel-info">
+                                    <div class="panel-body">
+                                        <p>Paperbook:
+                                            {% if book.paperback_version_exists   %}<span class="glyphicon glyphicon-ok-sign"></span>
+                                            {% else %} <span class="glyphicon glyphicon-remove-sign"></span>
+                                            {% endif %}
+                                        </p>
+
+                                        <p>E-book:
+                                            {% if book.e_version_exists %}<span class="glyphicon glyphicon-ok-sign"></span>
+                                            {% else %} <span class="glyphicon glyphicon-remove-sign"></span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="tags">
+                                <div class="panel panel-info">
+                                    <div class="panel-body">
+                                        {% for tag in book.tags.all %}
+
+                                            <a href="{% url 'books:tag' tag.id %}" class="btn btn-primary tag">{{ tag.tag }} </a>,
+
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
                 <hr/>
-
-                <div class="row action_style">
-                    Status:
-                    {% if not book.busy %}
-                        <span id="status_bar" class="free">Free</span>
-                    {% else %}
-                        {% if user in book.users.all %}
-                            <span id="status_bar" class="mine">Belongs me</span>
-                        {% else %}
-                            <span id="status_bar" class="busy">Busy</span>
-                        {% endif %}
-
-                        <p id="owner_label">
-                        Owner:
-
-                        <span class="comment_name">
-                            <a href='{% url "profile:profile" book.taken_by.id %}' class="comment_name">{{ book.taken_by.username }}</a>
-                        </span>
-                        </p>
-
-                    {% endif %}
-
-                </div>
-                <br/>
-            <span>
-                {% if not book.busy %}
-                    <a  id="take_return_send_button" class="take action_button button"
-
-                        onclick="book_action('take','take/{{ book.id }}',{{ book.id }});">
-                        Take!
-                    </a>
-                {% else %}
-                    {% if user in book.users.all %}
-                        <a id="take_return_send_button"
-
-                           onclick="book_action('return','return/{{ book.id }}',{{ book.id }});"
-                           class="put action_button button">
-                            Return...
-                        </a>
-                    {% else %}
-                        <a id="take_return_send_button"
-                           onclick=" book_action('ask','ask_to_return/{{ book.id }}',{{ book.id }});"
-                           class="busy ask action_button button"> Send a request! </a>
-                    {% endif %}
-                {% endif %}
-
-            </span>
-
-            </div>
-            <div class="small-6 columns description_area"  >
-
-                <div class="row offset"></div>
-                <h5> <span class="first_letter">B</span>ook information: </h5>
-                <div class="row offset"></div>
-
-                <div class="row info_area">
-
-                    Name:
-                          <span class="declaration_area">
-                               {{ book.title }}
-                           </span>
-
-                </div>
-                <br/>
-                <div class="row info_area">
-
-                    Author(s):
-                    {% for author in book.authors.all %}
-                        <span class="declaration_area">
-                                <a href='{% url "books:author" author.id %}' class="author_href">
-                                    {{ author.first_name }} {{ author.last_name }}
-                                </a>
-                          </span>;
-                    {% endfor %}
-                </div>
-                <br/>
-                {% if book.isbn%}
-                    <div class="row info_area">
-                        ISBN:
-                 <span class="declaration_area">
-                     {{ book.isbn }}
-                 </span>
-                    </div>
-                    <br/>
-                {% endif %}
-                <div class="row info_area">
-                    ID:
-                <span class="declaration_area">
-                    {{ book.id }}
-                </span>
-                </div>
-                <br/>
-                <div class="row info_area">
-
-                    Tags:
-                    {% for tag in book.tags.all %}
-                        <span class="declaration_area">
-                               <a href="{% url 'books:tag' tag.id %}" class="technology_href">{{ tag.tag }}</a>
-                    </span>,
-                    {% endfor %}
-
-
-                </div>
-                <br/>
-                <div class="row info_area">
-                    Versions:
-                <span class="row declaration_area">E-version
-                    {% if book.e_version_exists %}
-                        
-                        <img src="{% static 'image/yes.png'%}" class="icon"/>
-                    {% else %}
-                        
-                        <img src="{% static 'image/no.png'%}" class="icon"/>
-                    {% endif %}
-                    Paperback
-                    {% if book.paperback_version_exists %}
-                        
-                        <img src="{% static 'image/yes.png'%}" class="icon"/>
-                    {% else %}
-                        
-                        <img src="{% static 'image/no.png'%}" class="icon"/>
-                    {% endif %}
-                </span>
-                </div>
-                <br/>
-                <div class="row info_area">
-                    Description: <br/>
-                    <div class="panel block declaration_area">
-                        <div class="panel_content">
-                            {{ book.description }}
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-        <hr/>
-        <div class="small-offset-2 column linear_column " >
-
-            <ul class="button-group linear_column round">
-                <li>
-                    <a href='{% url "books:story" book.id %}' class="button take">View story of book's takers </a>
-                </li>
-                {% if user.is_staff %}
-                    <li>
-                        <a class="button put" href="{% url 'books:change' book.id %}">
-                            Change
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="button put" href="{% url 'books:delete' book.id %}">
-                            Delete
-                        </a>
-                    </li>
-
-                {% endif %}
-                <li>
-                    <a class="button ask" href="{% url 'books:list' %}">
-                        Fall back to book list
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="row stock">
-
-            <a  class="button spoiler_button right"
-
-                onclick=" add_comment_list({{ book.id }})"
-                    >
-                Comments ▼
-            </a>
-        </div>
-    </div>
-    <div class="row comment_panel_strip">
-        <div class="panel comment_panel" id="panel{{ book.id }}">
-            <div class="row row_panel" id="row_panel{{ book.id }}">
-                {#####}
-
-                {#####}
-                {% if book.comments.all %}
-                    {% for comment in book.comments.all %}
-                        <div class="row comment_branch" >
-
-                            <a href="{% url 'profile:profile' comment.user.pk %}" class="comment_name">
-                                {{ comment.user }}:
-                            </a>
-                            {{ comment.comment }}
-                            <div class="row comment_time">
-                                {{comment.sent_time}}
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-
             <div class="row">
-                <div class="small-2 columns input_comment_column">
-                    <input id="input{{ book.id }}" onkeydown="enter({{ book.id }}, {{ user.pk }})" type="text" class="input_comment">
+                <div class="col-md-7">
+                <div class="well well-lg">
+                    <div class="container">
+                        <h4 class="col-sm-offset-0">
+                            Status:
+                            {% if book.busy %}
+                                {% ifequal user book.taken_by %}
+                                    <span  id="status_row" class="label label-warning take_return_button"> Mine </span></h4>
+                                    <h4 id="owner">Owner:
+                                        <a href="{% url "profile:profile" book.taken_by.id %}"  class="author">You</a>
+                                    </h4>
+
+                                {% else %}
+                                    <span id="status_row"  class="label label-danger take_return_button"> Busy </span>
+                                </h4>
+                                    <h4 id="owner">Owner:
+                                        <a href="{% url "profile:profile" book.taken_by.id %}" class="author">
+                                        {{ book.taken_by.username }}
+                                        </a>
+                                    </h4>
+                                {% endifequal %}
+
+
+                            {% else %}
+                                <span id="status_row" class="label label-success take_return_button"> Free </span>
+                        </h4>
+                            {% endif %}
+
+
+
+                        <h4 id="action">Action:
+                            {% if not book.busy %}
+                                <a  id="take_return_send_button"
+                                    class="take_return_button btn btn-success  btn-lg"
+                                    onclick="book_action('take','take/{{ book.id }}',{{ book.id }});">
+                                    Take!
+                                </a>
+                            {% else %}
+                                {% if user in book.users.all %}
+                                    <a id="take_return_send_button"
+
+                                       onclick="book_action('return','return/{{ book.id }}',{{ book.id }});"
+                                       class="take_return_button btn btn-warning  btn-lg">
+                                        Return...
+                                    </a>
+                                {% else %}
+                                    <a id="take_return_send_button"
+
+                                       onclick=" book_action('ask','ask_to_return/{{ book.id }}',{{ book.id }});"
+                                       class="take_return_button btn btn-danger  btn-lg"> Send a request! </a>
+                                {% endif %}
+                            {% endif %}
+
+                        </h4>
+                    </div>
                 </div>
-                <div class="small-2 columns">
-                    <a class="comment_button button" onclick="  comment({{ book.id }}, {{ user.pk }});"> Send! </a>
+                </div>
+                <div class="col-md-5">
+
+                    <div class="rating_{{ book.id }}">
+                        <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+                    </div>
+                    <script>
+                        var user_in_list_{{ book.id }}=false;
+                        {%for elem in book.book_rating.all %}
+                            {% ifequal elem.user_owner.id user.id%}
+                                user_in_list_{{ book.id }}=true;
+
+                            {% endifequal %} {% endfor %}
+
+                        $('div.rating_'+'{{ book.id }}').rating({{ book.id }}, '{{ book.common_rating}}', '{{ book.votes_amount}}', user_in_list_{{ book.id }});
+
+                    </script>
                 </div>
             </div>
+                <hr/>
 
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group btn-group-lg ">
+                            <a href=" {% url "books:story" book.id %}" class="btn btn-primary btn-lg">
+                                Check a history of the book <span class="glyphicon glyphicon-list-alt"></span>
+                            </a>
+                            {% if user.is_staff %}
+                            <div class="btn-group btn-group-lg">
+
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    Edit book <span class="glyphicon glyphicon-edit"></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a  href="{% url 'books:delete' book.id %}">Delete</a></li>
+                                    <li><a  href="{% url 'books:change' book.id %}">Change</a></li>
+                                </ul>
+                            </div>
+                            {% endif %}
+                            <!-- Button trigger modal -->
+                            <a data-toggle="modal" href="#comments_{{book.id}}" class="btn btn-primary btn-lg">
+                                Comments <span class="glyphicon glyphicon-comment"></span>
+                            </a>
+
+
+                            <a href=" {% url "books:list"%}" class="btn btn-primary">
+                                Fall back <span class="glyphicon glyphicon-chevron-down"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
+        <!--MODAL-->
+        <div class="modal fade" id="comments_{{ book.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Share your opinion:</h4>
+                    </div>
+                    <div class="modal-body" id="row_panel{{ book.id }}">
+                        {% if book.comments.all %}
+                            {% for comment in book.comments.all %}
+                                <div class="row">
+                                    <span class="glyphicon glyphicon-time"> </span> {{comment.sent_time}}
+                                    <div class="well well-sm">
+                                        <a href="{% url 'profile:profile' comment.user.pk %}" class="text-primary">
+                                            {{ comment.user }}:
+                                        </a>
+                                        {{ comment.comment }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <h4 id="empty_board{{ book.id }}">
+                                This is board is empty... Fix such situation <span class="glyphicon glyphicon-chevron-down"></span>
+                            </h4>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-lg-6 pull-right">
+                                <div class="input-group">
+                                    <input id="input{{ book.id }}"
+                                           onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"
+                                           onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"
+                                           type="text" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="  comment({{ book.id }}, {{ user.pk }});">
+                                            Send! <span class="glyphicon glyphicon-envelope"></span>
+                                        </button>
+                                    </span>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
+
+
+    </div>
 
 
 {% endblock %}
 
 {% block extensions %}
-    <div class="modal_bg" id="modal_bg" onclick="close_modal_windows();"></div>
-    <div class="modal_window" id="modalwindow1">
-
-        {# v ajax v #}
-        <script>
-            function cl(){
-                ajax_loader('modalwindow1','{% url "books:ask" book.id %}');
-            }
-        </script>
-        {# ^ ajax ^ #}
-
-    </div>
+    <script>
+    $('div.rating').rating();
+    </script>
 {% endblock %}

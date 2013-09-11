@@ -43,7 +43,7 @@ urlpatterns = patterns('',
                        url(r'^(?P<pk>\d+)/story/$', BookStoryListView.as_view(template_name='book_library/book_story.html',
                                                                     ),
                            name='story'),
-                       url(r'^(?P<pk>\d+)/ask_to_return/$', ask_to_return,
+                       url(r'^(?P<pk>\d+)/ask_to_return/(\d+)$', ask_to_return,
                            name='ask'),
                        #SpaT_edition v
                        url(r'^request/$', requestBook.as_view(success_url='//',

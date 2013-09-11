@@ -224,8 +224,8 @@ class BookStoryListView(LoginRequiredView, ListView):
         return super(BookStoryListView, self).get_context_data(**context)
 
 @login_required()
-def ask_to_return(request, number, *args, **kwargs):
-    book = get_object_or_404(Book, id = number)
+def ask_to_return(request, *args, **kwargs):
+    book = get_object_or_404(Book, id = request.GET['ID'])
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:

@@ -18,18 +18,18 @@ function book_action(action, url, book_id){
                 data: {ID:book_id},
                 dataType: 'json',
                 success: function(data){
-                $('#take_return_send_button').animate({left:-999},'fast', function(){
-                    $(this).animate({left:0}, 'fast')
-                        .attr('class', 'put action_button button')
+                $('#take_return_send_button').animate({right: 999}, 600, function(){
+                    $(this).animate({right:0}, 600)
+                        .attr('class', 'take_return_button btn btn-warning  btn-lg')
                         .attr('onclick',"book_action('return','return/"+book_id+"',"+book_id+");")
-                        .text('Return...').end();
+                        .text('Return...');
                 }).end();
-                $('#status_bar').animate({left:-999},'fast', function(){
-                    $(this).animate({left:0}, 'fast')
-                        .attr('class','mine')
-                        .text('Belongs me').end();
-                }).end();
-                $('#owner_label').fadeIn(600).end();
+                    $('#status_row').animate({right: 999}, 600, function(){
+                        $(this).animate({right: 0}, 600)
+                            .attr('class', 'label label-warning take_return_button')
+                            .text('Free').end();  }).end();
+                    $('#owner').fadeIn(600);
+
                 }
 
             });
@@ -41,28 +41,32 @@ function book_action(action, url, book_id){
                 data: 'take',
                 dataType: 'json',
                 success: function(data){
-                    $('#take_return_send_button').animate({left:-999},'fast', function(){
-                        $(this).animate({left:0}, 'fast')
-                            .attr('class', 'take action_button button')
+                    $('#take_return_send_button').animate({right: 999}, 600, function(){
+                        $(this).animate({right:0}, 600)
+                            .attr('class', 'take_return_button btn btn-success  btn-lg')
                             .attr('onclick',"book_action('take','take/"+book_id+"',"+book_id+");")
                             .text('Take!').end();
                     }).end();
-                    $('#status_bar').animate({left:-999},'fast', function(){
-                        $(this).animate({left:0}, 'fast')
-                            .attr('class','free')
-                            .text('Free').end();
-                    }).end();
-                    $('#owner_label').fadeOut(600).end();
+                    $('#status_row').animate({right: 999}, 600, function(){
+                        $(this).animate({right: 0}, 600)
+                            .attr('class', 'label label-success take_return_button')
+                            .text('Free').end();  }).end();
+                    $('#owner').fadeOut(600);
+
 
                 }
 
             });
             break;
         case  'ask':
+            $('#take_return_send_button').animate({right: 999}, 600);
+            $('<span clas="glyphicon glyphicon-ok"></span> Sent!').insertAfter('#owner').fadeIn(600);
+            $('#action').fadeOut(200);
+            $('<p class="success"> <span class="glyphicon glyphicon-ok"></span> Sent!</p>').insertAfter('#action').fadeOut(3200);
             jQuery.ajax({
                 type: 'get',
                 url: url,
-                data: 'take',
+                data: {ID:book_id},
                 dataType: 'json',
                 success: function(data){
 
