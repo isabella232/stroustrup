@@ -242,7 +242,7 @@ def ask_to_return(request, *args, **kwargs):
                                                               'lastname': request.user.last_name,
                                                               'book': book.__unicode__(),
                                                               'author': authors_string,
-                                                              'link': "http://%(site)s/books/%(id)s/return/"
+                                                              'link': "http://%(site)s/books/%(id)s"
                                                                       % {'id': book.id, 'site': site.domain}
                                                              },
                                       server_email,

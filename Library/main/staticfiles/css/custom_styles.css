@@ -95,6 +95,7 @@ body {
 }
 
 .title{
+    color: #000000;
     margin: 10px 0 10px 0;
     text-align: justify;
     text-justify: inter-ideograph;

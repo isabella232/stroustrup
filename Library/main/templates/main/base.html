@@ -9,8 +9,12 @@
     <link href="{% static 'css/custom_styles.css' %}" rel="stylesheet" media="screen">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-
     <![endif]-->
+    <style>
+        html{
+            background: #eee;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -48,6 +52,9 @@
             pass1.attr('class','form-control').attr('placeholder','Password');
             pass2.attr('class','form-control').attr('placeholder','Repeat the password above');
         }
+
+
+        $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
         $('label').remove();
 
     }));

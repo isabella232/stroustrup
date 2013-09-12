@@ -24,14 +24,14 @@
                     <div class="col-md-1">
 
                                 {% if book.picture%}
-                                    <a class="thumbnail">
+                                    <a TARGET="_blank" href="{{ book.picture.url }}" class="thumbnail">
                                         <img data-src="holder.js/100%x320" src="{{ book.picture.url }}" alt="Image">
                                     </a>
 
                                 {% endif%}
                                 {% if not book.picture%}
 
-                                    <a class="thumbnail">
+                                    <a  TARGET="_blank"  href="{% static 'image/book_index.png'%}" class="thumbnail">
                                         <img data-src="holder.js/100%x180" src="{% static 'image/book_index.png' %}" alt="Image">
                                     </a>
 
