@@ -60,16 +60,17 @@ function book_action(action, url, book_id){
             break;
         case  'ask':
             $('#take_return_send_button').animate({right: 999}, 600);
-            $('<span clas="glyphicon glyphicon-ok"></span> Sent!').insertAfter('#owner').fadeIn(600);
+
             $('#action').fadeOut(200);
-            $('<p class="success"> <span class="glyphicon glyphicon-ok"></span> Sent!</p>').insertAfter('#action').fadeOut(3200);
+            $('<p id="remove_after_sent"> <span class="glyphicon glyphicon-send"></span> Sending... </p>').insertAfter('#action').fadeIn(100);
             jQuery.ajax({
                 type: 'get',
                 url: url,
                 data: {ID:book_id},
                 dataType: 'json',
                 success: function(data){
-
+                    $('#remove_after_sent').fadeOut(100);
+                    $('<p class="label label-success"> <span class="glyphicon glyphicon-ok"></span> Sent!</p>').insertAfter('#action').fadeOut(3200);
                 }
 
             });

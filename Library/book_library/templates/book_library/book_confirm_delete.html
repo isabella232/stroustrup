@@ -8,28 +8,35 @@
 {% endblock %}
 
 {% block content %}
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-warning">
     {% if user.is_staff %}
-        <form action="" method="post">{% csrf_token %}
-            <p>Are you sure you want to delete "{{ object }}"?</p>
-            <ul class="button-group round">
-                <li>
-                    <button type="submit" class="button success ">
-                        Confirm
-                    </button>
-                </li>
-                <li>
-                    <a class="button alert  " href="javascript: window.history.back()">
-                        Cancel
-                    </a>
-                </li>
-            </ul>
-        </form>
+
+
+                <div class="panel-heading">Confirm your action.</div>
+                <div class="panel-body">
+                   <h4>Are you sure that you are want to delete this book?</h4>
+                    <hr/>
+                    <form action="" method="post">{% csrf_token %}
+                        <button type="submit" class="btn btn-lg btn-success">
+                            Yes, i am
+                        </button>
+                        <a class="btn btn-lg  btn-danger" href="javascript: window.history.back()">
+                            No, i've had a doubt about it
+                        </a>
+                    </form>
+                </div>
+
+
     {% else %}
         <p class="errorlist row">You aren't staff.</p>
         <a class="button uibutton" href="javascript: window.history.back()">
             Fall back
         </a>
     {% endif %}
+        </div>
+    </div>
+
 
 {% endblock %}
 

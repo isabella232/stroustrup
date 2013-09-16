@@ -148,15 +148,15 @@ class BookListView(LoginRequiredView, ListView):
 
     def get_queryset(self):
         self.queryset = Book.books.all()
-        if self.kwargs['slug']:
-            self.busy = self.kwargs['slug'] == "busy"
-        else:
-            if 'busy' in self.request.GET:
-                if self.request.GET['busy'] == '2':
-                    self.busy = True
-                else:
-                    if self.request.GET['busy'] == '1':
-                        self.busy = False
+        try:
+            self.busy = self.request.GET['busy']
+        except KeyError:
+            self.busy = False
+
+        try:
+            self.free = self.request.GET['free']
+        except KeyError:
+            self.free = False
         form = SearchForm(self.request.GET)
         if form.is_valid():
             query = Q()
@@ -171,19 +171,13 @@ class BookListView(LoginRequiredView, ListView):
                     else:
                         query = Q(isbn__iexact=keyword)
 
-            try:
-                self.busy = form['busy'].data
-            except KeyError:
-                self.busy = False
-            try:
-                self.free = form['free'].data
-            except KeyError:
-                self.free = False
-            if self.busy != self.free:
-                if self.busy:
-                    query = query | Q(busy=True)
-                else:
-                    query = query | Q(busy=False)
+
+
+            if self.busy and not self.free:
+                query = query | Q(busy=True)
+            if not self.busy and self.free:
+                query = query | Q(busy=False)
+
             if query:
                 self.queryset = Book.books.filter(query)
         if self.kwargs['page']:
@@ -234,7 +228,7 @@ def ask_to_return(request, *args, **kwargs):
                 authors_string += author.__unicode__()
             site = RequestSite(request)
             server_email = settings.EMAIL_HOST_USER
-            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) asks you"
+            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) is asking you"
                                                              " to return the book %(book)s %(author)s."
                                                              " You can return it by click on this link: %(link)s"%
                                                              {'username': request.user.username,
@@ -248,7 +242,7 @@ def ask_to_return(request, *args, **kwargs):
                                       server_email,
                                       [profile.email])
             email.send()
-            return render_to_response('asked_successfully.html', {'book': book})
+            return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
 
@@ -284,6 +278,9 @@ class requestBook(AddRequestView): #SpaT_edition
 
         if request.POST['url'] and request.POST['title']:
             _url=request.POST['url']
+            start_str='http'
+            if(not _url.startswith(start_str)):
+                _url=start_str+'://'+_url
             _title=request.POST['title']
             req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
 
@@ -325,7 +322,12 @@ def LikeRequest(request, number, *args): #SpaT_edition
                     flag=False
                     break
             if not flag:
+                req.vote-=1
+                result_vote=req.vote
+                req.users.remove(user)
+                req.save()
                 break
+
             req.vote+=1
             req.users.add(user)
             req.save()
