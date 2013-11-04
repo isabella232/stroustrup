@@ -37,6 +37,11 @@
 
                                 {% endif %}
 
+                                {% if book.file %}
+                                    <a TARGET="_blank" href="{{ book.file.url }}" class="thumbnail"> Download </a>
+
+                                {%  endif %}
+
                     </div>
                     <div class="media-body">
                         <h4 class="media-heading pull-left"> ID: {{ book.id }}</h4>

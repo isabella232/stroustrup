@@ -66,6 +66,7 @@ class Book(models.Model):
     authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)
+    file = models.FileField(upload_to='book_files', blank=True)
 
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', symmetrical=False,  related_name='books', default=None, blank=True) #SpaT_edition

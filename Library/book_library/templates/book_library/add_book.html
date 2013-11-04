@@ -65,6 +65,27 @@
             $('#label2').wrap('<div class="btn-group" data-toggle="buttons"></div>');
             $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
             $('#add_bar').attr('class', 'active');
+            $('p:contains("File")').hide();
+
+
+
+            ($('#label1').click(function(){
+                if($('#id_e_version_exists').prop('checked'))
+                {
+                  ($('p:contains("File")').hide());
+                }
+                else
+                {
+                  ($('p:contains("File")').show());
+                }
+            }));
+
         }));
     </script>
+
+    <script>
+
+    </script>
+
+
 {% endblock %}
