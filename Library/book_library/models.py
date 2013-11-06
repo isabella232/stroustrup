@@ -134,3 +134,4 @@ class Book_Request(models.Model): #SpaT_edition
     vote = models.IntegerField(default=0)
     def __unicode__(self):
         return self.title + ' ' + self.url
+

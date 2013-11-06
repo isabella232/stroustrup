@@ -22,7 +22,7 @@ class RequestsInLine(admin.TabularInline):
 
 class Book_RequestAdmin(admin.ModelAdmin): #SpaT edition
     list_display = ('title', 'url', 'vote')
-    inlines = [RequestsInLine]
+    #inlines = [RequestsInLine]
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(Author, AuthorAdmin)

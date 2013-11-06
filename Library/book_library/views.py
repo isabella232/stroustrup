@@ -25,6 +25,7 @@ from forms import *
 from models import *
 
 BOOKS_ON_PAGE = 5
+REQUEST_ON_PAGE = 5
 
 
 class StaffOnlyView(object):
@@ -270,7 +271,6 @@ class requestBook(AddRequestView): #SpaT_edition
     object = None
     queryset = Book_Request.requests.all()
 
-
     def get_context_data(self, **kwargs):
         context = {'requests': Book_Request.requests.all(), "form" : self.get_form(self.form_class)}
         return super(requestBook, self).get_context_data(**context)
@@ -312,9 +312,11 @@ def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
     user=request.user
     result_vote=0
+    all_users=[]
     for req in queryset:
 
         if req.id == int(number):
+
             result_vote=req.vote
             flag = True
             for user1 in req.users.all():
@@ -323,20 +325,29 @@ def LikeRequest(request, number, *args): #SpaT_edition
                     break
             if not flag:
                 req.vote-=1
+
                 result_vote=req.vote
                 req.users.remove(user)
                 req.save()
+
+                for i in req.users.all():
+                   all_users.append(i.username)
+
                 break
 
             req.vote+=1
             req.users.add(user)
             req.save()
+            for i in req.users.all():
+                    all_users.append(i.username)
             result_vote=req.vote
             break
 
     return HttpResponse(content=json.dumps({
         'status':'OK',
         'vote':result_vote,
+        'listuser':all_users,
+
         }, sort_keys = True))
 
 def rating_post(request, *args, **kwargs):
