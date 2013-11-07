@@ -25,7 +25,7 @@ from forms import *
 from models import *
 
 BOOKS_ON_PAGE = 5
-REQUEST_ON_PAGE = 5
+REQUEST_ON_PAGE = 3
 
 
 class StaffOnlyView(object):
@@ -270,10 +270,33 @@ class requestBook(AddRequestView): #SpaT_edition
     form_class = Book_RequestForm
     object = None
     queryset = Book_Request.requests.all()
+    pageReq=1
+
+
+
+
 
     def get_context_data(self, **kwargs):
-        context = {'requests': Book_Request.requests.all(), "form" : self.get_form(self.form_class)}
+
+        if self.kwargs['page']!=None:
+            self.pageReq = int(self.kwargs['page'])
+        paginator1 = Paginator(self.queryset, REQUEST_ON_PAGE)
+        if self.pageReq in paginator1.page_range:
+            self.queryset = paginator1.page(self.pageReq).object_list
+        else:
+            self.queryset = []
+        next_page=self.pageReq+1
+        prev_page=self.pageReq-1
+        if prev_page == 0:
+            prev_page = self.pageReq
+        if next_page-1 == paginator1.num_pages:
+            next_page = self.pageReq
+        context = {'requests': set(self.queryset), "form" : self.get_form(self.form_class)
+                   , "current_page": self.pageReq, "next_page":next_page, "prev_page":prev_page}
         return super(requestBook, self).get_context_data(**context)
+
+
+
     def post(self, request, *args, **kwargs):
 
         if request.POST['url'] and request.POST['title']:

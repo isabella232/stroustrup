@@ -115,6 +115,23 @@
     {% endif %}
     </div>
 {% endblock %}
-{% block pagination %}
 
+
+
+{% block pagination %}
+    <div class="col-md-4 col-md-offset-4">
+        <ul class="pager">
+            <li class="previous {% ifequal current_page prev_page %}disabled{% endifequal %}">
+                <a {% ifnotequal current_page prev_page %}href="{%  url  'books:request' prev_page%}"{% endifnotequal %}>
+                    &larr; Previous
+                </a>
+            </li>
+            <li class="label label-primary page_number"> {{ current_page }} </li>
+            <li class="next {% ifequal current_page next_page %} disabled {% endifequal %}">
+                <a {% ifnotequal current_page next_page %}href="{% url 'books:request' next_page%}"{% endifnotequal %}>
+                    Next &rarr;
+                </a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
