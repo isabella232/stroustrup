@@ -21,7 +21,9 @@
             $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
             $('#request_bar').attr('class', 'active');
             $('#id_title').parent().attr('class','col-md-5');
+            $('#id_title').attr('required','');
             $('#id_url').parent().attr('class','col-md-5');
+            $('#id_url').attr('required','');
             $('#id_button').parent().attr('class','col-md-2');
         }));
 
@@ -35,6 +37,7 @@
 
             <form  class="" method="post" action="">
                 {% csrf_token %}
+
                 {{ form.as_p }}
                 <p>
                 <button class="btn btn-mg btn-block btn-success" type="submit" id="id_button">
