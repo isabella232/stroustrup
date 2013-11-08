@@ -20,6 +20,9 @@
             $('#id_url').attr('class','form-control').attr('placeholder','Paste URL here');
             $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
             $('#request_bar').attr('class', 'active');
+            $('#id_title').parent().attr('class','col-md-5');
+            $('#id_url').parent().attr('class','col-md-5');
+            $('#id_button').parent().attr('class','col-md-2');
         }));
 
 
@@ -30,12 +33,14 @@
 {% block content %}
     <div class="row request_area">
 
-            <form  class="form-signin" method="post" action="">
+            <form  class="" method="post" action="">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button class="btn btn-lg btn-block btn-success" type="submit">
+                <p>
+                <button class="btn btn-mg btn-block btn-success" type="submit" id="id_button">
                     Send! <span class="glyphicon glyphicon-send"></span>
                 </button>
+                </p>
             </form>
 
     </div>
