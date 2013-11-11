@@ -62,7 +62,7 @@
 		this.vote_stars = $('<div class="vote-stars"></div>');
 		this.vote_active = $('<div class="vote-active"></div>');
 		this.vote_result = $('<div class="vote-result"></div>');
-		this.vote_success = $('<div class="row"><div class="vote-success"></div></div>');
+		this.vote_success = $('<div class="vote-success"></div>');
         this.loader = $('<img src="'+this.options.loader+'" alt="load...">');
 
         this.el.html(this.loader);
@@ -73,6 +73,7 @@
         img.onload = function() {
             self.width = this.width; //Ширина одной звезды
             self.height = this.height/3; //Высота одной звезды
+
             self.init();
         };
 		
@@ -129,7 +130,7 @@
     				'background-position':'left center'
     			});
                 
-                self.vote_success.html('<div class="row offset"> Your rate: '+score+'</div>');
+                self.vote_success.html('<div class="your_rate"> Your rate: '+score+'</div>');
     		    
     		 })
     		 .bind('mouseout',function(){
@@ -158,7 +159,7 @@
     			 //self._data.val = (self._data.val*self._data.votes +score)/(self._data.votes + 1);
                 // self._data.val = Math.round( self._data.val * 100 ) / 100;
                  self._data.score = score;
-                 self.vote_success.html('<div class="row"> Your rate: '+score+'</div>');
+                 self.vote_success.html('<div class="your_rate"> Your rate: '+score+'</div>');
 
 
 
@@ -269,8 +270,11 @@
     	    if(number <= 0) return '';
     		number = Math.abs(Math.floor(number));
             cases = [2, 0, 1, 1, 1, 2];  
-            result_str = '<div class = "row">Common rating: ' + val;
-            result_str += '</div><div class = "row"> '+number+' '+ this.options.titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ]+'</div>';
+            result_str = '<div class="row"> <div class = "pull-right">'+
+            this.options.titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ]+
+                ':  <span class="label label-warning">'+number+'</span></div>'+
+                ' <div class = "pull-right"> Common rating: <span class="label label-warning"> ' +
+                val+'</span></div> </div>';
             return result_str;
         }  
     });

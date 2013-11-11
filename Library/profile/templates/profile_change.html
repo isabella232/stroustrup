@@ -8,24 +8,32 @@
 
 {% endblock %}
 
-{% block content1 %}
+{% block content %}
 
-    <form action="" method="post">{% csrf_token %}
+    <form class="form-signin" action="" method="post">{% csrf_token %}
         {{ form.as_p }}
-        <ul class="button-group round">
-            <li>
-                <button type="submit" class="button success ">
-                    Confirm
-                </button>
-            </li>
-            <li>
-                <a class="button alert  " href="{% url 'profile:profile' user.pk %}">
-                    Cancel
-                </a>
-            </li>
-        </ul>
+        <div class="btn-group btn-group-justified btn-group-lg">
+        <a class="btn btn-lg btn-success" type="submit">
+            Set!
+        </a>
+        <a class="btn btn-lg btn-danger " href="{% url 'profile:profile' user.pk %}">
+            Cancel
+        </a>
+        </div>
     </form>
 
 
 
+{% endblock %}
+{% block extensions %}
+    <script>
+        $(document).ready((function(){
+            $('label[for="id_first_name"]').remove();
+            $('label[for="id_last_name"]').remove();
+
+            $('#id_first_name').attr('class','form-control').attr('placeholder','First name');
+            $('#id_last_name').attr('class','form-control').attr('placeholder','Last name');
+
+        }));
+    </script>
 {% endblock %}

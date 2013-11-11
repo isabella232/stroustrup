@@ -3,7 +3,7 @@
 {% block location %}Requests page{% endblock %}
 {% block link_extension %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}" xmlns="http://www.w3.org/1999/html"/>
     
     <link rel="stylesheet" href="{% static 'css/request.css' %}"/>
 {% endblock %}
@@ -12,7 +12,15 @@
 
     <script language="JavaScript">
 
-           /* jQuery trigger for likes*/
+        $(document).ready((function(){
+            $('label[for="id_title"]').remove();
+            $('label[for="id_url"]').remove();
+
+            $('#id_title').attr('class','form-control').attr('placeholder','Title');
+            $('#id_url').attr('class','form-control').attr('placeholder','Paste URL here');
+            $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
+            $('#request_bar').attr('class', 'active');
+        }));
 
 
     </script>
@@ -22,19 +30,20 @@
 {% block content %}
     <div class="row request_area">
 
-            <form  method="post" action="">
+            <form  class="form-signin" method="post" action="">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button class=" request_button take" type="submit">
-                    Send!
+                <button class="btn btn-lg btn-block btn-success" type="submit">
+                    Send! <span class="glyphicon glyphicon-send"></span>
                 </button>
             </form>
 
     </div>
 
-    <h4 class="exist_declaration">
-        Look, what is already ordered:
-    </h4>
+            <div class="well">
+                <h4>Look, what is already ordered:</h4>
+
+
 
 
 
@@ -43,33 +52,38 @@
     {% if requests %}
         {% for order in requests %}
 
-            <div class="row work_label" id="request{{ order.id }}">
-                <div class="small-10 columns request_link_area">
-                        <div class="row">
-                            <a  target="_blank" class="request_link" href='//{{ order.url }}'>
+            <div class="panel panel-default" id="request{{ order.id }}">
+                <div class="panel-heading">
+
+                    <span class="glyphicon glyphicon-plus-sign"></span>
+                            <a  target="_blank" class="title" href='{{ order.url }}'>
                                 {{ order.title }}
                             </a>
-                        </div>
-                        <div class="offset"></div>
-                        <div class="row">
-                            Ordered by <a href="{% url "profile:profile" order.user.pk  %}">  <span class="comment_name"> {{ order.user }} </span></a>
-                        </div>
+
                 </div>
-                <div class="small-1 column request_vote_area" >
-                    <div class="row">
-                        <a id="like_{{ order.id }}"
-                           href="#"
-                           onclick="like_request({{ order.id }})"
-                           class="button request_vote_button"
-                           alt='like_button'>
-                            ❤
-                        </a>
-                    </div>
-                    <div class="row">
-                        <div id="counter{{ order.id }}"  class="panel request_vote_counter">
+                <div class="panel-body" >
+                    <h3 class="pull-left">
+                        Ordered by <a href="{% url "profile:profile" order.user.pk  %}">  <span class="comment_name"> {{ order.user }} </span></a>
+                    </h3>
+
+                        <div class="pull-right">
+
+
+                        <h2>
+                        <span id="counter{{ order.id }}">
                            {{ order.vote}}
+                        </span>
+                            <a id="like_{{ order.id }}"
+                               href="#"
+                               onclick="like_request({{ order.id }}); return false;"
+                               class="btn btn-success"
+                                    >
+                                <span class="glyphicon glyphicon-heart"></span>
+                            </a>
+                        </h2>
+
                         </div>
-                    </div>
+
 
                 </div>
 
@@ -78,8 +92,20 @@
 
         {% endfor %}
     {% else %}
-        <h4>There is no orders yet :(.</h4>
+        <div class="col-md-4 col-md-offset-4">
+            <div class="panel panel-danger">
+                <div class="panel-heading"><span class="glyphicon glyphicon-remove-sign"></span> </div>
+                <div class="panel-body">
+
+                    Here are no orders. Yet...
+
+
+                </div>
+            </div>
+
+        </div>
     {% endif %}
+    </div>
 {% endblock %}
 {% block pagination %}
 

@@ -15,132 +15,142 @@
 
 {% endblock %}
 
-{% block content1 %}
+{% block content %}
 
+    {#  #}
+    <div class="main_container">
 
-
-
-    <div class="row work_label">
-        <div class="row">
-            <div class="small-4 columns">
-                <div class="row picture_row">
-                    <div class="panel picture_area">
-                        {% if profile.is_staff%}
-
-                            
-                            <img src="{% static 'image/admin.jpg'%}"/>
-                        {% else %}
-                            
-                            <img src="{% static 'image/user.jpeg'%}" />
-                        {% endif %}
-                    </div>
-                </div>
-
-
-
-
-            </div>
-            <div class="small-7 columns activity_area"  >
-                <div class="row offset"></div>
-                <div class="row info_area">
-
-                    Username:
-                           <span class="declaration_area">
-                              {{ profile.username }}
-                           </span>
-
-                </div>
-                <div class="row info_area">
-
-                    Name:
-                          <span class="declaration_area">
-                               {{ profile.first_name }} {{ profile.last_name }}
-                           </span>
-
-                </div>
-                <div class="row info_area">
-
-                    E-mail:
-                          <span class="declaration_area">
-                               {{ profile.email }}
-                           </span>
-
-                </div>
-            </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-user"></span> <a class="title"> Profile </a>
         </div>
-        <hr/>
-        {% if user.pk == profile.pk %}
-        <div class="row">
-            <div class="small-2 column">
-                <a href="{% url 'authorisation:auth_logout' %}" class="button success comment_button"> Logout<br/></a>
-            </div>
-            <div class="small-4 column">
+        <div class="panel-body">
+            <div class="media">
+                <div class="col-md-1">
 
-                    <a href="{% url 'profile:change' user.pk %}" class="button comment_button">Change profile's data</a>
-
-            </div>
-            <div class="small-4 column">
-                <a href="{% url 'authorisation:auth_password_change' %}" class="button ask comment_button">Change password</a>
-            </div>
-
-            <div class="small-2 column"><br/></div>
-        </div>
-        {% endif %}
-    </div>
-    <div class="offset"></div>
-    {% if books %}
-        {% for book in books %}
-            <div class="offset_row "><br/></div>
-            <div class="work_label row">
-                <div class="small-5 columns work_label_left">
-                    <div class="row">
-                        {% if book.picture%}
-                            <a class="dropdown_custom_thumb" href="{% url "books:book" book.id %}">
-                                <img src="{{ book.picture.url }}" class="content"/>
-                            </a>
-                        {% endif%}
-                        {% if not book.picture%}
-
-                            <a class="dropdown_custom_thumb" href="{% url "books:book" book.id %}">
-                                <img src="{% static 'image/book_index.png' %}" class="content"/>
-                            </a>
-
-                        {% endif %}
-                    </div>
-
-                </div>
-                <div class="small-5 columns work_label_middle">
-                    <div class="row">
-
-
-
-
-                        <a href="{% url "books:book" book.id %}" class="book_href">
-                            {{ book.title }}
+                    {% if profile.is_staff%}
+                        <a TARGET="_blank" href="{% static 'image/admin.jpg'%}" class="thumbnail">
+                            <img data-src="holder.js/100%x320" src="{% static 'image/admin.jpg'%}" alt="Image">
                         </a>
-                        {% for author in book.authors.all %}
-                            <br>
-                            <a href='{% url "books:author" author.id %}' class="author_href" >
-                                {{ author.first_name }} {{ author.last_name }}
+
+                    {% else%}
+
+
+                        <a  TARGET="_blank"  href="{% static 'image/user.jpeg'%}" class="thumbnail">
+                            <img data-src="holder.js/100%x180" src="{% static 'image/user.jpeg'%}" alt="Image">
+                        </a>
+
+                    {% endif %}
+
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading pull-left"> ID: {{ profile.id }}</h4>
+
+                    <h4 class="media-heading pull-right">Username: {{ profile.username }} </h4>
+                    <hr/>
+                    <h3>
+                        Name:
+                    </h3>
+                        <div class="well well-sm">
+                            <strong>
+                            {% if  profile.first_name and profile.last_name  %}
+                            {{ profile.first_name }} {{ profile.last_name }}
+                            {% else %}
+                            John Doe
+                            {% endif %}
+                            </strong>
+                        </div>
+                    <h3>
+                        E-mail:
+                    </h3>
+                    <div class="well well-sm">
+                        <strong>
+                            {% if  profile.email  %}
+                                {{ profile.email }}
+                            {% else %}
+                                None
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                <h4 class="pull-left"> Backpack: </h4>
+                <br/><hr/>
+
+                    {% if profile.get_users_books %}
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th class="text-center">Title</th>
+                                <th>Keeps</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for book in profile.get_users_books %}
+
+
+                                <tr>
+                                    <td>{{ book.id }}</td>
+                                    <td>
+                                        <a class="btn btn-full-row text-left" href="{% url 'books:book' book.id  %}">
+                                            {{ book.title }}
+                                        </a>
+                                    </td>
+
+                                    <td class="success">{{ book.taken_about }} day(s)</td>
+
+                                </tr>
+
+
+
+
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+
+
+                    {% else %}
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h4> The backpack is empty. Yet.</h4>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <hr/>
+            {% if user.pk == profile.pk %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group btn-group-lg ">
+
+                            <a href="{% url 'profile:change' user.pk %}" class="btn btn-primary btn-lg">
+                                Edit profile data <span class="glyphicon glyphicon-edit"></span>
                             </a>
-
-                        {% endfor %}
-                        <br>
-                        {# thing with tags   <a href="#" class="technology_href"> </a>  #}
-
-                        <div class="row offset">
+                            <a href="{% url 'authorisation:auth_password_change' %}" class="btn btn-primary btn-lg">
+                                Change your password <span class="glyphicon glyphicon-lock"></span>
+                            </a>
 
                         </div>
-                             <span>
-                                 Status:   keeps about
-                                 <span class="status_free">{{ book.taken_about }} </span>   days.
-                             </span>
-
+                        <a href="{% url 'authorisation:auth_logout' %}" class="btn btn-primary btn-lg pull-right">
+                            Log out <span class="glyphicon glyphicon-log-out"></span>
+                        </a>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endif %}
 
-    {% endif %}
+
+        </div>
+    </div>
+
+
+
+
+    </div>
+    {#  #}
 
 {% endblock %}

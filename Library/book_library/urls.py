@@ -6,7 +6,7 @@ from django.views.generic import DetailView, DeleteView
 from views import *
 
 urlpatterns = patterns('',
-                       url(r'^((?P<slug>(free|busy))/)?$', BookListView.as_view(template_name='book_library/book_list.html',),
+                       url(r'^(page((?P<page>\d+))/)?((?P<slug>(free|busy))/)?$', BookListView.as_view(template_name='book_library/book_list.html',),
                            name='list'),
                        url(r'add/$', BookAdd.as_view(success_url="/",
                                                            template_name="book_library/add_book.html",
@@ -43,7 +43,7 @@ urlpatterns = patterns('',
                        url(r'^(?P<pk>\d+)/story/$', BookStoryListView.as_view(template_name='book_library/book_story.html',
                                                                     ),
                            name='story'),
-                       url(r'^(?P<pk>\d+)/ask_to_return/$', ask_to_return,
+                       url(r'^(?P<pk>\d+)/ask_to_return/(\d+)$', ask_to_return,
                            name='ask'),
                        #SpaT_edition v
                        url(r'^request/$', requestBook.as_view(success_url='//',

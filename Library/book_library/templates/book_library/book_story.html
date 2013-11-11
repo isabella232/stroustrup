@@ -1,3 +1,4 @@
+
 {% extends 'book_library/books_mainpage.html' %}
 {% block title %}Book Story.{% endblock %}
 {% block location %}Book Story{% endblock %}
@@ -6,42 +7,50 @@
     <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
 {% endblock %}
 
+
 {% block content %}
+    <div class="container">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <h3> Look, who's already read this book:</h3>
+    </div>
     {% if object_list %}
-
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Owner</th>
+                    <th class="danger">Taken</th>
+                    <th class="success">Ruturned</th>
+                </tr>
+            </thead>
+            <tbody>
         {% for record in object_list %}
-            <div class="row work_label">
-                <div class="small-4 column left">
-                    <div class="row text-left">
-                        <span class="busy">  Taken :</span>  {{ record.book_taken }}
-                    </div>
-                    <br/>
-                    <div class="row text-left">
-                        <span class="mine">by</span>
-                        <a href="{% url 'profile:profile' record.user.pk  %}" class="comment_name">
-                            {{ record.user.username}}
+
+
+                <tr class="active">
+                    <td>{{ record.id }}</td>
+                    <td>
+                        <a href="{% url 'profile:profile' record.user.pk  %}">
+                        {{ record.user.username}}
                         </a>
-                    </div>
-                </div>
-                <div class="small-6 column"><hr/></div>
+                    </td>
+                    <td class="danger">{{ record.book_taken }}</td>
+                    <td class="success">{{ record.book_returned }}</td>
+                </tr>
 
-                {% if record.book_returned %}
-                    <div class="small-2 column right">
-                        <span class="free">  Returned : </span> {{ record.book_returned }}
-                    </div>
-                {% else %}
-                    <div class="small-2 column"><hr/></div>
-                {% endif %}
-            </div>
-            <div class="offset"></div>
+
+
+
         {% endfor %}
-
+            </tbody>
+        </table>
     {% else %}
         <p>Nobody took this book. Yet...</p>
     {% endif %}
-    <div class="row">
-        <a href="{% url 'books:book' pk %}" class=" uibutton">
-            Fall back
-        </a>
+    </div>
+        <div class="col-md-6 col-md-offset-3">
+            <a href="{% url 'books:book' pk %}" class="btn btn-lg btn-block btn-default">Fall back</a>
+        </div>
     </div>
 {% endblock %}

@@ -12,44 +12,59 @@
 {% endblock %}
 {% block content %}
     {% if user.is_staff %}
-        <div class="row work_label">
 
-            <div class="row">
-                <form enctype="multipart/form-data" method="post" action="">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-plus"> </span>
+            <strong>
+                Add a new book into the library:
+            </strong>
+        </div>
+        <div class="panel-body">
+                <form enctype="multipart/form-data" method="post" class="form-group" action="">
 
                     {% csrf_token %}
-                    <div class="row work_area">
+
                         {{ form.as_p }}
-                    </div>
-                    <div class="small-12 column work_area">
-                        <div class="row">
-                            <ul class="button-group">
-                                <li class="half_length ">
-                                    <button type="submit" class="button success full_row left_button">
-                                        Add
-                                        
-                                        <img src="{% static 'image/yes.png'%}" class="icon"/>
-                                    </button>
-                                </li>
-                                <li class="half_length ">
-                                    <a class="button alert full_row right_button" href="{% url 'books:list' %}">
-                                        Cancel
-                                        
-                                        <img src="{% static 'image/no.png'%}" class="icon"/>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+
+                        <button type="submit" class="btn btn-lg btn-block btn-success">
+                            Add
+
+                            <img src="{% static 'image/yes.png'%}" class="icon"/>
+                        </button>
+
+                        <a class="btn btn-lg btn-block btn-danger" href="{% url 'books:list' %}">
+                            Cancel
+
+                            <img src="{% static 'image/no.png'%}" class="icon"/>
+                        </a>
 
                 </form>
-            </div>
-        </div>
 
+        </div>
+    </div>
 
     {% else %}
         <script language="JavaScript">
             window.location.assign('mainpage');
         </script>
     {% endif %}
+{% endblock %}
+{% block extensions %}
+    <script>
+        $(document).ready((function(){
+            $('input').attr('class','form-control');
+            $('textarea').attr('class','form-control').attr('cols','').attr('rows', '3').css('max-width','100%');
+            $('label[for="id_paperback_version_exists"]').remove();
+            $('label[for="id_e_version_exists"]').remove();
+            $('#id_e_version_exists') .wrap('<label id="label1" class="btn btn-warning"> E-Version ? </label>');
+            $('#id_paperback_version_exists')
+                    .wrap('<label id="label2" class="btn btn-warning"> Paperback-Version ? </label>');
+
+            $('#label1').wrap('<div class="btn-group" data-toggle="buttons"></div>');
+            $('#label2').wrap('<div class="btn-group" data-toggle="buttons"></div>');
+            $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
+            $('#add_bar').attr('class', 'active');
+        }));
+    </script>
 {% endblock %}

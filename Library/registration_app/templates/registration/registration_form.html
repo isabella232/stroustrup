@@ -3,44 +3,30 @@
 
 {% block content %}
     {% load static %}
-    <div class="row pin_header">
 
-        • Create new account:
-    </div>
-    <div class="offset_row"></div>
-
-    {% if error %}
-        <div class="panel error_box" id="wrong_email" >
-            {{ error }}
-        </div>
-    {% endif %}
-
-
-    <form action="" method="POST">{% csrf_token %}
+    <form class="form-signin" action="" method="POST">{% csrf_token %}
+        <h2 class="form-signin-heading">Please sign up</h2>
         {{ form.as_p}}
-
-
-        <button type="submit" class="submit_button success button" value="Login" >
-            
-            <img src="{% static 'image/arrow.png'%}" class="image">
-            Sign up!
+        <button class="btn btn-block btn-lg btn-success" type="submit">
+            Sign up! <span class="glyphicon glyphicon-hand-up"></span>
         </button>
-
-        <div class="row">
-            <div class="small-1 column support_row"  >
-                <a href="{% url 'authorisation:auth_login'%}" class="button success support_button left_support">
-
-                    Have you got account?
-
-                </a>
-
-                <a href="{% url 'mainpage'%}" class="button success support_button right_support">{# doesn't work for this time #}
-
-                    Fall back to main
-
-                </a>
-            </div>
-        </div>
-
     </form>
+    <div class="col-md-3"></div>
+    <div class="col-md-3">
+        <div class="help-block">
+            If you have an account:
+        </div>
+        <a href="{% url 'authorisation:auth_login'%}" class="btn btn-block btn-lg btn-primary">
+            Sign in! <span class="glyphicon glyphicon-hand-right"></span>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <div class="help-block">
+            If you have google account:
+        </div>
+        <a href="{% url 'openid-login' %}" class="btn btn-block btn-lg btn-primary">
+            Sign in via Google <span class="glyphicon glyphicon-search"></span>
+        </a>
+    </div>
+    <div class="col-md-3"></div>
 {% endblock %}

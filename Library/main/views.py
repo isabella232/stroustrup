@@ -6,6 +6,7 @@ def main_view(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('books:list'))
     else:
-        template = loader.get_template('main/mainpage.html')
-        context = RequestContext(request,)
-        return HttpResponse(template.render(context))
+        #template = loader.get_template('main/mainpage.html')
+        #context = RequestContext(request,)
+        #return HttpResponse(template.render(context))
+        return HttpResponseRedirect('auth/login')

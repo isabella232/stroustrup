@@ -2,43 +2,34 @@
 {% block title %} Crystalnix library: Welcome! {% endblock %}
 {% block content %}
     {% load static %}
-    <div class="row pin_header" xmlns="http://www.w3.org/1999/html">
 
-        • Log in your account:
-    </div>
-    <div class="offset_row"></div>
-
-        {% if error %}
-            <div class="panel error_box" id="wrong_email" >
-                {{ error }}
-            </div>
-        {% endif %}
-
-
-<form action="" method="POST">{% csrf_token %}
+<form class="form-signin" action="" method="POST">{% csrf_token %}
+    <h2 class="form-signin-heading">Please sign in</h2>
     {{ form.as_p}}
 
 
-<button type="submit" class="submit_button button" value="Login">
-    <img src="{% static 'image/arrow.png'%}" class="image">
-    Login!
-</button>
+    <button class="btn-block btn-lg btn-primary" type="submit">
+        Sign in! <span class="glyphicon glyphicon-hand-right"></span>
+    </button>
 </form>
 
-    <div class="row">
-        <div class="small-1 column support_row"  >
-            <a href="{% url 'registration_register'%}" class="button success support_button left_support">
-
-                Haven't registered yet?
-                <hr/>
-            </a>
-
-            <a href="{% url 'mainpage'%}" class="button support_button right_support">{# doesn't work for this time #}
-
-                Fall back to main
-                <hr/>
-            </a>
+    <div class="col-md-3"></div>
+    <div class="col-md-3">
+        <div class="help-block">
+            If you have no account:
         </div>
+        <a href="{% url 'registration_register'%}" class="btn btn-block btn-lg btn-success">
+            Sign up! <span class="glyphicon glyphicon-hand-up"></span>
+        </a>
     </div>
+    <div class="col-md-3">
+        <div class="help-block">
+            If you have google account:
+        </div>
+        <a href="{% url 'openid-login' %}" class="btn btn-block btn-lg btn-primary">
+            Sign in via Google <span class="glyphicon glyphicon-search"></span>
+        </a>
+    </div>
+    <div class="col-md-3"></div>
 
 {% endblock %}

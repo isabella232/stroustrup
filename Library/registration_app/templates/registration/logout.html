@@ -4,32 +4,21 @@
 
 {% block content %}
     {% load static %}
-    <div class="row pin_header">
+    <hr/>
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">Success!</div>
+            <div class="panel-body">
 
-        • Log out:
-    </div>
+                You have successfully logged out!
 
-    <div class="offset_row"></div>
-
-    <div class="success_box">You have successfully logged out.</div>
-
-    <div class="offset_row"></div>
-
-    <div class="row">
-        <div class="small-1 column support_row"  >
-            <a  href="{% url 'authorisation:auth_login' %}"
-                class="success button support_button big_font" type="submit">
-                
-                <img src="{% static 'image/arrow.png'%}" class="image">
-                Sign in!
-            </a>
-
-            <a  href="{% url 'mainpage' %}"
-                class="success button support_button big_font" type="submit">
-                
-                <img src="{% static 'image/arrow_up.png'%}" class="image">
-                Main page
-            </a>
+            </div>
         </div>
+
+        <a href="{% url 'authorisation:auth_login' %}" class="btn btn-primary btn-lg btn-block">
+            Continue <span class="glyphicon glyphicon-hand-right"></span>
+        </a>
     </div>
+
+
 {% endblock %}

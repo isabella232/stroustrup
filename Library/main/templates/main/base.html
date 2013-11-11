@@ -1,50 +1,63 @@
-<html class="no-js" lang="eng">
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width" />
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
-
     <title>{% block title %}{% endblock %}</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/normalize.css'%}"/>
-    
-    <link rel="stylesheet" href="{% static 'css/foundation.css'%}" />
-    
-    <script src="{%static 'js/vendor/custom.modernizr.js'%}"></script>
-    
-    <script src="{% static 'js/the_source.js'%}"></script>
-    
-    <link rel="stylesheet" href="{% static 'css/authorisation.css' %}"/>
-    {# <link rel="stylesheet" href=" css/authorisation.css" /> #}
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/custom_styles.css' %}" rel="stylesheet" media="screen">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+    <style>
+        html{
+            background: #eee;
+        }
+    </style>
 </head>
-
-
 <body>
-<div class="row top_offset" ></div>
-<div class="large-4 columns side_offset" ></div>
-<div class="large-1 columns" >
-    <div class="row main_row" id="main_row">
-
+<div class="container">
+    <div class="row"><img src="{% static 'image/crystalnix.png' %}" class="pull-left"></div>
+    <div class="row "><span class="pull-left library-notice"> L i b r a r y </span></div>
+</div>
+<div class="container">
 
         {% block content %}{% endblock %}
 
 
         {% block footer %}
-
         {% endblock %}
 
-    </div>
-    <div class="offset_row"></div>
 </div>
 
-
-<script src="{% static 'js/zepto.js'%}"></script>
-
-<script src="{% static 'js/foundation/foundation.js'%}"></script>
-
+<!-- jQuery required -->
 <script src="{% static 'js/jquery.js'%}"></script>
-<script>
-    $(document).foundation();
+<!-- Bootstrap features -->
+<script src="{% static 'js/bootstrap.js'%}"></script>
+
+<script language="JavaScript">
+    $(document).ready((function(){
+
+        $('#id_username').attr('class','form-control').attr('placeholder','Login').attr('autofocus', '');
+        var pass = $('#id_password');
+        if(pass){
+            pass.attr('class','form-control').attr('placeholder','Password');
+        }
+        var pass1 = $('#id_password1');
+        var pass2 = $('#id_password2');
+        var email = $('#id_email');
+        if(pass1 && pass2 && email){
+            email.attr('class','form-control').attr('placeholder','E-mail');
+            pass1.attr('class','form-control').attr('placeholder','Password');
+            pass2.attr('class','form-control').attr('placeholder','Repeat the password above');
+        }
+
+
+        $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
+        $('label').remove();
+
+    }));
 </script>
 </body>
 

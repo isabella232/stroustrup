@@ -14,6 +14,7 @@ from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from os import environ
 from main import settings
 import datetime
@@ -22,6 +23,8 @@ import math
 
 from forms import *
 from models import *
+
+BOOKS_ON_PAGE = 5
 
 
 class StaffOnlyView(object):
@@ -141,18 +144,19 @@ class BookListView(LoginRequiredView, ListView):
     busy = None
     free = None
     form_class = SearchForm
+    page = 1
 
     def get_queryset(self):
         self.queryset = Book.books.all()
-        if self.kwargs['slug']:
-            self.busy = self.kwargs['slug'] == "busy"
-        else:
-            if 'busy' in self.request.GET:
-                if self.request.GET['busy'] == '2':
-                    self.busy = True
-                else:
-                    if self.request.GET['busy'] == '1':
-                        self.busy = False
+        try:
+            self.busy = self.request.GET['busy']
+        except KeyError:
+            self.busy = False
+
+        try:
+            self.free = self.request.GET['free']
+        except KeyError:
+            self.free = False
         form = SearchForm(self.request.GET)
         if form.is_valid():
             query = Q()
@@ -167,25 +171,34 @@ class BookListView(LoginRequiredView, ListView):
                     else:
                         query = Q(isbn__iexact=keyword)
 
-            try:
-                self.busy = form['busy'].data
-            except KeyError:
-                self.busy = False
-            try:
-                self.free = form['free'].data
-            except KeyError:
-                self.free = False
-            if self.busy != self.free:
-                if self.busy:
-                    query = query | Q(busy=True)
-                else:
-                    query = query | Q(busy=False)
+
+
+            if self.busy and not self.free:
+                query = query | Q(busy=True)
+            if not self.busy and self.free:
+                query = query | Q(busy=False)
+
             if query:
                 self.queryset = Book.books.filter(query)
+        if self.kwargs['page']:
+            self.page = int(self.kwargs['page'])
         return self.queryset
 
     def get_context_data(self, **kwargs):
-        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET), "busy": self.busy}
+        page = Paginator(self.queryset, BOOKS_ON_PAGE)
+        if self.page in page.page_range:
+            self.queryset = page.page(self.page).object_list
+        else:
+            self.queryset = []
+
+        next_page=self.page+1
+        prev_page=self.page-1
+        if prev_page == 0:
+            prev_page = self.page
+        if next_page-1 == page.num_pages:
+            next_page = self.page
+        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET),
+                   "busy": self.busy, "current_page": self.page, "next_page":next_page, "prev_page":prev_page}
         return super(BookListView, self).get_context_data(**context)
 
 
@@ -205,8 +218,8 @@ class BookStoryListView(LoginRequiredView, ListView):
         return super(BookStoryListView, self).get_context_data(**context)
 
 @login_required()
-def ask_to_return(request, number, *args, **kwargs):
-    book = get_object_or_404(Book, id = number)
+def ask_to_return(request, *args, **kwargs):
+    book = get_object_or_404(Book, id = request.GET['ID'])
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:
@@ -215,7 +228,7 @@ def ask_to_return(request, number, *args, **kwargs):
                 authors_string += author.__unicode__()
             site = RequestSite(request)
             server_email = settings.EMAIL_HOST_USER
-            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) asks you"
+            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) is asking you"
                                                              " to return the book %(book)s %(author)s."
                                                              " You can return it by click on this link: %(link)s"%
                                                              {'username': request.user.username,
@@ -223,13 +236,13 @@ def ask_to_return(request, number, *args, **kwargs):
                                                               'lastname': request.user.last_name,
                                                               'book': book.__unicode__(),
                                                               'author': authors_string,
-                                                              'link': "http://%(site)s/books/%(id)s/return/"
+                                                              'link': "http://%(site)s/books/%(id)s"
                                                                       % {'id': book.id, 'site': site.domain}
                                                              },
                                       server_email,
                                       [profile.email])
             email.send()
-            return render_to_response('asked_successfully.html', {'book': book})
+            return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
 
@@ -265,6 +278,9 @@ class requestBook(AddRequestView): #SpaT_edition
 
         if request.POST['url'] and request.POST['title']:
             _url=request.POST['url']
+            start_str='http'
+            if(not _url.startswith(start_str)):
+                _url=start_str+'://'+_url
             _title=request.POST['title']
             req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
 
@@ -306,7 +322,12 @@ def LikeRequest(request, number, *args): #SpaT_edition
                     flag=False
                     break
             if not flag:
+                req.vote-=1
+                result_vote=req.vote
+                req.users.remove(user)
+                req.save()
                 break
+
             req.vote+=1
             req.users.add(user)
             req.save()

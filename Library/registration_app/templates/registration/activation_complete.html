@@ -3,19 +3,19 @@
 
 {% block content %}
     {% load static %}
-    <div class="row pin_header">
+    <hr/>
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">Success!</div>
+            <div class="panel-body">
 
-        • Success!
-    </div>
-    <div class="offset_row"></div>
-    <div class="success_box">Your account has been activated.</div>
-    <div class="row">
-        <div class="small-offset-1 column">
-            <a href="{% url 'authorisation:auth_login' %}">
-                
-                <img src="{% static 'image/arrow.png'%}">
-                Return
-            </a>
+                Your account has been activated!
+
+            </div>
         </div>
+
+        <a href="{% url 'authorisation:auth_login' %}" class="btn btn-primary btn-lg btn-block">
+            Continue <span class="glyphicon glyphicon-hand-right"></span>
+        </a>
     </div>
 {% endblock %}
