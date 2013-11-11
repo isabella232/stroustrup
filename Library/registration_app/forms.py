@@ -14,9 +14,22 @@ class CustomRegistrationForm(RegistrationForm):
                                 min_length=8)
     captcha = ReCaptchaField()
 
+    good_domains=['crystalnix.com']
+
     def clean_email(self):
+
+        email_domain = self.cleaned_data['email'].split('@')[1]
+        if not email_domain in self.good_domains:
+            raise forms.ValidationError(_("You must use the domain crystalnix.com."))
+            return self.cleaned_data['email']
+
         existing = User.objects.filter(email__iexact=self.cleaned_data['email'])
         if existing.exists():
             raise forms.ValidationError(_("A user with that email already exists."))
         else:
             return self.cleaned_data['email']
+
+
+
+
+

@@ -15,7 +15,7 @@ class AuthorAdmin(admin.ModelAdmin):
 
 class Book_TagAdmin(admin.ModelAdmin):
     display = 'tag'
-    inlines = [TagsInLine]
+    #inlines = [TagsInLine]
 
 class RequestsInLine(admin.TabularInline):
     model= Book_Request
