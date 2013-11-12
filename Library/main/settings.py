@@ -16,6 +16,15 @@ DOMAIN = '127.0.0.1:8001'
 
 MANAGERS = ADMINS
 
+BOOKS_ON_PAGE = 5
+REQUEST_ON_PAGE = 3
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 3,
+    'MARGIN_PAGES_DISPLAYED': 2,
+}
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -154,6 +163,7 @@ INSTALLED_APPS = (
     'profile',
     'dajaxice',
     'main',
+    'pure_pagination'
 )
 
 warnings.filterwarnings(

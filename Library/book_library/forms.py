@@ -27,7 +27,7 @@ class TagField(forms.CharField):
             value = value.split(',')
             for index in range(len(value)):
                 if value[index]=='':
-                    raise ValidationError(["Incorrect input"])
+                    raise ValidationError("Incorrect input")
                 value[index]=value[index].split(' ')
                 while '' in value[index]:
                     value[index].remove('')
@@ -36,10 +36,10 @@ class TagField(forms.CharField):
 
         return value
 
-  #  def validate(self, value):
+    def validate(self, value):
 
-   #     if not value:
-    #        raise ValidationError([" You haven't added any tag"])
+        if not value:
+            raise ValidationError([" You haven't added any tag"])
 
 
 class BookForm(ModelForm):

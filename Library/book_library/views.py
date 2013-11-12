@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.generic.list import ListView
+from django.views.generic.list import ListView, MultipleObjectMixin
+from django.views.generic.base import ContextMixin
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -16,16 +17,16 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from os import environ
-from main import settings
+
+
+from pure_pagination.mixins import PaginationMixin
+from Library.main.settings import BOOKS_ON_PAGE,REQUEST_ON_PAGE
 import datetime
 import json
 import math
 
 from forms import *
 from models import *
-
-BOOKS_ON_PAGE = 5
-REQUEST_ON_PAGE = 3
 
 
 class StaffOnlyView(object):
@@ -141,11 +142,14 @@ def return_book_view(request, number, *args, **kwargs):
     return  HttpResponseRedirect(reverse('book:list'))
 
 
-class BookListView(LoginRequiredView, ListView):
+class BookListView(PaginationMixin, LoginRequiredView, ListView, MultipleObjectMixin):
     busy = None
     free = None
     form_class = SearchForm
     page = 1
+    paginate_by = BOOKS_ON_PAGE
+
+
 
     def get_queryset(self):
         self.queryset = Book.books.all()
@@ -183,24 +187,39 @@ class BookListView(LoginRequiredView, ListView):
                 self.queryset = Book.books.filter(query)
         if self.kwargs['page']:
             self.page = int(self.kwargs['page'])
+
         return self.queryset
 
-    def get_context_data(self, **kwargs):
-        page = Paginator(self.queryset, BOOKS_ON_PAGE)
-        if self.page in page.page_range:
-            self.queryset = page.page(self.page).object_list
-        else:
-            self.queryset = []
 
-        next_page=self.page+1
-        prev_page=self.page-1
-        if prev_page == 0:
-            prev_page = self.page
-        if next_page-1 == page.num_pages:
-            next_page = self.page
-        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET),
-                   "busy": self.busy, "current_page": self.page, "next_page":next_page, "prev_page":prev_page}
-        return super(BookListView, self).get_context_data(**context)
+
+
+    #def get_context_data(self, **kwargs):
+       #  try:
+        #     page = self.request.GET.get('page', 1)
+         #except PageNotAnInteger:
+          #   page = 1
+
+       #  paginator = Paginator(self.queryset, BOOKS_ON_PAGE)
+        # page = paginator.page(page)
+        # self.object_list = page.object_list
+         #   if self.page in page.page_range:
+         #     self.queryset = page.page(self.page).object_list
+          #  else:
+          #    self.queryset = []
+
+
+
+
+        #next_page=self.page+1
+        #prev_page=self.page-1
+        #if prev_page == 0:
+        #    prev_page = self.page
+        #if next_page-1 == page.num_pages:
+        #    next_page = self.page
+        #context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET),
+                   # "busy": self.busy, "current_page": self.page, "next_page":next_page, "prev_page":prev_page}
+           # context={"form": self.form_class(self.request.GET)}
+            #return super(BookListView, self).get_context_data(**context)
 
 
 class BookStoryListView(LoginRequiredView, ListView):
@@ -265,19 +284,19 @@ class AddRequestView(CreateView): #SpaT_edition
         return super(AddRequestView, self).get(self, request, *args, **kwargs)
 
 
-class requestBook(AddRequestView): #SpaT_edition
+class requestBook(PaginationMixin,AddRequestView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
     queryset = Book_Request.requests.all()
     pageReq=1
+    paginate_by = 2
 
 
 
 
 
     def get_context_data(self, **kwargs):
-
         if self.kwargs['page']!=None:
             self.pageReq = int(self.kwargs['page'])
         paginator1 = Paginator(self.queryset, REQUEST_ON_PAGE)
