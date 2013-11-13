@@ -142,7 +142,7 @@ def return_book_view(request, number, *args, **kwargs):
     return  HttpResponseRedirect(reverse('book:list'))
 
 
-class BookListView(PaginationMixin, LoginRequiredView, ListView, MultipleObjectMixin):
+class BookListView(PaginationMixin, LoginRequiredView, ListView):
     busy = None
     free = None
     form_class = SearchForm
@@ -190,36 +190,38 @@ class BookListView(PaginationMixin, LoginRequiredView, ListView, MultipleObjectM
 
         return self.queryset
 
+    def get_context_data(self, **kwargs):
+        """
+        Get the context for this view.
+        """
+        queryset = kwargs.pop('object_list')
+        page_size = self.get_paginate_by(queryset)
+        context_object_name = self.get_context_object_name(queryset)
+        if page_size:
+            paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
+            context = {
+                'paginator': paginator,
+                'page_obj': page,
+                'is_paginated': is_paginated,
+                'object_list': queryset,
+                "form": self.form_class(self.request.GET),
+                "busy": self.busy
 
+            }
+        else:
+            context = {
+                'paginator': None,
+                'page_obj': None,
+                'is_paginated': False,
+                'object_list': queryset,
+                "form": self.form_class(self.request.GET),
+                "busy": self.busy
+            }
+        if context_object_name is not None:
+            context[context_object_name] = queryset
+        context.update(kwargs)
+        return super(MultipleObjectMixin, self).get_context_data(**context)
 
-
-    #def get_context_data(self, **kwargs):
-       #  try:
-        #     page = self.request.GET.get('page', 1)
-         #except PageNotAnInteger:
-          #   page = 1
-
-       #  paginator = Paginator(self.queryset, BOOKS_ON_PAGE)
-        # page = paginator.page(page)
-        # self.object_list = page.object_list
-         #   if self.page in page.page_range:
-         #     self.queryset = page.page(self.page).object_list
-          #  else:
-          #    self.queryset = []
-
-
-
-
-        #next_page=self.page+1
-        #prev_page=self.page-1
-        #if prev_page == 0:
-        #    prev_page = self.page
-        #if next_page-1 == page.num_pages:
-        #    next_page = self.page
-        #context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET),
-                   # "busy": self.busy, "current_page": self.page, "next_page":next_page, "prev_page":prev_page}
-           # context={"form": self.form_class(self.request.GET)}
-            #return super(BookListView, self).get_context_data(**context)
 
 
 class BookStoryListView(LoginRequiredView, ListView):
