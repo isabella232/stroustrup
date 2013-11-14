@@ -179,9 +179,9 @@ class BookListView(PaginationMixin, LoginRequiredView, ListView):
 
 
             if self.busy and not self.free:
-                query = query | Q(busy=True)
+                query = query & Q(busy=True)
             if not self.busy and self.free:
-                query = query | Q(busy=False)
+                query = query & Q(busy=False)
 
             if query:
                 self.queryset = Book.books.filter(query)

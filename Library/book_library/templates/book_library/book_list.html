@@ -6,15 +6,6 @@
     {% load static %}
     <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
-            $('label[for="id_busy"]').remove();
-            $('label[for="id_free"]').remove();
-            $('label[for="id_keywords"]').remove();
-            $('#id_busy').wrap('<div class="btn-group btn-group-md " data-toggle="buttons">' +
-                    '<label class="btn btn-danger">Busy</label>'+
-                                '</div>');
-            $('#id_free').wrap('<div class="btn-group btn-group-md " data-toggle="buttons">' +
-                    '<label class="btn btn-success">Free</label>'+
-                    '</div>');
             $('#id_keywords').attr('class','form-control').attr('placeholder', 'Search').wrap('<div class="form-group"></div>');
             $('#books_bar').attr('class', 'active');
 
@@ -39,10 +30,15 @@
 {% block filter %}
 
         {% if not search_flag %}
-            <form class="navbar-form navbar-right" action="" method="get">
-                {% csrf_token %}
-                {{ form }}
-                <button type="submit" class="btn btn-default"> Search <span class="glyphicon glyphicon-search"></span> </button>
+            <form class="navbar-form navbar-right form-inline form-search" role="form" action="" method="get">
+                            <label for="id_busy"> <font color="#f0ad4e" size="3">Busy: </font> <input  id="id_busy" name="busy" type="checkbox"> </label>
+
+                            <label for="id_free"> <font color="#5cb85c" size="3">Free: </font> <input  id="id_free" name="free" type="checkbox"> </label>
+
+                            <label > <input id="id_keywords" maxlength="45" name="keywords" type="text" class="form-control" placeholder="Search"> </label>
+
+                            <label > <button type="submit" class="btn btn-default"> Search <span class="glyphicon glyphicon-search"></span> </button> </label>
+
             </form>
 
 
@@ -234,34 +230,20 @@
 
 
 {% endblock %}
+
+
 {% block pagination %}
-{#    <div class="col-md-4 col-md-offset-4">#}
-{#        <ul class="pager">#}
-{#            <li class="previous {% ifequal current_page prev_page %}disabled{% endifequal %}">#}
-{#                <a {% ifnotequal current_page prev_page %}href="{%  url  'books:list' prev_page%}"{% endifnotequal %}>#}
-{#                    &larr; Previous#}
-{#                </a>#}
-{#            </li>#}
-{#            <li class="label label-primary page_number"> {{ current_page }} </li>#}
-{#            <li class="next {% ifequal current_page next_page %}disabled{% endifequal %}">#}
-{#                <a {% ifnotequal current_page next_page %}href="{% url 'books:list' next_page%}"{% endifnotequal %}>#}
-{#                    Next &rarr;#}
-{#                </a>#}
-{#            </li>#}
-{#        </ul>#}
-{#    </div>#}
-
-
+   {% if object_list %}
     {% load i18n %}
-    <div class="text-center">
-<div class="pagination ">
+        <div class="text-center">
+        <div class="pagination ">
 
-    {% if page_obj.has_previous %}
+     {% if page_obj.has_previous %}
         <a href="?{{ page_obj.previous_page_number.querystring }}" class="prev">&lsaquo;&lsaquo; {% trans "previous" %}</a>
-    {% else %}
+        {% else %}
         <span class="disabled prev">&lsaquo;&lsaquo; {% trans "previous" %}</span>
-    {% endif %}
-    {% for page in page_obj.pages %}
+        {% endif %}
+        {% for page in page_obj.pages %}
         {% if page %}
             {% ifequal page page_obj.number %}
                 <span class="current page">{{ page }}</span>
@@ -271,13 +253,14 @@
         {% else %}
            <li class="page disabled"> <a>...</a> </li>
         {% endif %}
-    {% endfor %}
-    {% if page_obj.has_next %}
+        {% endfor %}
+        {% if page_obj.has_next %}
         <a href="?{{ page_obj.next_page_number.querystring }}" class="next">{% trans "next" %} &rsaquo;&rsaquo;</a>
-    {% else %}
-        <span class="disabled next">{% trans "next" %} &rsaquo;&rsaquo;</span>
-    {% endif %}
+        {% else %}
+         <span class="disabled next">{% trans "next" %} &rsaquo;&rsaquo;</span>
+        {% endif %}
+        </div>
     </div>
-</div>
+  {% endif %}
 {% endblock %}
 
