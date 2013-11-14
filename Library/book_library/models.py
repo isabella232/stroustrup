@@ -55,7 +55,7 @@ class Book(models.Model):
     books = models.Manager()
 
     isbn = models.CharField(help_text="13 digit", max_length=13, blank=True,
-                            validators=[RegexValidator(regex="\d{13,13}", message="please just 13 digits")],
+                            validators=[RegexValidator(regex="\d{13,13}", message="Please just 13 digits")],
                             )
     title = models.CharField(max_length=45)
     busy = models.BooleanField(default=False)

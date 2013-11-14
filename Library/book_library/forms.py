@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+#from Library.book_library.models import Book
 from models import Book, Book_Tag, Author, Book_Request, Book_Comment, Book_Rating
 from django import forms
 from django.core import validators
@@ -7,6 +8,8 @@ from django.forms.fields import FileField
 from django.forms.models import save_instance
 from django.db.models import Q
 from django.contrib.auth import models
+from django.core.validators import RegexValidator
+
 
 class NameField(forms.CharField):
 
@@ -41,8 +44,20 @@ class TagField(forms.CharField):
         if not value:
             raise ValidationError([" You haven't added any tag"])
 
+class IsbnField(forms.CharField):
+    def validate(self, value):
+        if value:
+            try:
+                Book.books.get(isbn= value)
+            except Book.DoesNotExist:
+                return value
+            raise  forms.ValidationError('This ISBN is already taken.')
+
+
+
 
 class BookForm(ModelForm):
+    isbn = IsbnField( help_text="13 digit", max_length=13,  required=False)
     authors_names = NameField(max_length=100, label="Add authors full names (to separate use a comma):")
     tag_field = TagField(max_length=50, label = 'Add tags (to separate use a comma):')
 
