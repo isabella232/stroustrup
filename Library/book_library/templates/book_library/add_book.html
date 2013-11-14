@@ -67,8 +67,6 @@
             $('#add_bar').attr('class', 'active');
             $('p:contains("File")').hide();
 
-
-
             ($('#label1').click(function(){
                 if($('#id_e_version_exists').prop('checked'))
                 {
@@ -79,6 +77,9 @@
                   ($('p:contains("File")').show());
                 }
             }));
+
+            $('#id_tag_field').tagsInput()
+                              .attr('class',"form-control");
 
         }));
     </script>

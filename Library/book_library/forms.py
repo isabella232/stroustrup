@@ -29,20 +29,8 @@ class TagField(forms.CharField):
         if value:
             value = value.split(',')
             for index in range(len(value)):
-                if value[index]=='':
-                    raise ValidationError("Incorrect input")
-                value[index]=value[index].split(' ')
-                while '' in value[index]:
-                    value[index].remove('')
-                value[index]=str(value[index][0])
-
-
+                  value[index]= str(value[index])
         return value
-
-    def validate(self, value):
-
-        if not value:
-            raise ValidationError([" You haven't added any tag"])
 
 class IsbnField(forms.CharField):
     def validate(self, value):
