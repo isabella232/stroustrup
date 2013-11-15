@@ -47,7 +47,7 @@ class IsbnField(forms.CharField):
 class BookForm(ModelForm):
     isbn = IsbnField( help_text="13 digit", max_length=13,  required=False)
     authors_names = NameField(max_length=100, label="Add authors full names (to separate use a comma):")
-    tag_field = TagField(max_length=50, label = 'Add tags (to separate use a comma):')
+    tag_field = TagField(max_length=50, label = 'Add tags (to separate use a comma):', required=False)
 
     class Meta:
         model = Book
