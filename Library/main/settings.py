@@ -19,6 +19,9 @@ MANAGERS = ADMINS
 BOOKS_ON_PAGE = 5
 REQUEST_ON_PAGE = 3
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_FAIL_SILENTLY = not DEBUG
+
 PAGINATION_SETTINGS = {
     'PAGE_RANGE_DISPLAYED': 3,
     'MARGIN_PAGES_DISPLAYED': 2,
@@ -163,7 +166,8 @@ INSTALLED_APPS = (
     'profile',
     'dajaxice',
     'main',
-    'pure_pagination'
+    'pure_pagination',
+    'crispy_forms'
 )
 
 warnings.filterwarnings(

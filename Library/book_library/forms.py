@@ -1,5 +1,4 @@
 from django.forms import ModelForm
-#from Library.book_library.models import Book
 from models import Book, Book_Tag, Author, Book_Request, Book_Comment, Book_Rating
 from django import forms
 from django.core import validators
@@ -9,6 +8,11 @@ from django.forms.models import save_instance
 from django.db.models import Q
 from django.contrib.auth import models
 from django.core.validators import RegexValidator
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
+from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
+
+
 
 
 class NameField(forms.CharField):
@@ -32,23 +36,43 @@ class TagField(forms.CharField):
                   value[index]= str(value[index])
         return value
 
-class IsbnField(forms.CharField):
-    def validate(self, value):
-        if value:
-            try:
-                Book.books.get(isbn= value)
-            except Book.DoesNotExist:
-                return value
-            raise  forms.ValidationError('This ISBN is already taken.')
-
-
-
 
 class BookForm(ModelForm):
-    isbn = IsbnField( help_text="13 digit", max_length=13,  required=False)
     authors_names = NameField(max_length=100, label="Add authors full names (to separate use a comma):")
     tag_field = TagField(max_length=50, label = 'Add tags (to separate use a comma):', required=False)
+    e_version_exists = forms.BooleanField(label='E-version', required=False)
+    paperback_version_exists = forms.BooleanField(label='Paper version', required=False)
 
+
+    def clean_isbn(self):
+        data = self.cleaned_data['isbn']
+        if data=='':
+            return data
+        try:
+            Book.books.get(isbn= data)
+        except Book.DoesNotExist:
+            return data
+        raise  forms.ValidationError('This ISBN is already taken.')
+
+    @property
+    def helper(self):
+        helper = FormHelper()
+        helper.form_class = 'form-group'
+        helper.layout = Layout(
+            PrependedText('isbn', '13 digits'),
+            Field('title', css_class='form-control'),
+            Field('e_version_exists',css_class='form-group'),
+            Field('paperback_version_exists',css_class='form-group'),
+            Field('description', rows="3", css_class='form-control' ),
+            Field('picture', css_class='form-control'),
+            Field('file', css_class='form-control'),
+            Field('authors_names', css_class='form-control'),
+            Field('tag_field', css_class='form-group'),
+            Submit('save_changes', 'Add', css_class='btn btn-lg btn-block btn-success'),
+            Button('cancel', 'Cancel',onclick='window.location.href="/books/page/"',css_class="btn btn-lg btn-block btn-danger")
+
+            )
+        return helper
     class Meta:
         model = Book
         exclude = ['busy', 'users', 'authors', 'tags', 'book_rating', 'comments']

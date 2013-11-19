@@ -20,7 +20,7 @@ class CustomRegistrationForm(RegistrationForm):
 
         email_domain = self.cleaned_data['email'].split('@')[1]
         if not email_domain in self.good_domains:
-            raise forms.ValidationError(_("You must use the domain crystalnix.com."))
+            raise forms.ValidationError("You must use the domain crystalnix.com.")
             return self.cleaned_data['email']
 
         existing = User.objects.filter(email__iexact=self.cleaned_data['email'])
