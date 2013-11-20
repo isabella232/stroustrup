@@ -154,12 +154,27 @@ class SearchForm(forms.Form):
     )
 
 
-
 class Book_RequestForm(ModelForm): #SpaT_edition
+    title=forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
+    url=forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
+    helper = FormHelper()
+    helper.form_method='post'
+    helper.form_class = "form-group row"
+    helper.form_show_labels=False
+    helper.error_text_inline=True
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.layout = Layout(
+            Field('title',wrapper_class="col-xs-5"),
+            Field('url',wrapper_class="col-xs-5"),
+            Submit('send','Send!',css_class="btn  btn-success col-md-2")
+    )
 
     class Meta:
         model = Book_Request
         fields = ['title', 'url']
+
+
+
 
     def save(self, commit=True):   #Probably it's became useless
         if self.cleaned_data['url'] and self.cleaned_data['title']:

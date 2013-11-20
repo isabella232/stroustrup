@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from book_library.models import Book
+from Library.book_library.models import Book
 
 
 class AskReturnForm(forms.Form):
