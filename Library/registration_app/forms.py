@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from captcha.fields import ReCaptchaField
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
+from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, FieldWithButtons, InlineField, StrictButton
 
 
 class CustomRegistrationForm(RegistrationForm):
@@ -15,6 +18,18 @@ class CustomRegistrationForm(RegistrationForm):
     captcha = ReCaptchaField()
 
     good_domains=['crystalnix.com']
+
+    helper = FormHelper()
+    helper.form_class = 'form-signin'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+            Field('username'),
+            Field('email'),
+            Field('password1'),
+            Field('password2'),
+            Field('captcha'),
+            Submit('sign_up', 'Sign up!', css_class='btn btn-lg btn-block btn-success')
+            )
 
     def clean_email(self):
 
