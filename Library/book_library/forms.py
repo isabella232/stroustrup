@@ -10,7 +10,7 @@ from django.contrib.auth import models
 from django.core.validators import RegexValidator
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
-from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
+from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, FieldWithButtons, InlineField, StrictButton
 
 
 
@@ -32,8 +32,6 @@ class TagField(forms.CharField):
     def to_python(self, value):
         if value:
             value = value.split(',')
-            for index in range(len(value)):
-                  value[index]= str(value[index])
         return value
 
 
@@ -43,6 +41,21 @@ class BookForm(ModelForm):
     e_version_exists = forms.BooleanField(label='E-version', required=False)
     paperback_version_exists = forms.BooleanField(label='Paper version', required=False)
 
+    helper = FormHelper()
+    helper.form_class = 'form-group'
+    helper.layout = Layout(
+            PrependedText('isbn', '13 digits'),
+            Field('title', css_class='form-control'),
+            Field('e_version_exists',css_class='form-group'),
+            Field('paperback_version_exists',css_class='form-group'),
+            Field('description', rows="3", css_class='form-control', style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;" ),
+            Field('picture', css_class='form-control'),
+            Field('file', css_class='form-control'),
+            Field('authors_names', css_class='form-control'),
+            Field('tag_field', css_class='form-group'),
+            Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success')
+            )
+
 
     def clean_isbn(self):
         data = self.cleaned_data['isbn']
@@ -50,29 +63,12 @@ class BookForm(ModelForm):
             return data
         try:
             Book.books.get(isbn= data)
-        except Book.DoesNotExist:
+        except:
+            Book.DoesNotExist
             return data
         raise  forms.ValidationError('This ISBN is already taken.')
 
-    @property
-    def helper(self):
-        helper = FormHelper()
-        helper.form_class = 'form-group'
-        helper.layout = Layout(
-            PrependedText('isbn', '13 digits'),
-            Field('title', css_class='form-control'),
-            Field('e_version_exists',css_class='form-group'),
-            Field('paperback_version_exists',css_class='form-group'),
-            Field('description', rows="3", css_class='form-control' ),
-            Field('picture', css_class='form-control'),
-            Field('file', css_class='form-control'),
-            Field('authors_names', css_class='form-control'),
-            Field('tag_field', css_class='form-group'),
-            Submit('save_changes', 'Add', css_class='btn btn-lg btn-block btn-success'),
-            Button('cancel', 'Cancel',onclick='window.location.href="/books/page/"',css_class="btn btn-lg btn-block btn-danger")
 
-            )
-        return helper
     class Meta:
         model = Book
         exclude = ['busy', 'users', 'authors', 'tags', 'book_rating', 'comments']
@@ -142,7 +138,22 @@ class SureForm(forms.Form):
 class SearchForm(forms.Form):
     busy = forms.BooleanField(label='Busy', required=False)
     free = forms.BooleanField(label='Free', required=False)
-    keywords = forms.CharField(label="Search", max_length=45, required=False)
+    keywords = forms.CharField(label='Search',max_length=45, required=False)
+
+    helper = FormHelper()
+    helper.form_method='get'
+    helper.form_class = "navbar-form navbar-right form-inline form-search "
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_show_labels=False
+    helper.layout = Layout(
+            InlineField('busy'),
+            InlineField('free'),
+            InlineField('keywords'),
+
+            Submit('search','Search',css_class="btn btn-default")
+    )
+
+
 
 class Book_RequestForm(ModelForm): #SpaT_edition
 

@@ -1,4 +1,5 @@
 {% extends 'book_library/books_mainpage.html' %}
+{% load crispy_forms_tags %}
 {% block title %}All books.{% endblock %}
 {% block location %}Books page{% endblock %}
 
@@ -6,7 +7,7 @@
     {% load static %}
     <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
-            $('#id_keywords').attr('class','form-control').attr('placeholder', 'Search').wrap('<div class="form-group"></div>');
+            //$('#id_keywords').attr('class','form-control').attr('placeholder', 'Search').wrap('<div class="form-group"></div>');
             $('#books_bar').attr('class', 'active');
 
 
@@ -21,16 +22,10 @@
 {% block filter %}
 
         {% if not search_flag %}
-            <form class="navbar-form navbar-right form-inline form-search" role="form" action="" method="get">
-                            <label for="id_busy"> <font color="#f0ad4e" size="3">Busy: </font> <input  id="id_busy" name="busy" type="checkbox"> </label>
+            {% crispy form  %}
 
-                            <label for="id_free"> <font color="#5cb85c" size="3">Free: </font> <input  id="id_free" name="free" type="checkbox"> </label>
 
-                            <label > <input id="id_keywords" maxlength="45" name="keywords" type="text" class="form-control" placeholder="Search"> </label>
 
-                            <label > <button type="submit" class="btn btn-default"> Search <span class="glyphicon glyphicon-search"></span> </button> </label>
-
-            </form>
 
 
         {% endif %}
