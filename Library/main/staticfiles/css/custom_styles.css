@@ -153,6 +153,18 @@ body {
 }
 
 #submit-id-send {
-    width: 15.666666666666664%;
+    width: 15.366666666666664%;
 
+}
+
+#id-action-form-change{
+    width:300px;
+}
+
+#submit-id-save_changes{
+    width: 150px;
+}
+
+#submit-id-cancel{
+    width: 150px;
 }
