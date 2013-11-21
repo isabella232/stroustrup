@@ -53,7 +53,7 @@ class BookForm(ModelForm):
             Field('file', css_class='form-control'),
             Field('authors_names', css_class='form-control'),
             Field('tag_field', css_class='form-group'),
-            Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success')
+            Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),
             )
 
 

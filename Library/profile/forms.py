@@ -29,9 +29,9 @@ class ProfileForm(ModelForm):
             Field('last_name'),
             FormActions(
 
-                    Submit('save_changes', 'Save', css_class='btn btn-lg btn-success'),
-                    Submit('cancel', 'Cancel', css_class='btn btn-lg btn-danger '),
-                    css_class='btn-group  btn-group-lg',
+                    Submit('save_changes_profile', 'Save', css_class='btn btn-lg btn-success'),
+                    Submit('cancel_profile', 'Cancel', css_class='btn btn-lg btn-danger '),
+                    css_class='btn-group  btn-group-lg form-actions',
                     id='id-action-form-change',
 
             )
