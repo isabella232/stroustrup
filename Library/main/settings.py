@@ -137,9 +137,6 @@ ROOT_URLCONF = 'main.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'main.wsgi.application'
 
-TEMPLATE_DIRS = (
-    'templates'
-)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',

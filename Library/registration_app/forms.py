@@ -6,6 +6,7 @@ from captcha.fields import ReCaptchaField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, FieldWithButtons, InlineField, StrictButton
+from django.contrib.auth.forms import AuthenticationForm
 
 
 class CustomRegistrationForm(RegistrationForm):
@@ -45,6 +46,17 @@ class CustomRegistrationForm(RegistrationForm):
             return self.cleaned_data['email']
 
 
+class CustomAuthForm(AuthenticationForm):
 
-
+    helper = FormHelper()
+    helper.form_class = 'form-signin'
+    helper.form_method = 'POST'
+    error_text_inline = True
+    helper.layout = Layout(
+                'username',
+                'password',
+                FormActions(
+                                Submit('sign_in_auth', 'Sign in!', css_class='btn btn-lg btn-block btn-primary'),
+                           )
+    )
 

@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
+from django.contrib import auth
 
 def main_view(request):
     if request.user.is_authenticated():
@@ -10,3 +11,4 @@ def main_view(request):
         #context = RequestContext(request,)
         #return HttpResponse(template.render(context))
         return HttpResponseRedirect('auth/login')
+
