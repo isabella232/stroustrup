@@ -10,12 +10,23 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 class CustomRegistrationForm(RegistrationForm):
-    password1 = forms.CharField(widget=forms.PasswordInput,
-                                label=_("Password"),
-                                min_length=8)
-    password2 = forms.CharField(widget=forms.PasswordInput,
-                                label=_("Password (again)"),
-                                min_length=8)
+    username = forms.RegexField(regex=r'^[\w.@+-]+$',
+                                max_length=30,
+                                label=_("Username"),
+                                error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")},
+                                widget=forms.TextInput(attrs={'placeholder': 'Username'})
+                                )
+    email = forms.EmailField(label=_("E-mail"),
+                             widget=forms.TextInput(attrs={'placeholder': 'E-mail'})
+                             )
+    password1 = forms.CharField(label=_("Password"),
+                                min_length=8,
+                                widget=forms.PasswordInput(attrs={'placeholder': 'Password'})
+                                )
+    password2 = forms.CharField(label=_("Password (again)"),
+                                min_length=8,
+                                widget=forms.PasswordInput(attrs={'placeholder': 'Password (again)'})
+                                )
     captcha = ReCaptchaField()
 
     good_domains=['crystalnix.com']
@@ -23,6 +34,7 @@ class CustomRegistrationForm(RegistrationForm):
     helper = FormHelper()
     helper.form_class = 'form-signin'
     helper.form_method = 'POST'
+    helper.form_show_labels=False
     helper.layout = Layout(
             Field('username'),
             Field('email'),
@@ -47,11 +59,21 @@ class CustomRegistrationForm(RegistrationForm):
 
 
 class CustomAuthForm(AuthenticationForm):
+    username = forms.CharField(max_length=254,
+                               widget=forms.TextInput(attrs={'placeholder': 'Username'})
+                                )
+    password = forms.CharField(
+        label=_("Password"),
+        max_length=4096,
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'})
+    )
 
     helper = FormHelper()
     helper.form_class = 'form-signin'
     helper.form_method = 'POST'
-    error_text_inline = True
+    helper.help_text_inline=False
+    helper.error_messages = True
+    helper.form_show_labels=False
     helper.layout = Layout(
                 'username',
                 'password',
