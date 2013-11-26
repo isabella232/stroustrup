@@ -46,8 +46,8 @@
 
 
 
-    {% if requests %}
-        {% for order in requests %}
+    {% if object_list %}
+        {% for order in object_list %}
 
             <div class="panel panel-default" id="request{{ order.id }}">
                 <div class="panel-heading">
@@ -116,19 +116,43 @@
 
 
 {% block pagination %}
-    <div class="col-md-4 col-md-offset-4">
-        <ul class="pager">
-            <li class="previous {% ifequal current_page prev_page %}disabled{% endifequal %}">
-                <a {% ifnotequal current_page prev_page %}href="{%  url  'books:request' prev_page%}"{% endifnotequal %}>
-                    &larr; Prev
-                </a>
+   {% if object_list %}
+    {% load i18n %}
+        <div class="text-center">
+        <div class="pagination ">
+
+     {% if page_obj.has_previous %}
+            <li class="previous">
+                <a href="?{{ page_obj.previous_page_number.querystring }}" class="prev">&larr; {% trans "Prev" %}</a>
             </li>
-            <li class="label label-primary page_number"> {{ current_page }} </li>
-            <li class="next {% ifequal current_page next_page %} disabled {% endifequal %}">
-                <a {% ifnotequal current_page next_page %}href="{% url 'books:request' next_page%}"{% endifnotequal %}>
-                    Next &rarr;
-                </a>
+        {% else %}
+            <li class="previous disabled">
+                <span class="disabled prev">&larr; {% trans "Prev" %}</span>
             </li>
-        </ul>
+        {% endif %}
+        {% for page in page_obj.pages %}
+        {% if page %}
+            {% ifequal page page_obj.number %}
+               <li class="active">
+                   <span class="current page">{{ page }}</span>
+               </li>
+            {% else %}
+               <li> <a href="?{{ page.querystring }}" class="page">{{ page }}</a> </li>
+            {% endifequal %}
+        {% else %}
+           <li class="page disabled"> <a>...</a> </li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li class="next">
+                    <a href="?{{ page_obj.next_page_number.querystring }}" class="next">{% trans "Next" %} &rarr;</a>
+            </li>
+        {% else %}
+            <li class="next disabled">
+                <span class="disabled next">{% trans "Next" %} &rarr;</span>
+            </li>
+        {% endif %}
+        </div>
     </div>
+  {% endif %}
 {% endblock %}

@@ -262,41 +262,26 @@ class AddRequestView(CreateView): #SpaT_edition
         return super(AddRequestView, self).get(self, request, *args, **kwargs)
 
 
-class requestBook(PaginationMixin,AddRequestView): #SpaT_edition
+class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
     queryset = Book_Request.requests.all()
-    pageReq=1
-    paginate_by = 2
-
-
-
+    page=1
+    paginate_by = REQUEST_ON_PAGE
 
 
     def get_context_data(self, **kwargs):
-        if self.kwargs['page']!=None:
-            self.pageReq = int(self.kwargs['page'])
-        paginator1 = Paginator(self.queryset, REQUEST_ON_PAGE)
-        if self.pageReq in paginator1.page_range:
-            self.queryset = paginator1.page(self.pageReq).object_list
-        else:
-            self.queryset = []
-        next_page=self.pageReq+1
-        prev_page=self.pageReq-1
-        if prev_page == 0:
-            prev_page = self.pageReq
-        if next_page-1 == paginator1.num_pages:
-            next_page = self.pageReq
-        context = {'requests': set(self.queryset), "form" : self.get_form(self.form_class)
-                   , "current_page": self.pageReq, "next_page":next_page, "prev_page":prev_page}
+        context = {}
+        context['object_list']=self.queryset
+        context['form']=self.get_form(self.form_class)
         return super(requestBook, self).get_context_data(**context)
 
 
 
     def post(self, request, *args, **kwargs):
-
-        if request.POST['url'] and request.POST['title']:
+        form=self.form_class(request.POST)
+        if request.POST and form.is_valid():
             _url=request.POST['url']
             start_str='http'
             if(not _url.startswith(start_str)):
@@ -305,8 +290,8 @@ class requestBook(PaginationMixin,AddRequestView): #SpaT_edition
             req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
 
             req.save()
-            return HttpResponseRedirect('//')
-        return super(AddRequestView, self).post(request, *args, **kwargs)
+            return super(AddRequestView, self).get(request, *args, **kwargs)
+        return super(AddRequestView, self).get(request, *args, **kwargs)
 
 
 def CommentAdd(request, number, *args): #SpaT_edition
