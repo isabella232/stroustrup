@@ -20,7 +20,7 @@ from os import environ
 
 
 from pure_pagination.mixins import PaginationMixin
-from Library.main.settings import BOOKS_ON_PAGE,REQUEST_ON_PAGE
+from Library.main.settings import BOOKS_ON_PAGE,REQUEST_ON_PAGE,USERS_ON_PAGE
 import datetime
 import json
 import math
@@ -191,37 +191,11 @@ class BookListView(PaginationMixin, LoginRequiredView, ListView):
         return self.queryset
 
     def get_context_data(self, **kwargs):
-        """
-        Get the context for this view.
-        """
-        queryset = kwargs.pop('object_list')
-        page_size = self.get_paginate_by(queryset)
-        context_object_name = self.get_context_object_name(queryset)
-        if page_size:
-            paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
-            context = {
-                'paginator': paginator,
-                'page_obj': page,
-                'is_paginated': is_paginated,
-                'object_list': queryset,
-                "form": self.form_class(self.request.GET),
-                "busy": self.busy
-
-            }
-        else:
-            context = {
-                'paginator': None,
-                'page_obj': None,
-                'is_paginated': False,
-                'object_list': queryset,
-                "form": self.form_class(self.request.GET),
-                "busy": self.busy
-            }
-        if context_object_name is not None:
-            context[context_object_name] = queryset
-        context.update(kwargs)
-        return super(MultipleObjectMixin, self).get_context_data(**context)
-
+        context = {}
+        context['object_list']=self.queryset
+        context['form']=self.form_class(self.request.GET)
+        context['busy']=self.busy
+        return super(BookListView, self).get_context_data(**context)
 
 
 class BookStoryListView(LoginRequiredView, ListView):
@@ -268,9 +242,11 @@ def ask_to_return(request, *args, **kwargs):
     return HttpResponseRedirect(reverse("books:list"))
 
 
-class UsersView(LoginRequiredView, ListView):
+class UsersView(PaginationMixin,LoginRequiredView, ListView):
     model = User
     queryset = User.objects.all()
+    page = 1
+    paginate_by = USERS_ON_PAGE
 
     def get(self, request, *args, **kwargs):
         return super(UsersView, self).get(request, *args, **kwargs)
