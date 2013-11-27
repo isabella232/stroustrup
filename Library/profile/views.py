@@ -1,7 +1,7 @@
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.models import User
 from django.views.generic.edit import UpdateView
-from book_library.views import LoginRequiredView
+from Library.book_library.views import LoginRequiredView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator

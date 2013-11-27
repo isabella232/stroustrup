@@ -50,7 +50,6 @@ class Book_Comment(models.Model):
 
 
 
-
 class Book(models.Model):
     books = models.Manager()
 
@@ -108,6 +107,8 @@ class Book(models.Model):
             return self.book_rating.latest('id').votes
         return 0
 
+    class Meta:
+        ordering = ['title']
 
 class Book_Tag(models.Model):
     tags = models.Manager()
