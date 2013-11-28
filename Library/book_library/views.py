@@ -309,7 +309,6 @@ def CommentAdd(request, number, *args): #SpaT_edition
         raise ValueError
     message = request.REQUEST.dicts[1]['Comment']
     _user=request.user
-    _avatar=Profile_addition.objects.avatar.get(user=_user)
     _time = datetime.datetime.now()
     com = Book_Comment.comments.create(user = _user, comment = message, sent_time = _time)
     book.comments.add(com)

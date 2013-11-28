@@ -19,7 +19,7 @@ class ProfileForm(ModelForm):
     first_name=forms.CharField(max_length=30,required=True,widget=forms.TextInput(attrs={'placeholder': 'First name'}))
     last_name=forms.CharField(max_length=30,required=True,widget=forms.TextInput(attrs={'placeholder': 'Last name'}))
     email=forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'E-mail'}))
-    avatar=forms.ImageField(widget=forms.FileInput(attrs={'placeholder': 'Avatar'}),required=False)
+    avatar = forms.ImageField(widget=forms.ClearableFileInput(attrs={'placeholder': 'Avatar'}), required=False)
 
     class Meta:
         model = User
@@ -32,7 +32,7 @@ class ProfileForm(ModelForm):
             Field('first_name'),
             Field('last_name'),
             Field('email'),
-            Field('avatar'),
+            Field('avatar',wrapper_class='form-control'),
             FormActions(
 
                     Submit('save_changes_profile', 'Save', css_class='btn btn-lg btn-success'),
@@ -43,18 +43,25 @@ class ProfileForm(ModelForm):
             )
     )
 
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        if not self.is_bound and self.instance.pk:
+            profile = self.instance.profile_addition_set.latest('id')
+            self.fields['avatar'].initial = profile.avatar
+
     def save(self, commit=True):
         profile = super(ProfileForm, self).save(commit)
-        avatar = self.cleaned_data['avatar']
-        if avatar is None:
-            if profile.is_staff:
-                avatar = 'user_avatar/default_avatars/admin.jpg'
-            else:
-                avatar = 'user_avatar/default_avatars/user.jpeg'
-        new_avatar, created = Profile_addition.objects.get_or_create(defaults={'avatar':avatar},user_id=profile.pk)
+        photo = self.cleaned_data['avatar']
+        if photo is None:
+            return profile
+
+        if photo is False:
+            photo=None
+
+        new_avatar, created = Profile_addition.objects.get_or_create(defaults={'avatar':photo},user_id=profile.pk)
         if created is False:
-            new_avatar.avatar = avatar
-            new_avatar.save()
+                new_avatar.avatar = photo
+                new_avatar.save()
         return profile
 
 class ProfileFormAddition(ModelForm):

@@ -232,10 +232,36 @@
                             {% for comment in book.comments.all %}
                                 <div class="row">
                                     <span class="glyphicon glyphicon-time"> </span> {{comment.sent_time}}
-                                    <div class="well well-sm">
-                                        <a href="{% url 'profile:profile' comment.user.pk %}" class="text-primary">
-                                            {{ comment.user }}:
-                                        </a>
+                                    <div class="well well-lg container">
+
+                                    <div class="col-md-2 ">
+
+
+                                            {% if comment.user.is_staff%}
+
+                                                <a TARGET="_blank" href="{% static 'image/admin.jpg'%}" class="thumbnail">
+                                                     <img data-src="holder.js/100%x320" src="{% static 'image/admin.jpg'%}" alt="Image">
+                                                </a>
+
+                                            {% else%}
+
+
+                                                <a  TARGET="_blank"  href="{% static 'image/user.jpeg'%}" class="thumbnail">
+                                                    <img data-src="holder.js/100%x180" src="{% static 'image/user.jpeg'%}" alt="Image">
+                                                </a>
+
+                                            {% endif %}
+                                            <a href="{% url 'profile:profile' comment.user.pk %}" class="text-primary">
+                                            {% if comment.user.first_name != ''  or comment.user.last_name != '' %}
+                                                {{ comment.user.first_name }} {{ comment.user.last_name }}
+                                            {% else %}
+                                                {{ comment.user }}
+                                            {% endif %}
+                                            </a>
+                                        </div>
+
+
+
                                         {{ comment.comment }}
                                     </div>
                                 </div>
