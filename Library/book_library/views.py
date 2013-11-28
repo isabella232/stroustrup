@@ -15,6 +15,7 @@ from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
+from Library.profile.models import Profile_addition
 from django.core.paginator import Paginator
 from os import environ
 
@@ -245,6 +246,7 @@ def ask_to_return(request, *args, **kwargs):
 class UsersView(PaginationMixin,LoginRequiredView, ListView):
     model = User
     queryset = User.objects.all()
+    queryset2=Profile_addition.objects.all()
     page = 1
     paginate_by = USERS_ON_PAGE
 
@@ -254,6 +256,7 @@ class UsersView(PaginationMixin,LoginRequiredView, ListView):
     def get_context_data(self, **kwargs):
         context = {}
         context['object_list']=self.queryset
+        context['add_object_list']=self.queryset2
         return super(UsersView, self).get_context_data(**context)
 
 class AddRequestView(CreateView): #SpaT_edition
@@ -306,6 +309,7 @@ def CommentAdd(request, number, *args): #SpaT_edition
         raise ValueError
     message = request.REQUEST.dicts[1]['Comment']
     _user=request.user
+    _avatar=Profile_addition.objects.avatar.get(user=_user)
     _time = datetime.datetime.now()
     com = Book_Comment.comments.create(user = _user, comment = message, sent_time = _time)
     book.comments.add(com)
