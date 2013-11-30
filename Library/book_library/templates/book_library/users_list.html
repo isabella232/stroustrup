@@ -27,17 +27,24 @@
 
 
                         <li class="media pull-left">
-                            {% if user.is_staff%}
-                                <a href="{% url "profile:profile" user.id %}" class="pull-left">
-                                    <img class="media-object" src="{% static 'image/admin.jpg' %}" alt="image">
-                                </a>
+                            {% if  user.get_profile.avatar %}
+
+                                    <a  href="{% url "profile:profile" user.id %}" class="pull-left">
+                                        <img class="media-object" src="{{ user.get_profile.avatar.url }}" alt="image">
+                                    </a>
 
                             {% else %}
+                                    {% if user.is_staff%}
+                                            <a href="{% url "profile:profile" user.id %}" class="pull-left">
+                                                <img class="media-object" src="{%  static 'image/admin.jpg' %}" alt="Image">
+                                            </a>
 
-                                <a href="{% url "profile:profile" user.id %}" class="pull-left">
-                                    <img class="media-object" src="{% static 'image/user.jpeg' %}" alt="image">
-                                </a>
+                                    {% else%}
 
+                                            <a href="{%  static 'image/user.jpeg' %}" class="pull-left">
+                                                <img class="media-object" src="{%  static 'image/user.jpeg' %}" alt="Image">
+                                            </a>
+                                    {% endif %}
                             {% endif %}
 
                         </li>

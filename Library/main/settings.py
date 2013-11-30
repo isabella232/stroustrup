@@ -28,6 +28,7 @@ PAGINATION_SETTINGS = {
     'MARGIN_PAGES_DISPLAYED': 2,
 }
 
+AUTH_PROFILE_MODULE = 'profile.Profile_addition'
 
 DATABASES = {
     'default': {
@@ -165,7 +166,8 @@ INSTALLED_APPS = (
     'dajaxice',
     'main',
     'pure_pagination',
-    'crispy_forms'
+    'crispy_forms',
+    'south'
 )
 
 warnings.filterwarnings(

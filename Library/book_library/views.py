@@ -309,8 +309,8 @@ def CommentAdd(request, number, *args): #SpaT_edition
         raise ValueError
     message = request.REQUEST.dicts[1]['Comment']
     _user=request.user
-    _time = datetime.datetime.now()
-    com = Book_Comment.comments.create(user = _user, comment = message, sent_time = _time)
+    # _time = datetime.datetime.now().timetuple()
+    com = Book_Comment.comments.create(user = _user, comment = message)
     book.comments.add(com)
     com.save()
     return HttpResponseRedirect('../..')

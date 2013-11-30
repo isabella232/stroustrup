@@ -41,7 +41,7 @@ class Book_Rating(models.Model): #SpaT_edition
 
 class Book_Comment(models.Model):
     comments = models.Manager()
-    sent_time = models.DateField()
+    sent_time = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length= 255, default='')
     user = models.ForeignKey(User, related_name="comment", default=0, blank=True)
     def __unicode__(self):

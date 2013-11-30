@@ -46,7 +46,7 @@ class ProfileForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
         if not self.is_bound and self.instance.pk:
-            profile = self.instance.profile_addition_set.latest('id')
+            profile = self.instance.get_profile()
             self.fields['avatar'].initial = profile.avatar
 
     def save(self, commit=True):

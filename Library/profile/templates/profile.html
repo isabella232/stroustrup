@@ -27,22 +27,27 @@
         <div class="panel-body">
             <div class="media">
                 <div class="col-md-1">
+                    {% if  profile.get_profile.avatar %}
+
+                                    <a TARGET="_blank" href="{{  profile.get_profile.avatar.url }}" class="thumbnail">
+                                        <img data-src="holder.js/100%x320" src="{{ profile.get_profile.avatar.url }}" alt="Image">
+                                    </a>
+
+                    {% else %}
+                            {% if profile.is_staff%}
+                                    <a TARGET="_blank" href="{%  static 'image/admin.jpg' %}" class="thumbnail">
+                                        <img data-src="holder.js/100%x320" src="{%  static 'image/admin.jpg' %}" alt="Image">
+                                    </a>
+
+                        {% else%}
 
 
-                    {% if profile.is_staff%}
-                        <a TARGET="_blank" href="{% static 'image/admin.jpg'%}" class="thumbnail">
-                            <img data-src="holder.js/100%x320" src="{% static 'image/admin.jpg'%}" alt="Image">
-                        </a>
+                                    <a  TARGET="_blank"  href="{%  static 'image/user.jpeg' %}" class="thumbnail">
+                                         <img data-src="holder.js/100%x180" src="{%  static 'image/user.jpeg' %}" alt="Image">
+                                    </a>
 
-                    {% else%}
-
-
-                        <a  TARGET="_blank"  href="{% static 'image/user.jpeg'%}" class="thumbnail">
-                            <img data-src="holder.js/100%x180" src="{% static 'image/user.jpeg'%}" alt="Image">
-                        </a>
-
+                        {% endif %}
                     {% endif %}
-
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading pull-left"> ID: {{ profile.id }}</h4>
