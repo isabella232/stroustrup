@@ -30,7 +30,7 @@
                 <div class="col-md-1">
                     {% if  profile.get_profile.avatar %}
 
-                                    <a TARGET="_blank" href="{{  profile.get_profile.avatar.url }}" class="thumbnail">
+                                    <a TARGET="_blank" href="{{  profile.get_profile.avatar.avatar_profile.url }}" class="thumbnail">
                                         <img data-src="holder.js/100%x320" src="{{ profile.get_profile.avatar.url }}" alt="Image">
                                     </a>
 

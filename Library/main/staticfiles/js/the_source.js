@@ -27,7 +27,7 @@ function book_action(action, url, book_id){
                     $('#status_row').animate({right: 999}, 600, function(){
                         $(this).animate({right: 0}, 600)
                             .attr('class', 'label label-warning take_return_button')
-                            .text('Free').end();  }).end();
+                            .text('Busy').end();  }).end();
                     $('#owner').fadeIn(600);
 
 
@@ -50,7 +50,6 @@ function book_action(action, url, book_id){
                             .attr('onclick',"book_action('take','take/"+book_id+"',"+book_id+");")
                             .text('Take!').end();
                     }).end();
-                    $("td:contains('"+book_id+"')").parent().remove();
                     $('#status_row').animate({right: 999}, 600, function(){
                         $(this).animate({right: 0}, 600)
                             .attr('class', 'label label-success take_return_button')

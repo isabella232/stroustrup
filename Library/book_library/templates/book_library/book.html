@@ -25,7 +25,7 @@
 
                                 {% if book.picture%}
                                     <a TARGET="_blank" href="{{ book.picture.url }}" class="thumbnail">
-                                        <img data-src="holder.js/100%x320" src="{{ book.picture.url }}" alt="Image">
+                                        <img data-src="holder.js/100%x320" src="{{ book.picture.book_profile.url }}" alt="Image">
                                     </a>
 
                                 {% endif%}
@@ -234,7 +234,7 @@
                                         <span class="glyphicon glyphicon-time"> </span> {{comment.sent_time}}
                                         <a class="pull-left" href="{% url 'profile:profile' comment.user.pk %}">
                                             {% if comment.user.get_profile.avatar %}
-                                            <img class="media-object" data-src="holder.js/64x64" alt="avatar" src="{{ comment.user.get_profile.avatar.url }}">
+                                            <img class="media-object" data-src="holder.js/64x64" alt="avatar" src="{{ comment.user.get_profile.avatar.avatar_size.url }}">
                                             {% else %}
                                                 {% if comment.user.is_staff  %}
                                                     <img class="media-object" data-src="holder.js/64x64" alt="avatar" src="{%  static 'image/admin.jpg' %}">

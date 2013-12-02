@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib import auth
+from easy_thumbnails.fields import ThumbnailerImageField
 
 
 
@@ -61,7 +62,7 @@ class Book(models.Model):
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
     description = models.TextField(max_length=255, default="No description available.")
-    picture = models.FileField(upload_to='book_images', blank=True)
+    picture = ThumbnailerImageField(upload_to='book_images', blank=True)
     authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)

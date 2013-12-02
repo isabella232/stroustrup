@@ -30,6 +30,22 @@ PAGINATION_SETTINGS = {
 
 AUTH_PROFILE_MODULE = 'profile.Profile_addition'
 
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar_size': {'size': (100, 100), 'crop': False,
+
+        },
+
+        'avatar_profile': {'size': (36,36), 'crop': False
+
+         },
+
+        'book_size':{'size': (119,100), 'crop': False},
+
+        'book_profile': {'size': (52,44), 'crop': False}
+}
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -167,7 +183,9 @@ INSTALLED_APPS = (
     'main',
     'pure_pagination',
     'crispy_forms',
-    'south'
+    'south',
+    'easy_thumbnails'
+
 )
 
 warnings.filterwarnings(

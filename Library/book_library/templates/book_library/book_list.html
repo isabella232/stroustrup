@@ -43,8 +43,8 @@
             <div class="panel panel-primary" id="book_panel_{{book.id}}">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        <span class="glyphicon glyphicon-book"></span>
-                        <a href="{% url "books:book" book.id %}" class="title">{{ book.title }}</a>
+                        <span class="glyphicon glyphicon-link"></span>
+                        <a href="{% url "books:book" book.id %}" class="href">{{ book.title }}</a>
 
                     </h3>
                 </div>
@@ -59,7 +59,7 @@
                         <li class="media">
                             {% if book.picture%}
                                 <a class="pull-left" href="{% url "books:book" book.id %}">
-                                    <img class="media-object" src="{{ book.picture.url }}" alt="image">
+                                    <img class="media-object" src="{{ book.picture.book_size.url }}" alt="image">
                                 </a>
                             {% endif%}
                             {% if not book.picture%}
