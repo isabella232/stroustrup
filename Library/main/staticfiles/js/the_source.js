@@ -30,6 +30,9 @@ function book_action(action, url, book_id){
                             .text('Free').end();  }).end();
                     $('#owner').fadeIn(600);
 
+
+
+
                 }
 
             });
@@ -47,6 +50,7 @@ function book_action(action, url, book_id){
                             .attr('onclick',"book_action('take','take/"+book_id+"',"+book_id+");")
                             .text('Take!').end();
                     }).end();
+                    $("td:contains('"+book_id+"')").parent().remove();
                     $('#status_row').animate({right: 999}, 600, function(){
                         $(this).animate({right: 0}, 600)
                             .attr('class', 'label label-success take_return_button')
@@ -78,7 +82,17 @@ function book_action(action, url, book_id){
     }
 }
 
-
+function book_return (url, book_id){
+    jQuery.ajax({
+                type: 'get',
+                url: url,
+                data: 'take',
+                dataType: 'json',
+                success: function(data){
+                    $("td:contains('"+book_id+"')").parent().remove();
+                }
+            });
+}
 
 function colored_button(id,color)
 {

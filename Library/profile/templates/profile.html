@@ -12,6 +12,7 @@
 {% block link_extension %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+    <script src="{% static 'js/the_source.js'%}"></script>
 
 {% endblock %}
 
@@ -89,6 +90,7 @@
                                 <th>ID</th>
                                 <th class="text-center">Title</th>
                                 <th>Keeps</th>
+                                <th class="text-right">Return Book</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -105,6 +107,16 @@
 
                                     <td class="success">{{ book.taken_about }} day(s)</td>
 
+                                    <td class="text-right">
+                                            {% if user in book.users.all %}
+                                                     <a id="take_return_send_button_user"
+
+                                                     onclick="book_return('/../books/{{ book.id }}/return/{{ book.id }}',{{ book.id }});"
+                                                     class="take_return_button btn btn-warning  btn-lg">
+                                                     Return...
+                                                     </a>
+                                            {% endif %}
+                                    </td>
                                 </tr>
 
 
