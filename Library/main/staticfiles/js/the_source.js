@@ -150,16 +150,22 @@ function like_request(num){
         url: 'like/'+num.toString()+'/',
         data: 'like',
         dataType: 'json',
-        success: function(data){
+        success:function(data){
             $('#counter'+num).animate({opacity: 0}, 'fast', function() {
                 $(this)
                     .text(data.vote)
                     .animate({opacity: 1},'fast');
             });
+            $('#userslist'+num).animate({opacity:0},'fast',function() {
+                $(this)
+                    .text(data.listuser)
+                    .animate({opacity:1},'fast');
+            });
         }
     });
 
 }
+
 
 function equals()
 {

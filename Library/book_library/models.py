@@ -54,18 +54,19 @@ class Book_Comment(models.Model):
 class Book(models.Model):
     books = models.Manager()
 
-    isbn = models.CharField(help_text="13 digit", max_length=13, blank=True,
-                            validators=[RegexValidator(regex="\d{13,13}", message="please just 13 digits")],
+    isbn = models.CharField( max_length=13, blank=True,
+                            validators=[RegexValidator(regex="\d{13,13}", message="Please just 13 digits")],
                             )
     title = models.CharField(max_length=45)
     busy = models.BooleanField(default=False)
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
-    paperback_version_exists = models.BooleanField(default=True, verbose_name="paper version")
+    paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
     description = models.TextField(max_length=255, default="No description available.")
     picture = models.FileField(upload_to='book_images', blank=True)
     authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
     users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)
+    file = models.FileField(upload_to='book_files', blank=True)
 
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', symmetrical=False,  related_name='books', default=None, blank=True) #SpaT_edition
@@ -131,5 +132,7 @@ class Book_Request(models.Model): #SpaT_edition
     url = models.URLField(null='')
     title = models.CharField(max_length=30)
     vote = models.IntegerField(default=0)
+
     def __unicode__(self):
-        return self.title + ' ' + self.url
+        return  '{0} {1}'.format(self.title , self.url)
+

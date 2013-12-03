@@ -1,16 +1,14 @@
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 {% block title %} Crystalnix library: Welcome! {% endblock %}
 
 {% block content %}
     {% load static %}
+        <h2 class="text-center">Please sign up</h2>
 
-    <form class="form-signin" action="" method="POST">{% csrf_token %}
-        <h2 class="form-signin-heading">Please sign up</h2>
-        {{ form.as_p}}
-        <button class="btn btn-block btn-lg btn-success" type="submit">
-            Sign up! <span class="glyphicon glyphicon-hand-up"></span>
-        </button>
-    </form>
+        {% crispy form  %}
+
+
     <div class="col-md-3"></div>
     <div class="col-md-3">
         <div class="help-block">

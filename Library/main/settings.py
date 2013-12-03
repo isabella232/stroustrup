@@ -16,6 +16,18 @@ DOMAIN = '127.0.0.1:8001'
 
 MANAGERS = ADMINS
 
+BOOKS_ON_PAGE = 5
+REQUEST_ON_PAGE = 3
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_FAIL_SILENTLY = not DEBUG
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 3,
+    'MARGIN_PAGES_DISPLAYED': 2,
+}
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -125,9 +137,6 @@ ROOT_URLCONF = 'main.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'main.wsgi.application'
 
-TEMPLATE_DIRS = (
-    'templates'
-)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
@@ -154,6 +163,8 @@ INSTALLED_APPS = (
     'profile',
     'dajaxice',
     'main',
+    'pure_pagination',
+    'crispy_forms'
 )
 
 warnings.filterwarnings(

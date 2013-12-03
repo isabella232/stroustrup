@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, url, include
 from django.views.generic.base import TemplateView
-
+from django.contrib.auth import views as auth_views
 from registration.backends.default.views import RegistrationView, ActivationView
+
 from forms import CustomRegistrationForm
 import os
 os.environ['RECAPTCHA_TESTING'] = 'True'
@@ -27,5 +28,6 @@ urlpatterns = patterns('',
                        url(r'^register/closed/$',
                            TemplateView.as_view(template_name='registration/registration_closed.html'),
                            name='registration_disallowed'),
+
                        (r'', include('registration.auth_urls')),
                        )

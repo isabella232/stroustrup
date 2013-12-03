@@ -3,11 +3,14 @@ from django.contrib import admin
 from django_openid_auth.views import login_complete
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from main import views, settings
+from Library.main import views, settings
+from Library.registration_app.forms import CustomAuthForm
 
 dajaxice_autodiscover()
 
-
+import warnings
+warnings.simplefilter('error', DeprecationWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 admin.autodiscover()
 
@@ -25,6 +28,10 @@ urlpatterns = patterns('',
                        (r'^accounts/', include('registration_app.urls')),
 
                        (r'^books/', include('book_library.urls', namespace='books')),
+                       url(r'^auth/login/$',
+                           'django.contrib.auth.views.login',
+                           {'template_name': 'registration/login.html','authentication_form': CustomAuthForm},
+                           name='auth_login'),
                        url(r'^auth/', include('registration.auth_urls', namespace="authorisation")),
                        )
 

@@ -1,10 +1,11 @@
 {% extends 'book_library/books_mainpage.html' %}
+{% load crispy_forms_tags %}
 {% block title %}Request new book.{% endblock %}
 {% block location %}Requests page{% endblock %}
 {% block link_extension %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/book_index.css' %}" xmlns="http://www.w3.org/1999/html"/>
-    
+
     <link rel="stylesheet" href="{% static 'css/request.css' %}"/>
 {% endblock %}
 
@@ -13,13 +14,18 @@
     <script language="JavaScript">
 
         $(document).ready((function(){
-            $('label[for="id_title"]').remove();
-            $('label[for="id_url"]').remove();
+           // $('label[for="id_title"]').remove();
+           // $('label[for="id_url"]').remove();
 
-            $('#id_title').attr('class','form-control').attr('placeholder','Title');
-            $('#id_url').attr('class','form-control').attr('placeholder','Paste URL here');
-            $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
-            $('#request_bar').attr('class', 'active');
+           // $('#id_title').attr('class','form-control').attr('placeholder','Title');
+           // $('#id_url').attr('class','form-control').attr('placeholder','Paste URL here');
+           // $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
+           // $('#request_bar').attr('class', 'active');
+           // $('#id_title').parent().attr('class','col-md-5');
+           // $('#id_title').attr('required','');
+           // $('#id_url').parent().attr('class','col-md-5');
+           // $('#id_url').attr('required','');
+           // $('#id_button').parent().attr('class','col-md-2');
         }));
 
 
@@ -28,22 +34,13 @@
 
 
 {% block content %}
-    <div class="row request_area">
 
-            <form  class="form-signin" method="post" action="">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-lg btn-block btn-success" type="submit">
-                    Send! <span class="glyphicon glyphicon-send"></span>
-                </button>
-            </form>
+                    {% crispy form form.helper %}
 
-    </div>
+
 
             <div class="well">
                 <h4>Look, what is already ordered:</h4>
-
-
 
 
 
@@ -64,6 +61,14 @@
                 <div class="panel-body" >
                     <h3 class="pull-left">
                         Ordered by <a href="{% url "profile:profile" order.user.pk  %}">  <span class="comment_name"> {{ order.user }} </span></a>
+                        <p>Liked:
+                        <span id="userslist{{ order.id }}">
+                            {% for i in order.users.all %}
+                               {{ i.username }}
+                            {% endfor %}
+
+                        </span>
+                        </p>
                     </h3>
 
                         <div class="pull-right">
@@ -107,6 +112,23 @@
     {% endif %}
     </div>
 {% endblock %}
-{% block pagination %}
 
+
+
+{% block pagination %}
+    <div class="col-md-4 col-md-offset-4">
+        <ul class="pager">
+            <li class="previous {% ifequal current_page prev_page %}disabled{% endifequal %}">
+                <a {% ifnotequal current_page prev_page %}href="{%  url  'books:request' prev_page%}"{% endifnotequal %}>
+                    &larr; Prev
+                </a>
+            </li>
+            <li class="label label-primary page_number"> {{ current_page }} </li>
+            <li class="next {% ifequal current_page next_page %} disabled {% endifequal %}">
+                <a {% ifnotequal current_page next_page %}href="{% url 'books:request' next_page%}"{% endifnotequal %}>
+                    Next &rarr;
+                </a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

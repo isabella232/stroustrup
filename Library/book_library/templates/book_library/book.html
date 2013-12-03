@@ -17,7 +17,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="glyphicon glyphicon-book"></span> <a class="title">{{ book.title }}</a>
+                <span class="glyphicon glyphicon-book"></span> <a class="title" > {{ book.title }}</a>
             </div>
             <div class="panel-body">
                 <div class="media">
@@ -36,6 +36,11 @@
                                     </a>
 
                                 {% endif %}
+
+                                {% if book.file %}
+                                    <a TARGET="_blank" href="{{ book.file.url }}" class="thumbnail"> Download </a>
+
+                                {%  endif %}
 
                     </div>
                     <div class="media-body">
@@ -205,7 +210,7 @@
                             </a>
 
 
-                            <a href=" {% url "books:list"%}" class="btn btn-primary">
+                            <a href=" {% url "books:list" current_page%}" class="btn btn-primary">
                                 Fall back <span class="glyphicon glyphicon-chevron-down"></span>
                             </a>
                         </div>

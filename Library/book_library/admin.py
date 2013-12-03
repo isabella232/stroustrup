@@ -15,14 +15,14 @@ class AuthorAdmin(admin.ModelAdmin):
 
 class Book_TagAdmin(admin.ModelAdmin):
     display = 'tag'
-    inlines = [TagsInLine]
+    #inlines = [TagsInLine]
 
 class RequestsInLine(admin.TabularInline):
     model= Book_Request
 
 class Book_RequestAdmin(admin.ModelAdmin): #SpaT edition
     list_display = ('title', 'url', 'vote')
-    inlines = [RequestsInLine]
+    #inlines = [RequestsInLine]
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(Author, AuthorAdmin)

@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.generic.list import ListView
+from django.views.generic.list import ListView, MultipleObjectMixin
+from django.views.generic.base import ContextMixin
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -16,15 +17,16 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from os import environ
-from main import settings
+
+
+from pure_pagination.mixins import PaginationMixin
+from Library.main.settings import BOOKS_ON_PAGE,REQUEST_ON_PAGE
 import datetime
 import json
 import math
 
 from forms import *
 from models import *
-
-BOOKS_ON_PAGE = 5
 
 
 class StaffOnlyView(object):
@@ -140,11 +142,14 @@ def return_book_view(request, number, *args, **kwargs):
     return  HttpResponseRedirect(reverse('book:list'))
 
 
-class BookListView(LoginRequiredView, ListView):
+class BookListView(PaginationMixin, LoginRequiredView, ListView):
     busy = None
     free = None
     form_class = SearchForm
     page = 1
+    paginate_by = BOOKS_ON_PAGE
+
+
 
     def get_queryset(self):
         self.queryset = Book.books.all()
@@ -174,32 +179,49 @@ class BookListView(LoginRequiredView, ListView):
 
 
             if self.busy and not self.free:
-                query = query | Q(busy=True)
+                query = query & Q(busy=True)
             if not self.busy and self.free:
-                query = query | Q(busy=False)
+                query = query & Q(busy=False)
 
             if query:
                 self.queryset = Book.books.filter(query)
         if self.kwargs['page']:
             self.page = int(self.kwargs['page'])
+
         return self.queryset
 
     def get_context_data(self, **kwargs):
-        page = Paginator(self.queryset, BOOKS_ON_PAGE)
-        if self.page in page.page_range:
-            self.queryset = page.page(self.page).object_list
-        else:
-            self.queryset = []
+        """
+        Get the context for this view.
+        """
+        queryset = kwargs.pop('object_list')
+        page_size = self.get_paginate_by(queryset)
+        context_object_name = self.get_context_object_name(queryset)
+        if page_size:
+            paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
+            context = {
+                'paginator': paginator,
+                'page_obj': page,
+                'is_paginated': is_paginated,
+                'object_list': queryset,
+                "form": self.form_class(self.request.GET),
+                "busy": self.busy
 
-        next_page=self.page+1
-        prev_page=self.page-1
-        if prev_page == 0:
-            prev_page = self.page
-        if next_page-1 == page.num_pages:
-            next_page = self.page
-        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET),
-                   "busy": self.busy, "current_page": self.page, "next_page":next_page, "prev_page":prev_page}
-        return super(BookListView, self).get_context_data(**context)
+            }
+        else:
+            context = {
+                'paginator': None,
+                'page_obj': None,
+                'is_paginated': False,
+                'object_list': queryset,
+                "form": self.form_class(self.request.GET),
+                "busy": self.busy
+            }
+        if context_object_name is not None:
+            context[context_object_name] = queryset
+        context.update(kwargs)
+        return super(MultipleObjectMixin, self).get_context_data(**context)
+
 
 
 class BookStoryListView(LoginRequiredView, ListView):
@@ -264,16 +286,38 @@ class AddRequestView(CreateView): #SpaT_edition
         return super(AddRequestView, self).get(self, request, *args, **kwargs)
 
 
-class requestBook(AddRequestView): #SpaT_edition
+class requestBook(PaginationMixin,AddRequestView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
     queryset = Book_Request.requests.all()
+    pageReq=1
+    paginate_by = 2
+
+
+
 
 
     def get_context_data(self, **kwargs):
-        context = {'requests': Book_Request.requests.all(), "form" : self.get_form(self.form_class)}
+        if self.kwargs['page']!=None:
+            self.pageReq = int(self.kwargs['page'])
+        paginator1 = Paginator(self.queryset, REQUEST_ON_PAGE)
+        if self.pageReq in paginator1.page_range:
+            self.queryset = paginator1.page(self.pageReq).object_list
+        else:
+            self.queryset = []
+        next_page=self.pageReq+1
+        prev_page=self.pageReq-1
+        if prev_page == 0:
+            prev_page = self.pageReq
+        if next_page-1 == paginator1.num_pages:
+            next_page = self.pageReq
+        context = {'requests': set(self.queryset), "form" : self.get_form(self.form_class)
+                   , "current_page": self.pageReq, "next_page":next_page, "prev_page":prev_page}
         return super(requestBook, self).get_context_data(**context)
+
+
+
     def post(self, request, *args, **kwargs):
 
         if request.POST['url'] and request.POST['title']:
@@ -312,9 +356,11 @@ def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
     user=request.user
     result_vote=0
+    all_users=[]
     for req in queryset:
 
         if req.id == int(number):
+
             result_vote=req.vote
             flag = True
             for user1 in req.users.all():
@@ -323,20 +369,29 @@ def LikeRequest(request, number, *args): #SpaT_edition
                     break
             if not flag:
                 req.vote-=1
+
                 result_vote=req.vote
                 req.users.remove(user)
                 req.save()
+
+                for i in req.users.all():
+                   all_users.append(i.username)
+
                 break
 
             req.vote+=1
             req.users.add(user)
             req.save()
+            for i in req.users.all():
+                    all_users.append(i.username)
             result_vote=req.vote
             break
 
     return HttpResponse(content=json.dumps({
         'status':'OK',
         'vote':result_vote,
+        'listuser':all_users,
+
         }, sort_keys = True))
 
 def rating_post(request, *args, **kwargs):

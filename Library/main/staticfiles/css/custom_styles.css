@@ -75,7 +75,7 @@ body {
 }
 
 .books-content{
-    margin-top: 150px;
+    margin-top: 70px;
 
 }
 
@@ -144,4 +144,27 @@ body {
     position: relative;
 }
 
+#div_id_busy {
+    color:#f0ad4e
+}
 
+#div_id_free {
+    color:#5cb85c
+}
+
+#submit-id-send {
+    width: 15.366666666666664%;
+
+}
+
+#id-action-form-change{
+    width:300px;
+}
+
+#submit-id-save_changes_profile{
+    width: 150px;
+}
+
+#submit-id-cancel_profile{
+    width: 150px;
+}
