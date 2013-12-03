@@ -93,7 +93,7 @@ class BookAdd(AddView):
 
 class BookUpdate(StaffOnlyView, UpdateView):
     model = Book
-    form_class = BookForm
+    form_class = Book_UpdateForm
 
     def get(self, request, *args, **kwargs):
         return super(BookUpdate, self).get(self, request, *args, **kwargs)
