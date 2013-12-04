@@ -10,8 +10,10 @@
             //$('#id_keywords').attr('class','form-control').attr('placeholder', 'Search').wrap('<div class="form-group"></div>');
             $('#books_bar').attr('class', 'active');
 
-
-
+            if ($('#id_busy').checked())
+            {
+                $('#id_free').prop("checked","false")
+            }
 
 
         }));

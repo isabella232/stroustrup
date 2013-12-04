@@ -56,12 +56,12 @@ class ProfileForm(ModelForm):
             return profile
 
         if photo is False:
+            profile.get_profile().avatar.delete()
             photo=None
 
-        new_avatar, created = Profile_addition.objects.get_or_create(defaults={'avatar':photo},user_id=profile.pk)
-        if created is False:
-                new_avatar.avatar = photo
-                new_avatar.save()
+        profile.get_profile().avatar = photo
+        new_avatar=profile.get_profile()
+        new_avatar.save()
         return profile
 
 class ProfileFormAddition(ModelForm):
