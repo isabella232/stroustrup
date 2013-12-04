@@ -214,48 +214,8 @@
     {% endif %}
 
 
-
+    {% include "book_library/pagination.html"  %}
 {% endblock %}
 
 
-{% block pagination %}
-   {% if object_list %}
-    {% load i18n %}
-        <div class="text-center">
-        <div class="pagination ">
 
-     {% if page_obj.has_previous %}
-            <li class="previous">
-                <a href="?{{ page_obj.previous_page_number.querystring }}" class="prev">&larr; {% trans "Prev" %}</a>
-            </li>
-        {% else %}
-            <li class="previous disabled">
-                <span class="disabled prev">&larr; {% trans "Prev" %}</span>
-            </li>
-        {% endif %}
-        {% for page in page_obj.pages %}
-        {% if page %}
-            {% ifequal page page_obj.number %}
-               <li class="active">
-                   <span class="current page">{{ page }}</span>
-               </li>
-            {% else %}
-               <li> <a href="?{{ page.querystring }}" class="page">{{ page }}</a> </li>
-            {% endifequal %}
-        {% else %}
-           <li class="page disabled"> <a>...</a> </li>
-        {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-            <li class="next">
-                    <a href="?{{ page_obj.next_page_number.querystring }}" class="next">{% trans "Next" %} &rarr;</a>
-            </li>
-        {% else %}
-            <li class="next disabled">
-                <span class="disabled next">{% trans "Next" %} &rarr;</span>
-            </li>
-        {% endif %}
-        </div>
-    </div>
-  {% endif %}
-{% endblock %}
