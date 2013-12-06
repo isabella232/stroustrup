@@ -57,6 +57,7 @@ class BookForm(ModelForm):
             )
 
 
+
     def clean_isbn(self):
         data = self.cleaned_data['isbn']
         if data=='':
@@ -152,6 +153,41 @@ class SearchForm(forms.Form):
 
             Submit('search','Search',css_class="btn btn-default")
     )
+
+
+class Book_UpdateForm(BookForm):
+        def __init__(self, *args, **kwargs):
+            kwargs.setdefault('initial', {})['authors'] = ''
+            super(BookForm, self).__init__(*args, **kwargs)
+            if not self.is_bound and self.instance.pk:
+                queryset_authors = self.instance.authors.all()
+                authors=''
+                for count in range(len(queryset_authors)):
+                    authors = authors+'{0} {1},'.format(queryset_authors[count].first_name,queryset_authors[count].last_name)
+                    if count+1 == len(queryset_authors):
+                        authors = authors[0:-1]
+                self.fields['authors_names'].initial = authors
+                queryset_tags = self.instance.tags.all()
+                tags=''
+                for count in range(len(queryset_tags)):
+                    tags = tags + '{0},'.format(queryset_tags[count].tag)
+                    if count+1 == len(queryset_tags):
+                        tags = tags[0:-1]
+                self.fields['tag_field'].initial = tags
+
+
+        def clean_isbn(self):
+            data = self.cleaned_data['isbn']
+            if data or self.instance.isbn == data:
+                return data
+            try:
+                Book.books.get(isbn=data)
+            except:
+                Book.DoesNotExist
+                return data
+            raise  forms.ValidationError('This ISBN is already taken.')
+
+
 
 
 class Book_RequestForm(ModelForm): #SpaT_edition

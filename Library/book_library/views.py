@@ -15,6 +15,7 @@ from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
+from Library.profile.models import Profile_addition
 from django.core.paginator import Paginator
 from os import environ
 
@@ -92,7 +93,7 @@ class BookAdd(AddView):
 
 class BookUpdate(StaffOnlyView, UpdateView):
     model = Book
-    form_class = BookForm
+    form_class = Book_UpdateForm
 
     def get(self, request, *args, **kwargs):
         return super(BookUpdate, self).get(self, request, *args, **kwargs)
@@ -244,9 +245,9 @@ def ask_to_return(request, *args, **kwargs):
 
 class UsersView(PaginationMixin,LoginRequiredView, ListView):
     model = User
-    queryset = User.objects.all()
     page = 1
     paginate_by = USERS_ON_PAGE
+    queryset = User.objects.all()
 
     def get(self, request, *args, **kwargs):
         return super(UsersView, self).get(request, *args, **kwargs)
@@ -305,9 +306,8 @@ def CommentAdd(request, number, *args): #SpaT_edition
     if not book:
         raise ValueError
     message = request.REQUEST.dicts[1]['Comment']
-    _user=request.user
-    _time = datetime.datetime.now()
-    com = Book_Comment.comments.create(user = _user, comment = message, sent_time = _time)
+    _user = request.user
+    com = Book_Comment.comments.create(user=_user, comment=message)
     book.comments.add(com)
     com.save()
     return HttpResponseRedirect('../..')
@@ -316,22 +316,22 @@ def CommentAdd(request, number, *args): #SpaT_edition
 def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
     user=request.user
-    result_vote=0
+    result_vote = 0
     all_users=[]
     for req in queryset:
 
         if req.id == int(number):
 
-            result_vote=req.vote
+            result_vote = req.vote
             flag = True
             for user1 in req.users.all():
                 if user1.id == user.id:
-                    flag=False
+                    flag = False
                     break
             if not flag:
-                req.vote-=1
+                req.vote -= 1
 
-                result_vote=req.vote
+                result_vote = req.vote
                 req.users.remove(user)
                 req.save()
 
