@@ -46,8 +46,8 @@
 
 
 
-    {% if requests %}
-        {% for order in requests %}
+    {% if object_list %}
+        {% for order in object_list %}
 
             <div class="panel panel-default" id="request{{ order.id }}">
                 <div class="panel-heading">
@@ -111,24 +111,7 @@
         </div>
     {% endif %}
     </div>
+    {% include "book_library/pagination.html"  %}
 {% endblock %}
 
 
-
-{% block pagination %}
-    <div class="col-md-4 col-md-offset-4">
-        <ul class="pager">
-            <li class="previous {% ifequal current_page prev_page %}disabled{% endifequal %}">
-                <a {% ifnotequal current_page prev_page %}href="{%  url  'books:request' prev_page%}"{% endifnotequal %}>
-                    &larr; Prev
-                </a>
-            </li>
-            <li class="label label-primary page_number"> {{ current_page }} </li>
-            <li class="next {% ifequal current_page next_page %} disabled {% endifequal %}">
-                <a {% ifnotequal current_page next_page %}href="{% url 'books:request' next_page%}"{% endifnotequal %}>
-                    Next &rarr;
-                </a>
-            </li>
-        </ul>
-    </div>
-{% endblock %}

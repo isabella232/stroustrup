@@ -53,7 +53,7 @@ urlpatterns = patterns('',
                           ),
                        url(r'like/(\d+)/$', LikeRequest,
                            name='like'),
-                       url(r'^users/$', UsersView.as_view(template_name='book_library/users_list.html'),
+                       url(r'^users/(?P<page>\d+)?/?$', UsersView.as_view(template_name='book_library/users_list.html'),
                            name = 'users'
                        ),
                        url(r'comment/(\d+)/(.*)$', CommentAdd, name='comment'),
