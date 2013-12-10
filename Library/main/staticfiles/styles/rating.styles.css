@@ -47,7 +47,7 @@ div.border-wrap{
     border-top-left-radius: 9px;
     border-top-right-radius: 9px;
     margin: 10px auto;
-    overflow: auto; <!--hidden-->
+    /*overflow: auto; <!--hidden-->*/
     padding: 10px;
     position: relative;
 }

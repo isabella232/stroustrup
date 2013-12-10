@@ -46,7 +46,7 @@ class ProfileForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
         if not self.is_bound and self.instance.pk:
-            profile = self.instance.profile_addition_set.latest('id')
+            profile = self.instance.get_profile()
             self.fields['avatar'].initial = profile.avatar
 
     def save(self, commit=True):
@@ -56,12 +56,12 @@ class ProfileForm(ModelForm):
             return profile
 
         if photo is False:
+            profile.get_profile().avatar.delete()
             photo=None
 
-        new_avatar, created = Profile_addition.objects.get_or_create(defaults={'avatar':photo},user_id=profile.pk)
-        if created is False:
-                new_avatar.avatar = photo
-                new_avatar.save()
+        profile.get_profile().avatar = photo
+        new_avatar=profile.get_profile()
+        new_avatar.save()
         return profile
 
 class ProfileFormAddition(ModelForm):

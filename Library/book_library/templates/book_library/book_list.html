@@ -13,23 +13,37 @@
 
 
 
-
         }));
+             $("label[for='id_busy']").click(function() {
+                            if ($('#id_busy').is(":checked")) {
+
+                                $('#id_free').prop("checked", false);
+                                $('#id_busy').prop("checked", true);
+                            } else {
+                                $('#id_busy').prop("checked", false);
+                            }
+                });
+
+             $("label[for='id_free']").click(function() {
+                            if ($('#id_free').is(":checked")) {
+
+                                $('#id_busy').prop("checked", false);
+                                $('#id_free').prop("checked", true);
+                            } else {
+                                $('#id_free').prop("checked", false);
+                            }
+                });
+
         $('div.rating').rating();
     </script>
 {% endblock %}
 
 {% block filter %}
-
+    <div class="form-group" id="search">
         {% if not search_flag %}
             {% crispy form  %}
-
-
-
-
-
         {% endif %}
-
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -37,29 +51,22 @@
 
     {% if object_list %}
         {% for book in object_list %}
-            {# ################# #}
-
-            {# NEW START #}
             <div class="panel panel-primary" id="book_panel_{{book.id}}">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        <span class="glyphicon glyphicon-book"></span>
-                        <a href="{% url "books:book" book.id %}" class="title">{{ book.title }}</a>
+                        <span class="glyphicon glyphicon-link"></span>
+                        <a href="{% url "books:book" book.id %}" class="href">{{ book.title }}</a>
 
                     </h3>
                 </div>
                 <div class="panel-body">
                     <ul class="media-list">
-                        <li class="pull-right">
-                            <div class="rating_{{ book.id }}">
-                                <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
-                            </div>
-                        </li>
+
 
                         <li class="media">
                             {% if book.picture%}
                                 <a class="pull-left" href="{% url "books:book" book.id %}">
-                                    <img class="media-object" src="{{ book.picture.url }}" alt="image">
+                                    <img class="media-object" src="{{ book.picture.book_size.url }}" alt="image">
                                 </a>
                             {% endif%}
                             {% if not book.picture%}
@@ -70,6 +77,11 @@
 
                             {% endif %}
 
+                                <div class="pull-right">
+                                    <div class="rating_{{ book.id }}">
+                                        <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+                                    </div>
+                                </div>
                         </li>
 
                         <li>
@@ -126,58 +138,6 @@
 
                     </ul>
                 </div>
-                <!-- Button trigger modal -->
-                <a data-toggle="modal" href="#myModal_{{ book.id }}" class="btn btn-primary btn-lg">
-                    Comments <span class="glyphicon glyphicon-comment"></span>
-                </a>
-                <!-- Modal -->
-                <div class="modal fade" id="myModal_{{ book.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">Share your opinion:</h4>
-                            </div>
-                            <div class="modal-body" id="row_panel{{ book.id }}">
-                                {% if book.comments.all %}
-                                    {% for comment in book.comments.all %}
-                                        <div class="row">
-                                            <span class="glyphicon glyphicon-time"> </span> {{comment.sent_time}}
-                                            <div class="well well-sm">
-                                                <a href="{% url 'profile:profile' comment.user.pk %}" class="text-primary">
-                                                    {{ comment.user }}:
-                                                </a>
-                                                {{ comment.comment }}
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <h4 id="empty_board{{ book.id }}">
-                                        This is board is empty... Fix such situation <span class="glyphicon glyphicon-chevron-down"></span>
-                                    </h4>
-                                {% endif %}
-                            </div>
-                            <div class="modal-footer">
-                                <div class="row">
-                                    <div class="col-lg-6 pull-right">
-                                        <div class="input-group">
-                                            <input id="input{{ book.id }}"
-                                                   onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"
-                                                   onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"
-                                                   type="text" class="form-control">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary"
-                                                onclick="  comment({{ book.id }}, {{ user.pk }});">
-                                            Send! <span class="glyphicon glyphicon-envelope"></span>
-                                        </button>
-                                    </span>
-                                        </div><!-- /input-group -->
-                                    </div><!-- /.col-lg-6 -->
-                                </div>
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
             </div>
 
             {# NEW EnD #}
@@ -200,16 +160,16 @@
 
     {% else %}
         <div class="col-md-4 col-md-offset-4">
-        <div class="panel panel-danger">
-            <div class="panel-heading"><span class="glyphicon glyphicon-remove-sign"></span> </div>
-            <div class="panel-body">
+            <div class="panel panel-danger">
+                <div class="panel-heading"><span class="glyphicon glyphicon-remove-sign"></span> </div>
+                    <div class="panel-body">
 
                 Here are no books. Yet...
 
 
-            </div>
-        </div>
 
+                    </div>
+            </div>
         </div>
     {% endif %}
 

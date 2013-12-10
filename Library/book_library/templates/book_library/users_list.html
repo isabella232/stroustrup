@@ -12,14 +12,14 @@
 {% endblock %}
 
 {% block content %}
-
+{% load thumbnail %}
         {% for user in object_list %}
             {# ################# #}
             <div class="panel panel-primary" id="user_panel_{{user.id}}">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <span class="glyphicon glyphicon-user"></span>
-                        <a href="{% url "profile:profile" user.id %}" class="title">{{ user.username }}</a>
+                        <a href="{% url "profile:profile" user.id %}" class="href">{{ user.username }}</a>
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -27,17 +27,24 @@
 
 
                         <li class="media pull-left">
-                            {% if user.is_staff%}
-                                <a href="{% url "profile:profile" user.id %}" class="pull-left">
-                                    <img class="media-object" src="{% static 'image/admin.jpg' %}" alt="image">
-                                </a>
+                            {% if  user.get_profile.avatar %}
+
+                                    <a  href="{% url "profile:profile" user.id %}" class="pull-left">
+                                        <img class="media-object" src="{{ user.get_profile.avatar.avatar_size.url }}" alt="image">
+                                    </a>
 
                             {% else %}
+                                    {% if user.is_staff%}
+                                            <a href="{% url "profile:profile" user.id %}" class="pull-left">
+                                                <img class="media-object" src="{%  static 'image/admin.jpg' %}" alt="Image">
+                                            </a>
 
-                                <a href="{% url "profile:profile" user.id %}" class="pull-left">
-                                    <img class="media-object" src="{% static 'image/user.jpeg' %}" alt="image">
-                                </a>
+                                    {% else%}
 
+                                            <a href="{%  static 'image/user.jpeg' %}" class="pull-left">
+                                                <img class="media-object" src="{%  static 'image/user.jpeg' %}" alt="Image">
+                                            </a>
+                                    {% endif %}
                             {% endif %}
 
                         </li>
@@ -52,30 +59,21 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for book in user.get_users_books %}
+                                        {% for book in user.get_users_books %}
+                                            <tr>
+                                                <td>{{ book.id }}</td>
 
+                                                <td>
+                                                    <a class="btn btn-full-row text-left" href="{% url 'books:book' book.id  %}">
+                                                         {{ book.title }}
+                                                    </a>
+                                                </td>
 
-                                        <tr>
-                                            <td>{{ book.id }}</td>
-                                            <td>
-                                            <a class="btn btn-full-row text-left" href="{% url 'books:book' book.id  %}">
-                                                 {{ book.title }}
-                                            </a>
-                                            </td>
-
-                                            <td class="success">{{ book.taken_about }} day(s)</td>
-
-                                        </tr>
-
-
-
-
-
-                                    {% endfor %}
+                                                <td class="success">{{ book.taken_about }} day(s)</td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
-
-
 
                             {% else %}
                                 <div class="panel panel-danger">
@@ -85,9 +83,6 @@
                                 </div>
                             {% endif %}
                         </li>
-
-
-
 
                     </ul>
                 </div>

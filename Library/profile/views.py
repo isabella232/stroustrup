@@ -1,8 +1,7 @@
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.models import User
-from Library.profile.models import Profile_addition
-from django.views.generic.edit import UpdateView
 from Library.book_library.views import LoginRequiredView
+from django.views.generic.edit import UpdateView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
@@ -15,7 +14,7 @@ class ProfileView(LoginRequiredView, DetailView):
     model = User
 
     def get_context_data(self, object):
-        context = {'profile': object, 'books': object.get_users_books(), 'user': self.request.user,'avatar':Profile_addition.objects.get(user=self.request.user)}
+        context = {'profile': object, 'books': object.get_users_books(), 'user': self.request.user,}
         return super(ProfileView, self).get_context_data(**context)
 
 

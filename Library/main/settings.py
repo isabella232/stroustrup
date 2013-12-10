@@ -28,6 +28,23 @@ PAGINATION_SETTINGS = {
     'MARGIN_PAGES_DISPLAYED': 2,
 }
 
+AUTH_PROFILE_MODULE = 'profile.Profile_addition'
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar_size': {'size': (100, 100), 'crop': False,
+
+        },
+
+        'avatar_profile': {'size': (36,36), 'crop': False
+
+         },
+
+        'book_size':{'size': (119,100), 'crop': False},
+
+        'book_profile': {'size': (52,44), 'crop': False}
+}
+}
 
 DATABASES = {
     'default': {
@@ -165,7 +182,10 @@ INSTALLED_APPS = (
     'dajaxice',
     'main',
     'pure_pagination',
-    'crispy_forms'
+    'crispy_forms',
+    'south',
+    'easy_thumbnails'
+
 )
 
 warnings.filterwarnings(

@@ -1,0 +1,4 @@
+*.pyc
+.idea
+libarydb
+Library/main/media/
