@@ -64,6 +64,7 @@
 
 
                         <li class="media">
+                            <div class="col-md-4">
                             {% if book.picture%}
                                 <a class="pull-left" href="{% url "books:book" book.id %}">
                                     <img class="media-object" src="{{ book.picture.book_size.url }}" alt="image">
@@ -76,12 +77,14 @@
                                 </a>
 
                             {% endif %}
-
-                                <div class="pull-right">
+                            </div>
+                               <div class="col-md-offset-4">
+                                <span class="pull-right">
                                     <div class="rating_{{ book.id }}">
                                         <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
                                     </div>
-                                </div>
+                                </span>
+                               </div>
                         </li>
 
                         <li>

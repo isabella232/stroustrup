@@ -5,6 +5,8 @@ from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from Library.main import views, settings
 from Library.registration_app.forms import CustomAuthForm
+from Library.registration_app.views import *
+from django.views.generic.base import TemplateView
 
 dajaxice_autodiscover()
 
@@ -25,9 +27,14 @@ urlpatterns = patterns('',
                        url(r'^openid/login-complete/$', login_complete, name='openid-complete'),
 
                        url(r'^profile/',include('profile.urls', namespace="profile")),
-                       (r'^accounts/', include('registration_app.urls')),
 
-                       (r'^books/', include('book_library.urls', namespace='books')),
+                       url(r'^landing_page$',LandingPage.as_view(template_name='landing_page.html'),name='landing_page'),
+
+                       url(r'^thanks/$', TemplateView.as_view(template_name='thanks.html'),name='thanks'),
+
+                       url(r'^accounts/', include('registration_app.urls')),
+
+                       url(r'^books/', include('book_library.urls', namespace='books')),
                        url(r'^auth/login/$',
                            'django.contrib.auth.views.login',
                            {'template_name': 'registration/login.html','authentication_form': CustomAuthForm},

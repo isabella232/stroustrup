@@ -82,3 +82,18 @@ class CustomAuthForm(AuthenticationForm):
                            )
     )
 
+
+class LandingForm(forms.Form):
+    email=forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'E-mail'}))
+
+    helper = FormHelper()
+    helper.form_method='post'
+    helper.form_class = "form-signin"
+    helper.form_show_labels=False
+    helper.layout = Layout(
+                'email',
+                 FormActions(
+                                Submit('send_letter', 'Send!', css_class='btn btn-lg btn-block btn-primary'),
+                           )
+    )
+

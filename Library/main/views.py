@@ -10,5 +10,5 @@ def main_view(request):
         #template = loader.get_template('main/mainpage.html')
         #context = RequestContext(request,)
         #return HttpResponse(template.render(context))
-        return HttpResponseRedirect('auth/login')
+        return HttpResponseRedirect('/landing_page')
 
