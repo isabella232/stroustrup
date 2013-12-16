@@ -58,7 +58,7 @@
 
 		this.vote_wrap = $('<div class="vote-wrap"></div>');
 		this.vote_block = $('<div class="vote-block"></div>');
-        this.vote_hover = $('<div class="vote-hover"></div>');
+        this.vote_hover = $('<div class="vote-hover row"></div>');
 		this.vote_stars = $('<div class="vote-stars"></div>');
 		this.vote_active = $('<div class="vote-active"></div>');
 		this.vote_result = $('<div class="vote-result"></div>');
@@ -130,7 +130,7 @@
     				'background-position':'left center'
     			});
                 
-                self.vote_success.html('<div class="your_rate"> Your rate: '+score+'</div>');
+                self.vote_success.html('<div class="your_rate">Your rate: '+score+'</div>');
     		    
     		 })
     		 .bind('mouseout',function(){
@@ -159,7 +159,7 @@
     			 //self._data.val = (self._data.val*self._data.votes +score)/(self._data.votes + 1);
                 // self._data.val = Math.round( self._data.val * 100 ) / 100;
                  self._data.score = score;
-                 self.vote_success.html('<div class="your_rate"> Your rate: '+score+'</div>');
+                 self.vote_success.html('<div class="your_rate">Your rate: '+score+'</div>');
 
 
 
@@ -198,8 +198,9 @@
                     height:this.height,
                     width:this.width*this.options.stars
                 }),
-				this.vote_result.html(this.declOfNum(this._data.votes, this._data.val)), //text?
-				this.vote_success
+                this.vote_success,
+				this.vote_result.html(this.declOfNum(this._data.votes, this._data.val))//text?
+
     		));
 
     		
@@ -270,11 +271,9 @@
     	    if(number <= 0) return '';
     		number = Math.abs(Math.floor(number));
             cases = [2, 0, 1, 1, 1, 2];  
-            result_str = '<div class="row"> <div class = "pull-right">'+
+            result_str = '<div class="row">Common rating: <span class="label label-warning"> ' + val+'</span> ' +
             this.options.titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ]+
-                ':  <span class="label label-warning">'+number+'</span></div>'+
-                ' <div class = "pull-right"> Common rating: <span class="label label-warning"> ' +
-                val+'</span></div> </div>';
+                ':  <span class="label label-warning">'+number+'</span> </div>';
             return result_str;
         }  
     });
