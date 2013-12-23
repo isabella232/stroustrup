@@ -77,11 +77,9 @@ class BookForm(ModelForm):
     def save(self, commit=True):
         authors = self.cleaned_data['authors_names']
         tags = self.cleaned_data['tag_field']
-        book= super(BookForm, self).save(commit)
+        book = super(BookForm, self).save(commit)
         book.authors.clear()
         book.tags.clear()
-        book.authors.remove( )
-        book.tags.remove( )
 
         for author in authors:
         # all inputs checks to belong to db
