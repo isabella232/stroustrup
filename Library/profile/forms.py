@@ -57,10 +57,10 @@ class ProfileForm(ModelForm):
 
         if photo is False:
             profile.get_profile().avatar.delete()
-            photo=None
+            photo = None
 
         profile.get_profile().avatar = photo
-        new_avatar=profile.get_profile()
+        new_avatar = profile.get_profile()
         new_avatar.save()
         return profile
 

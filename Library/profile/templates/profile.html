@@ -109,9 +109,9 @@
 
                                     <td class="text-right">
                                             {% if user in book.users.all %}
-                                                     <a id="take_return_send_button_user"
+                                                     <a id="take_return_send_button_user_{{ book.id }}"
 
-                                                     onclick="book_return('/../books/{{ book.id }}/return/{{ book.id }}',{{ book.id }});"
+                                                     onclick="book_return('{% url 'books:return' book.id%}',{{ book.id }});"
                                                      class="take_return_button btn btn-warning  btn-lg">
                                                      Return...
                                                      </a>

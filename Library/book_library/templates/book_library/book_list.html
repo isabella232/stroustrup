@@ -7,32 +7,21 @@
     {% load static %}
     <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
-            //$('#id_keywords').attr('class','form-control').attr('placeholder', 'Search').wrap('<div class="form-group"></div>');
             $('#books_bar').attr('class', 'active');
 
 
 
 
         }));
-             $("label[for='id_busy']").click(function() {
-                            if ($('#id_busy').is(":checked")) {
 
-                                $('#id_free').prop("checked", false);
-                                $('#id_busy').prop("checked", true);
-                            } else {
-                                $('#id_busy').prop("checked", false);
+                        $(".search_box").parent().click(function() {
+                            if ($(this).children().is(":checked"))
+                            {
+                                $(".search_box").prop("checked", false);
+                                $(this).children().prop("checked", true);
                             }
-                });
-
-             $("label[for='id_free']").click(function() {
-                            if ($('#id_free').is(":checked")) {
-
-                                $('#id_busy').prop("checked", false);
-                                $('#id_free').prop("checked", true);
-                            } else {
-                                $('#id_free').prop("checked", false);
-                            }
-                });
+                            else $(this).children().prop("checked",false);
+                         });
 
         $('div.rating').rating();
     </script>

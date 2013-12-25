@@ -23,7 +23,7 @@ class Author(models.Model):
     last_name = models.CharField(max_length=45, verbose_name="Last name")
 
     def __unicode__(self):
-        return self.first_name+' '+self.last_name
+        return '{0} {1}'.format(self.first_name,self.last_name)
 
 
 class Book_Rating(models.Model): #SpaT_edition
