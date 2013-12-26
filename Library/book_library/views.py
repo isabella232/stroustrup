@@ -395,7 +395,7 @@ def rating_post(request, *args, **kwargs):
 
     common = (float(request.GET['val'])*(_votes-1)+_rate)/_votes
     common = math.ceil(common*100)/100
-    elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
+    elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
     elem.save()
     book.book_rating.add(elem)
     return HttpResponse(content=json.dumps({

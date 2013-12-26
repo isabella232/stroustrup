@@ -10,24 +10,36 @@ class Command(NoArgsCommand):
 
 
         def handle(self, *args, **options):
-            DEAD_LINE = 14 #days
-            query = Request_Return.objects.order_by('id')
+            DEADLINE = 14 #days
+            query = Request_Return.objects.order_by("book__id", "id").distinct('book')
             for request_return in query:
                     book = request_return.book
-                    if book.taken_about() is DEAD_LINE: #Send email
-                        authors_string = ""
-                        for author in book.authors.all():
-                            authors_string += author.__unicode__()+","
-                        user = book.taken_by()
-                        server_email = settings.EMAIL_HOST_USER
-                        email = EmailMessage('Book return request',
-                                             "We is asking you to return the book "+book.title+"  author(s):"+authors_string+
-                                             "You can return it by click on this link: "+settings.DOMAIN+"/books/"+str(book.id), #need to modify
-                                             server_email,
-                                             [user.email]
-                                            )
+                    authors = u", ".join(unicode(v) for v in book.authors.all())
+                    server_email = settings.EMAIL_HOST_USER
+                    if book.busy == False :
+                        user = request_return.user_request
+                        email = EmailMessage('Book free request',
+                                             "Book (''"+book.title+"'' author(s): " + authors + " ) has been returned."
+                                             " You can take it by click on this link: "+settings.DOMAIN+"/books/"
+                                             + str(book.id), #need to modify
+                                             server_email, [user.email])
                         email.send()
+                        request_return.delete()
+                        continue
+                    if request_return.processing_time!=None:
+                        round_day=datetime.now() - request_return.processing_time
+                    if book.taken_about() is DEADLINE and (request_return.processing_time is None or round_day.days>0): #Send email
+                        user = book.taken_by()
+                        email = EmailMessage('Book return request',
+                                             "We is asking you to return the book: ''"+book.title+"'' author(s): "
+                                             + authors +
+                                             " You can return it by click on this link: "+settings.DOMAIN+"/books/"
+                                             + str(book.id), #need to modify
+                                             server_email, [user.email])
+                        email.send()
+                        request_return.processing_time = datetime.now()
+                        request_return.save()
                     else:
-                        self.stdout.write('\nFalse!!!' ,ending='') #need to modify
+                        self.stdout.write('\nFalse!!!', ending='') #need to modify
 
 

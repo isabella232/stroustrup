@@ -31,7 +31,7 @@ class Profile_additionsAdmin(admin.ModelAdmin):
 
 class Request_ReturnAdmin(admin.ModelAdmin):
     model = Request_Return
-    list_display = ('pk','user_request','book','time_request')
+    list_display = ('pk','user_request','book','time_request', 'processing_time')
 
 
 

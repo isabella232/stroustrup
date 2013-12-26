@@ -144,4 +144,5 @@ class Request_Return(models.Model):
     user_request = models.ForeignKey(User)
     book = models.ForeignKey(Book)
     time_request = models.DateTimeField(auto_now_add=True)
+    processing_time = models.DateTimeField(blank=True,null=True)
 
