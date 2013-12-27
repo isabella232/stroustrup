@@ -60,7 +60,7 @@ class BookForm(ModelForm):
 
     def clean_isbn(self):
         data = self.cleaned_data['isbn']
-        if data=='':
+        if data == '':
             return data
         try:
             Book.books.get(isbn= data)

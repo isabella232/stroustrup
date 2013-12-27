@@ -14,11 +14,7 @@ class ProfileView(LoginRequiredView, DetailView):
     model = User
 
     def get_context_data(self, object):
-<<<<<<< HEAD
         context = {'profile': object, 'books': object.get_users_books()}
-=======
-        context = {'profile': object, 'books': object.get_users_books(), 'user': self.request.user,}
->>>>>>> origin/master
         return super(ProfileView, self).get_context_data(**context)
 
 
