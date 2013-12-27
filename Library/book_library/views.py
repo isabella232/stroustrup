@@ -211,25 +211,6 @@ def ask_to_return(request, *args, **kwargs):
         if request.user != profile:
             request_return=Request_Return.objects.create(book=book , user_request=request.user)
             request_return.save()
-            # authors_string = ""
-            # for author in book.authors.all():
-            #     authors_string += author.__unicode__()
-            # site = RequestSite(request)
-            # server_email = settings.EMAIL_HOST_USER
-            # email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) is asking you"
-            #                                                  " to return the book %(book)s %(author)s."
-            #                                                  " You can return it by click on this link: %(link)s"%
-            #                                                  {'username': request.user.username,
-            #                                                   'firstname': request.user.first_name,
-            #                                                   'lastname': request.user.last_name,
-            #                                                   'book': book.__unicode__(),
-            #                                                   'author': authors_string,
-            #                                                   'link': "http://%(site)s/books/%(id)s"
-            #                                                           % {'id': book.id, 'site': site.domain}
-            #                                                  },
-            #                           server_email,
-            #                           [profile.email])
-            # email.send()
             return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 

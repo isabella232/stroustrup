@@ -1,8 +1,9 @@
 from django.views.generic.edit import FormView
-from forms import LandingForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import redirect
+
+from Library.profile.registration_app.forms import LandingForm
 
 
 class LandingPage(FormView):

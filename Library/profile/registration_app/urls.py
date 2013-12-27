@@ -1,11 +1,11 @@
+import os
+
 from django.conf.urls import patterns, url, include
 from django.views.generic.base import TemplateView
-from django.contrib.auth import views as auth_views
 from registration.backends.default.views import RegistrationView, ActivationView
-from views import LandingPage
 
-from forms import CustomRegistrationForm
-import os
+from Library.profile.registration_app.forms import CustomRegistrationForm
+
 os.environ['RECAPTCHA_TESTING'] = 'True'
 
 

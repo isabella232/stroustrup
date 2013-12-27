@@ -19,6 +19,7 @@ MANAGERS = ADMINS
 BOOKS_ON_PAGE = 5
 REQUEST_ON_PAGE = 3
 USERS_ON_PAGE = 2
+DEADLINE = 14
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CRISPY_FAIL_SILENTLY = not DEBUG
@@ -180,7 +181,7 @@ INSTALLED_APPS = (
     'django_openid_auth',
     'registration',
     'book_library',
-    'registration_app',
+    'profile.registration_app',
     'profile',
     'dajaxice',
     'main',
