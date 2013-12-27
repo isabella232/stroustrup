@@ -88,7 +88,11 @@ function book_return (url, book_id){
                 data: 'take',
                 dataType: 'json',
                 success: function(data){
+<<<<<<< HEAD
                     $("#take_return_send_button_user_"+book_id).parents('tr').remove();
+=======
+                    $("td:contains('"+book_id+"')").parent().remove();
+>>>>>>> origin/master
                 }
             });
 }

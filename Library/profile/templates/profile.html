@@ -108,6 +108,7 @@
                                     <td class="success">{{ book.taken_about }} day(s)</td>
 
                                     <td class="text-right">
+<<<<<<< HEAD
                                             {% ifequal user book.users%}
                                                      <a id="take_return_send_button_user_{{ book.id }}"
 
@@ -116,6 +117,16 @@
                                                      Return...
                                                      </a>
                                             {% endifequal %}
+=======
+                                            {% if user in book.users.all %}
+                                                     <a id="take_return_send_button_user"
+
+                                                     onclick="book_return('/../books/{{ book.id }}/return/{{ book.id }}',{{ book.id }});"
+                                                     class="take_return_button btn btn-warning  btn-lg">
+                                                     Return...
+                                                     </a>
+                                            {% endif %}
+>>>>>>> origin/master
                                     </td>
                                 </tr>
 

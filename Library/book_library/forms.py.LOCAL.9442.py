@@ -64,7 +64,8 @@ class BookForm(ModelForm):
             return data
         try:
             Book.books.get(isbn= data)
-        except Book.DoesNotExist:
+        except:
+            Book.DoesNotExist
             return data
         raise  forms.ValidationError('This ISBN is already taken.')
 
@@ -174,7 +175,6 @@ class Book_UpdateForm(BookForm):
             except Book.DoesNotExist:
                 return data
             raise forms.ValidationError('This ISBN is already taken.')
-
 
 
 class Book_RequestForm(ModelForm): #SpaT_edition

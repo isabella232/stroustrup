@@ -9,8 +9,10 @@
         $(document).ready((function(){
             $('#books_bar').attr('class', 'active');
 
-
-
+            if ($('#id_busy').checked())
+            {
+                $('#id_free').prop("checked","false")
+            }
 
         }));
 
@@ -55,7 +57,11 @@
                         <li class="row">
                             <div class="col-md-2">
                             {% if book.picture%}
+<<<<<<< HEAD
                                 <a  href="{% url "books:book" book.id %}">
+=======
+                                <a class="pull-left" href="{% url "books:book" book.id %}">
+>>>>>>> origin/master
                                     <img class="media-object" src="{{ book.picture.book_size.url }}" alt="image">
                                 </a>
                             {% endif%}
@@ -129,6 +135,61 @@
 
                     </ul>
                 </div>
+<<<<<<< HEAD
+=======
+{#                <!-- Button trigger modal -->#}
+{#                <a data-toggle="modal" href="#myModal_{{ book.id }}" class="btn btn-primary btn-lg">#}
+{#                    Comments <span class="glyphicon glyphicon-comment"></span>#}
+{#                </a>#}
+{#                <!-- Modal -->#}
+{#                <div class="modal fade" id="myModal_{{ book.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
+{#                    <div class="modal-dialog">#}
+{#                        <div class="modal-content">#}
+{#                            <div class="modal-header">#}
+{#                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
+{#                                <h4 class="modal-title">Share your opinion:</h4>#}
+{#                            </div>#}
+{#                            <div class="modal-body" id="row_panel{{ book.id }}">#}
+{#                                {% if book.comments.all %}#}
+{#                                    {% for comment in book.comments.all %}#}
+{#                                        <div class="row">#}
+{#                                            <span class="glyphicon glyphicon-time"> </span> {{comment.sent_time}}#}
+{#                                            <div class="well well-sm">#}
+{#                                                <a href="{% url 'profile:profile' comment.user.pk %}" class="text-primary">#}
+{#                                                    {{ comment.user }}:#}
+{#                                                </a>#}
+{#                                                {{ comment.comment }}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {% endfor %}#}
+{#                                {% else %}#}
+{#                                    <h4 id="empty_board{{ book.id }}">#}
+{#                                        This is board is empty... Fix such situation <span class="glyphicon glyphicon-chevron-down"></span>#}
+{#                                    </h4>#}
+{#                                {% endif %}#}
+{#                            </div>#}
+{#                            <div class="modal-footer">#}
+{#                                <div class="row">#}
+{#                                    <div class="col-lg-6 pull-right">#}
+{#                                        <div class="input-group">#}
+{#                                            <input id="input{{ book.id }}"#}
+{#                                                   onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"#}
+{#                                                   onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"#}
+{#                                                   type="text" class="form-control">#}
+{#                                    <span class="input-group-btn">#}
+{#                                        <button type="button" class="btn btn-primary"#}
+{#                                                onclick="  comment({{ book.id }}, {{ user.pk }});">#}
+{#                                            Send! <span class="glyphicon glyphicon-envelope"></span>#}
+{#                                        </button>#}
+{#                                    </span>#}
+{#                                        </div><!-- /input-group -->#}
+{#                                    </div><!-- /.col-lg-6 -->#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div><!-- /.modal-content -->#}
+{#                    </div><!-- /.modal-dialog -->#}
+{#                </div><!-- /.modal -->#}
+>>>>>>> origin/master
             </div>
 
             {# NEW EnD #}
@@ -165,48 +226,8 @@
     {% endif %}
 
 
-
+    {% include "book_library/pagination.html"  %}
 {% endblock %}
 
 
-{% block pagination %}
-   {% if object_list %}
-    {% load i18n %}
-        <div class="text-center">
-        <div class="pagination ">
 
-     {% if page_obj.has_previous %}
-            <li class="previous">
-                <a href="?{{ page_obj.previous_page_number.querystring }}" class="prev">&larr; {% trans "Prev" %}</a>
-            </li>
-        {% else %}
-            <li class="previous disabled">
-                <span class="disabled prev">&larr; {% trans "Prev" %}</span>
-            </li>
-        {% endif %}
-        {% for page in page_obj.pages %}
-        {% if page %}
-            {% ifequal page page_obj.number %}
-               <li class="active">
-                   <span class="current page">{{ page }}</span>
-               </li>
-            {% else %}
-               <li> <a href="?{{ page.querystring }}" class="page">{{ page }}</a> </li>
-            {% endifequal %}
-        {% else %}
-           <li class="page disabled"> <a>...</a> </li>
-        {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-            <li class="next">
-                    <a href="?{{ page_obj.next_page_number.querystring }}" class="next">{% trans "Next" %} &rarr;</a>
-            </li>
-        {% else %}
-            <li class="next disabled">
-                <span class="disabled next">{% trans "Next" %} &rarr;</span>
-            </li>
-        {% endif %}
-        </div>
-    </div>
-  {% endif %}
-{% endblock %}

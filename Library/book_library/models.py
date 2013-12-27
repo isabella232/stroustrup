@@ -63,9 +63,15 @@ class Book(models.Model):
     paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
     description = models.TextField(max_length=255, default="No description available.")
     picture = ThumbnailerImageField(upload_to='book_images', blank=True)
+<<<<<<< HEAD
     authors = models.ManyToManyField(Author, related_name="books")
     users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
+=======
+    authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
+    users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
+    tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)
+>>>>>>> origin/master
     file = models.FileField(upload_to='book_files', blank=True)
 
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
