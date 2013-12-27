@@ -17,7 +17,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="glyphicon glyphicon-book"></span> <a class="title">{{ book.title }}</a>
+                <span class="glyphicon glyphicon-book"></span> <a class="title" > {{ book.title }}</a>
             </div>
             <div class="panel-body">
                 <div class="media">
@@ -25,7 +25,7 @@
 
                                 {% if book.picture%}
                                     <a TARGET="_blank" href="{{ book.picture.url }}" class="thumbnail">
-                                        <img data-src="holder.js/100%x320" src="{{ book.picture.url }}" alt="Image">
+                                        <img data-src="holder.js/100%x320" src="{{ book.picture.book_profile.url }}" alt="Image">
                                     </a>
 
                                 {% endif%}
@@ -36,6 +36,11 @@
                                     </a>
 
                                 {% endif %}
+
+                                {% if book.file %}
+                                    <a TARGET="_blank" href="{{ book.file.url }}" > Download </a>
+
+                                {%  endif %}
 
                     </div>
                     <div class="media-body">
@@ -141,7 +146,7 @@
                                     Take!
                                 </a>
                             {% else %}
-                                {% if user in book.users.all %}
+                                {% ifequal user  book.taken_by %}
                                     <a id="take_return_send_button"
 
                                        onclick="book_action('return','return/{{ book.id }}',{{ book.id }});"
@@ -153,7 +158,7 @@
 
                                        onclick=" book_action('ask','ask_to_return/{{ book.id }}',{{ book.id }});"
                                        class="take_return_button btn btn-danger  btn-lg"> Send a request! </a>
-                                {% endif %}
+                                {% endifequal %}
                             {% endif %}
 
                         </h4>
@@ -205,7 +210,7 @@
                             </a>
 
 
-                            <a href=" {% url "books:list"%}" class="btn btn-primary">
+                            <a href=" {% url "books:list" current_page%}" class="btn btn-primary">
                                 Fall back <span class="glyphicon glyphicon-chevron-down"></span>
                             </a>
                         </div>
@@ -215,26 +220,47 @@
             </div>
         </div>
         <!--MODAL-->
-        <div class="modal fade" id="comments_{{ book.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+{#        <div class="modal fade" id="comments_{{ book.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
+{#            <div class="modal-dialog">#}
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Share your opinion:</h4>
                     </div>
                     <div class="modal-body" id="row_panel{{ book.id }}">
                         {% if book.comments.all %}
                             {% for comment in book.comments.all %}
                                 <div class="row">
-                                    <span class="glyphicon glyphicon-time"> </span> {{comment.sent_time}}
-                                    <div class="well well-sm">
-                                        <a href="{% url 'profile:profile' comment.user.pk %}" class="text-primary">
-                                            {{ comment.user }}:
+                                    <div class="media well well-lg container">
+                                        <span class="glyphicon glyphicon-time"> </span> {{comment.sent_time}}
+                                        <a class="pull-left" href="{% url 'profile:profile' comment.user.pk %}">
+                                            {% if comment.user.get_profile.avatar %}
+                                            <img class="media-object" data-src="holder.js/64x64" alt="avatar" src="{{ comment.user.get_profile.avatar.avatar_size.url }}">
+                                            {% else %}
+                                                {% if comment.user.is_staff  %}
+                                                    <img class="media-object" data-src="holder.js/64x64" alt="avatar" src="{%  static 'image/admin.jpg' %}">
+                                                {% else %}
+                                                    <img class="media-object" data-src="holder.js/64x64" alt="avatar" src="{%  static 'image/user.jpeg' %}">
+                                                {% endif %}
+                                            {% endif %}
                                         </a>
-                                        {{ comment.comment }}
+                                        <div class="media-body">
+                                            <h4 class="media-heading">
+                                                <a class="text-primary" href="{% url 'profile:profile' comment.user.pk %}">
+                                                    {% if comment.user.first_name != '' or comment.user.last_name != '' %}
+                                                            {{ comment.user.first_name }} {{ comment.user.last_name }}
+                                                    {% else %}
+                                                            {{ comment.user }}
+                                                    {% endif %}
+                                                </a>
+                                            </h4>
+                                           <p> {{ comment.comment }} </p>
+
+                                        </div>
                                     </div>
-                                </div>
+                                 </div>
                             {% endfor %}
+
+
                         {% else %}
                             <h4 id="empty_board{{ book.id }}">
                                 This is board is empty... Fix such situation <span class="glyphicon glyphicon-chevron-down"></span>

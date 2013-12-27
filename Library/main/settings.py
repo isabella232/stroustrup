@@ -12,19 +12,53 @@ ADMINS = (
     ('Roman', 'r.vaseev@crystalnix.com'),
 )
 
-DOMAIN = '127.0.0.1:8001'
+DOMAIN = '127.0.0.1:8000'
 
 MANAGERS = ADMINS
 
+BOOKS_ON_PAGE = 5
+REQUEST_ON_PAGE = 3
+USERS_ON_PAGE = 2
+DEADLINE = 14
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_FAIL_SILENTLY = not DEBUG
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 3,
+    'MARGIN_PAGES_DISPLAYED': 2,
+}
+
+AUTH_PROFILE_MODULE = 'profile.Profile_addition'
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar_size': {'size': (100, 100), 'crop': False,
+
+        },
+
+        'avatar_profile': {'size': (36,36), 'crop': False
+
+         },
+
+        'book_size':{'size': (119,100), 'crop': False},
+
+        'book_profile': {'size': (52,44), 'crop': False}
+}
+}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'libarydb',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'postgres',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '5433',                      # Set to empty string for default.
+        'OPTIONS': {
+            'autocommit': True,
+        }
     }
 }
 
@@ -68,7 +102,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, '../media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -125,9 +159,6 @@ ROOT_URLCONF = 'main.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'main.wsgi.application'
 
-TEMPLATE_DIRS = (
-    'templates'
-)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
@@ -150,10 +181,15 @@ INSTALLED_APPS = (
     'django_openid_auth',
     'registration',
     'book_library',
-    'registration_app',
+    'profile.registration_app',
     'profile',
     'dajaxice',
     'main',
+    'pure_pagination',
+    'crispy_forms',
+    'south',
+    'easy_thumbnails'
+
 )
 
 warnings.filterwarnings(

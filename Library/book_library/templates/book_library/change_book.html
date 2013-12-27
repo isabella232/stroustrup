@@ -1,4 +1,5 @@
 {% extends 'book_library/books_mainpage.html' %}
+{% load crispy_forms_tags %}
 {% block title %}Change book{% endblock %}
 {% block location %}Change book{% endblock %}
 
@@ -7,30 +8,32 @@
     {% load static %}
     <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
-            $('input').attr('class','form-control');
+           // $('input').attr('class','form-control');
 
-            $('textarea').attr('class','form-control').attr('cols','').attr('rows', '3').css('max-width','100%');
-            $('label[for="id_paperback_version_exists"]').remove();
-            $('label[for="id_e_version_exists"]').remove();
-            $('#id_e_version_exists') .wrap('<label id="label1" class="btn btn-warning"> E-Version ? </label>');
-            $('#id_paperback_version_exists')
-                    .wrap('<label id="label2" class="btn btn-warning"> Paperback-Version ? </label>');
-            $('#label1').wrap('<div class="btn-group" data-toggle="buttons"></div>');
-            $('#label2').wrap('<div class="btn-group" data-toggle="buttons"></div>');
-            $('label[for="picture-clear_id"]').remove();
-            $('#picture-clear_id')
-                    .wrap('<label id="label3" class="btn btn-danger"> Clear </label>');
-            $('#label3').wrap('<div class="btn-group" data-toggle="buttons"></div>');
+           // $('textarea').attr('class','form-control').attr('cols','').attr('rows', '3').css('max-width','100%');
+           // $('label[for="id_paperback_version_exists"]').remove();
+           // $('label[for="id_e_version_exists"]').remove();
+           // $('#id_e_version_exists') .wrap('<label id="label1" class="btn btn-warning"> E-Version ? </label>');
+           // $('#id_paperback_version_exists')
+           //         .wrap('<label id="label2" class="btn btn-warning"> Paperback-Version ? </label>');
+           // $('#label1').wrap('<div class="btn-group" data-toggle="buttons"></div>');
+           // $('#label2').wrap('<div class="btn-group" data-toggle="buttons"></div>');
+           // $('label[for="picture-clear_id"]').remove();
+           // $('#picture-clear_id')
+           //         .wrap('<label id="label3" class="btn btn-danger"> Clear </label>');
+           // $('#label3').wrap('<div class="btn-group" data-toggle="buttons"></div>');
 
-            $('input[name="authors_names"]')
-                    .val('{% for author in book.authors.all  %}{{ author.first_name }} {{ author.last_name }}'+
-                    '{% if not forloop.last %},{% endif %} {% endfor %}');
-            $('input[name="tag_field"]')
-                   .val('{% for tag in book.tags.all  %} {{ tag.tag }}{% if not forloop.last %},{% endif %} {% endfor %}');
-            $('input[type=text]').css('border-radius','8px');
+          //  $('input[name="authors_names"]')
+          //          .val('{% for author in book.authors.all  %}{{ author.first_name }} {{ author.last_name }}'+
+          //          '{% if not forloop.last %},{% endif %} {% endfor %}');
+          //  $('input[name="tag_field"]')
+          //         .val('{% for tag in book.tags.all  %} {{ tag.tag }}{% if not forloop.last %},{% endif %} {% endfor %}');
+           // $('input[type=text]').css('border-radius','8px');
 
-            $('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
-
+            //$('ul[class="errorlist"]').wrap('<div class="alert alert-danger"></div>');
+                $('#id_tag_field').tagsInput();
+            $('#id_tag_field_tagsinput').attr('style','width: 100%; height: 100px ')
+                                        .attr('class','tagsinput form-control');
         }))
     </script>
 {% endblock %}
@@ -45,25 +48,14 @@
         </div>
 
         <div class="panel-body">
-            <form enctype="multipart/form-data" method="post" class="form-group" action="">
+            {% crispy form  %}
 
-                {% csrf_token %}
-
-                {{ form.as_p }}
-
-                <button type="submit" class="btn btn-lg btn-block btn-success">
-                    Save
-
-                    <img src="{% static 'image/yes.png'%}" class="icon"/>
-                </button>
 
                 <a class="btn btn-lg btn-block btn-danger" href="{% url 'books:book' book.pk %}">
                     Cancel
-
-                    <img src="{% static 'image/no.png'%}" class="icon"/>
                 </a>
 
-            </form>
+
 
         </div>
     </div>

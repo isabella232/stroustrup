@@ -6,25 +6,17 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
-from django.utils import simplejson
-from dajaxice.decorators import dajaxice_register
-from django.core import mail
-from django.contrib.sites.models import RequestSite
-from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator
-from os import environ
-from main import settings
-import datetime
+
+from pure_pagination.mixins import PaginationMixin
+from Library.main.settings import BOOKS_ON_PAGE,REQUEST_ON_PAGE,USERS_ON_PAGE
 import json
 import math
 
 from forms import *
 from models import *
-
-BOOKS_ON_PAGE = 5
 
 
 class StaffOnlyView(object):
@@ -90,7 +82,7 @@ class BookAdd(AddView):
 
 class BookUpdate(StaffOnlyView, UpdateView):
     model = Book
-    form_class = BookForm
+    form_class = Book_UpdateForm
 
     def get(self, request, *args, **kwargs):
         return super(BookUpdate, self).get(self, request, *args, **kwargs)
@@ -140,11 +132,14 @@ def return_book_view(request, number, *args, **kwargs):
     return  HttpResponseRedirect(reverse('book:list'))
 
 
-class BookListView(LoginRequiredView, ListView):
+class BookListView(PaginationMixin, LoginRequiredView, ListView):
     busy = None
     free = None
     form_class = SearchForm
     page = 1
+    paginate_by = BOOKS_ON_PAGE
+
+
 
     def get_queryset(self):
         self.queryset = Book.books.all()
@@ -174,31 +169,22 @@ class BookListView(LoginRequiredView, ListView):
 
 
             if self.busy and not self.free:
-                query = query | Q(busy=True)
+                query = query & Q(busy=True)
             if not self.busy and self.free:
-                query = query | Q(busy=False)
+                query = query & Q(busy=False)
 
             if query:
                 self.queryset = Book.books.filter(query)
         if self.kwargs['page']:
             self.page = int(self.kwargs['page'])
+
         return self.queryset
 
     def get_context_data(self, **kwargs):
-        page = Paginator(self.queryset, BOOKS_ON_PAGE)
-        if self.page in page.page_range:
-            self.queryset = page.page(self.page).object_list
-        else:
-            self.queryset = []
-
-        next_page=self.page+1
-        prev_page=self.page-1
-        if prev_page == 0:
-            prev_page = self.page
-        if next_page-1 == page.num_pages:
-            next_page = self.page
-        context = {'object_list': set(self.queryset), "form": self.form_class(self.request.GET),
-                   "busy": self.busy, "current_page": self.page, "next_page":next_page, "prev_page":prev_page}
+        context = {}
+        context['object_list']=self.queryset
+        context['form']=self.form_class(self.request.GET)
+        context['busy']=self.busy
         return super(BookListView, self).get_context_data(**context)
 
 
@@ -223,31 +209,16 @@ def ask_to_return(request, *args, **kwargs):
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:
-            authors_string = ""
-            for author in book.authors.all():
-                authors_string += author.__unicode__()
-            site = RequestSite(request)
-            server_email = settings.EMAIL_HOST_USER
-            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) is asking you"
-                                                             " to return the book %(book)s %(author)s."
-                                                             " You can return it by click on this link: %(link)s"%
-                                                             {'username': request.user.username,
-                                                              'firstname': request.user.first_name,
-                                                              'lastname': request.user.last_name,
-                                                              'book': book.__unicode__(),
-                                                              'author': authors_string,
-                                                              'link': "http://%(site)s/books/%(id)s"
-                                                                      % {'id': book.id, 'site': site.domain}
-                                                             },
-                                      server_email,
-                                      [profile.email])
-            email.send()
+            request_return=Request_Return.objects.create(book=book , user_request=request.user)
+            request_return.save()
             return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
 
-class UsersView(LoginRequiredView, ListView):
+class UsersView(PaginationMixin,LoginRequiredView, ListView):
     model = User
+    page = 1
+    paginate_by = USERS_ON_PAGE
     queryset = User.objects.all()
 
     def get(self, request, *args, **kwargs):
@@ -264,19 +235,26 @@ class AddRequestView(CreateView): #SpaT_edition
         return super(AddRequestView, self).get(self, request, *args, **kwargs)
 
 
-class requestBook(AddRequestView): #SpaT_edition
+class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
     queryset = Book_Request.requests.all()
+    page=1
+    paginate_by = REQUEST_ON_PAGE
 
 
     def get_context_data(self, **kwargs):
-        context = {'requests': Book_Request.requests.all(), "form" : self.get_form(self.form_class)}
+        context = {}
+        context['object_list']=self.queryset
+        context['form']=self.get_form(self.form_class)
         return super(requestBook, self).get_context_data(**context)
-    def post(self, request, *args, **kwargs):
 
-        if request.POST['url'] and request.POST['title']:
+
+
+    def post(self, request, *args, **kwargs):
+        form=self.form_class(request.POST)
+        if request.POST and form.is_valid():
             _url=request.POST['url']
             start_str='http'
             if(not _url.startswith(start_str)):
@@ -285,8 +263,8 @@ class requestBook(AddRequestView): #SpaT_edition
             req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
 
             req.save()
-            return HttpResponseRedirect('//')
-        return super(AddRequestView, self).post(request, *args, **kwargs)
+            return super(AddRequestView, self).get(request, *args, **kwargs)
+        return super(AddRequestView, self).get(request, *args, **kwargs)
 
 
 def CommentAdd(request, number, *args): #SpaT_edition
@@ -300,9 +278,8 @@ def CommentAdd(request, number, *args): #SpaT_edition
     if not book:
         raise ValueError
     message = request.REQUEST.dicts[1]['Comment']
-    _user=request.user
-    _time = datetime.datetime.now()
-    com = Book_Comment.comments.create(user = _user, comment = message, sent_time = _time)
+    _user = request.user
+    com = Book_Comment.comments.create(user=_user, comment=message)
     book.comments.add(com)
     com.save()
     return HttpResponseRedirect('../..')
@@ -311,32 +288,43 @@ def CommentAdd(request, number, *args): #SpaT_edition
 def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
     user=request.user
-    result_vote=0
+    result_vote = 0
+    all_users=[]
     for req in queryset:
 
         if req.id == int(number):
-            result_vote=req.vote
+
+            result_vote = req.vote
             flag = True
             for user1 in req.users.all():
                 if user1.id == user.id:
-                    flag=False
+                    flag = False
                     break
             if not flag:
-                req.vote-=1
-                result_vote=req.vote
+                req.vote -= 1
+
+                result_vote = req.vote
                 req.users.remove(user)
                 req.save()
+
+                for i in req.users.all():
+                   all_users.append(i.username)
+
                 break
 
             req.vote+=1
             req.users.add(user)
             req.save()
+            for i in req.users.all():
+                    all_users.append(i.username)
             result_vote=req.vote
             break
 
     return HttpResponse(content=json.dumps({
         'status':'OK',
         'vote':result_vote,
+        'listuser':all_users,
+
         }, sort_keys = True))
 
 def rating_post(request, *args, **kwargs):
@@ -388,7 +376,7 @@ def rating_post(request, *args, **kwargs):
 
     common = (float(request.GET['val'])*(_votes-1)+_rate)/_votes
     common = math.ceil(common*100)/100
-    elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
+    elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
     elem.save()
     book.book_rating.add(elem)
     return HttpResponse(content=json.dumps({

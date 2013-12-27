@@ -7,6 +7,13 @@ from django.forms.fields import FileField
 from django.forms.models import save_instance
 from django.db.models import Q
 from django.contrib.auth import models
+from django.core.validators import RegexValidator
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
+from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, FieldWithButtons, InlineField, StrictButton
+
+
+
 
 class NameField(forms.CharField):
 
@@ -25,23 +32,43 @@ class TagField(forms.CharField):
     def to_python(self, value):
         if value:
             value = value.split(',')
-            for index in range(len(value)):
-                value[index]=value[index].split(' ')
-                while '' in value[index]:
-                    value[index].remove('')
-                value[index]=str(value[index][0])
-
-
         return value
-
-    def validate(self, value):
-        if not value:
-            raise ValidationError([" You haven't added any tag"])
 
 
 class BookForm(ModelForm):
     authors_names = NameField(max_length=100, label="Add authors full names (to separate use a comma):")
-    tag_field = TagField(max_length=50, label = 'Add tags (to separate use a comma):')
+    tag_field = TagField(max_length=50, label = 'Add tags (to separate use a comma):', required=False)
+    e_version_exists = forms.BooleanField(label='E-version', required=False)
+    paperback_version_exists = forms.BooleanField(label='Paper version', required=False)
+
+    helper = FormHelper()
+    helper.form_class = 'form-group'
+    helper.layout = Layout(
+            PrependedText('isbn', '13 digits'),
+            Field('title', css_class='form-control'),
+            Field('e_version_exists',css_class='form-group'),
+            Field('paperback_version_exists',css_class='form-group'),
+            Field('description', rows="3", css_class='form-control', style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;" ),
+            Field('picture', css_class='form-control'),
+            Field('file', css_class='form-control'),
+            Field('authors_names', css_class='form-control'),
+            Field('tag_field', css_class='form-group'),
+            Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),
+            )
+
+
+
+    def clean_isbn(self):
+        data = self.cleaned_data['isbn']
+        if data=='':
+            return data
+        try:
+            Book.books.get(isbn= data)
+        except:
+            Book.DoesNotExist
+            return data
+        raise  forms.ValidationError('This ISBN is already taken.')
+
 
     class Meta:
         model = Book
@@ -50,11 +77,9 @@ class BookForm(ModelForm):
     def save(self, commit=True):
         authors = self.cleaned_data['authors_names']
         tags = self.cleaned_data['tag_field']
-        book= super(BookForm, self).save(commit)
+        book = super(BookForm, self).save(commit)
         book.authors.clear()
         book.tags.clear()
-        book.authors.remove( )
-        book.tags.remove( )
 
         for author in authors:
         # all inputs checks to belong to db
@@ -112,13 +137,67 @@ class SureForm(forms.Form):
 class SearchForm(forms.Form):
     busy = forms.BooleanField(label='Busy', required=False)
     free = forms.BooleanField(label='Free', required=False)
-    keywords = forms.CharField(label="Search", max_length=45, required=False)
+    keywords = forms.CharField(label='Search',max_length=45)
+
+    helper = FormHelper()
+    helper.form_method='get'
+    helper.form_class = "form-inline"
+    helper.form_id = "search_form"
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_show_labels=False
+    helper.layout = Layout(
+            InlineField('busy', css_class="search_box"),
+            InlineField('free', css_class="search_box"),
+            InlineField('keywords', wrapper_class="col-xs-5"),
+            Submit('search','Search', css_class="btn btn-default")
+    )
+
+
+class Book_UpdateForm(BookForm):
+        def __init__(self, *args, **kwargs):
+            kwargs.setdefault('initial', {})['authors'] = ''
+            super(BookForm, self).__init__(*args, **kwargs)
+            if not self.is_bound and self.instance.pk:
+                queryset_authors = self.instance.authors.all()
+                authors = u", ".join(unicode(v) for v in queryset_authors)
+                self.fields['authors_names'].initial = authors
+                queryset_tags = self.instance.tags.all()
+                tags = u",".join(unicode(v) for v in queryset_tags)
+                self.fields['tag_field'].initial = tags
+
+
+        def clean_isbn(self):
+            data = self.cleaned_data['isbn']
+            if data and self.instance.isbn == data:
+                return data
+            try:
+                Book.books.get(isbn=data)
+            except Book.DoesNotExist:
+                return data
+            raise forms.ValidationError('This ISBN is already taken.')
+
 
 class Book_RequestForm(ModelForm): #SpaT_edition
+    title=forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
+    url=forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
+    helper = FormHelper()
+    helper.form_method='post'
+    helper.form_class = "form-group row"
+    helper.form_show_labels=False
+    helper.error_text_inline=True
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.layout = Layout(
+            Field('title',wrapper_class="col-xs-5"),
+            Field('url',wrapper_class="col-xs-5"),
+            Submit('send','Send!',css_class="btn  btn-success col-md-2")
+    )
 
     class Meta:
         model = Book_Request
         fields = ['title', 'url']
+
+
+
 
     def save(self, commit=True):   #Probably it's became useless
         if self.cleaned_data['url'] and self.cleaned_data['title']:

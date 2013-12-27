@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib import auth
+from easy_thumbnails.fields import ThumbnailerImageField
 
 
 
@@ -22,7 +23,7 @@ class Author(models.Model):
     last_name = models.CharField(max_length=45, verbose_name="Last name")
 
     def __unicode__(self):
-        return self.first_name+' '+self.last_name
+        return '{0} {1}'.format(self.first_name,self.last_name)
 
 
 class Book_Rating(models.Model): #SpaT_edition
@@ -41,7 +42,7 @@ class Book_Rating(models.Model): #SpaT_edition
 
 class Book_Comment(models.Model):
     comments = models.Manager()
-    sent_time = models.DateField()
+    sent_time = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length= 255, default='')
     user = models.ForeignKey(User, related_name="comment", default=0, blank=True)
     def __unicode__(self):
@@ -50,25 +51,25 @@ class Book_Comment(models.Model):
 
 
 
-
 class Book(models.Model):
     books = models.Manager()
 
-    isbn = models.CharField(help_text="13 digit", max_length=13, blank=True,
-                            validators=[RegexValidator(regex="\d{13,13}", message="please just 13 digits")],
+    isbn = models.CharField( max_length=13, blank=True,
+                            validators=[RegexValidator(regex="\d{13,13}", message="Please just 13 digits")],
                             )
     title = models.CharField(max_length=45)
     busy = models.BooleanField(default=False)
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
-    paperback_version_exists = models.BooleanField(default=True, verbose_name="paper version")
+    paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
     description = models.TextField(max_length=255, default="No description available.")
-    picture = models.FileField(upload_to='book_images', blank=True)
-    authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
-    users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
-    tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)
+    picture = ThumbnailerImageField(upload_to='book_images', blank=True)
+    authors = models.ManyToManyField(Author, related_name="books")
+    users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
+    tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
+    file = models.FileField(upload_to='book_files', blank=True)
 
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
-    comments = models.ManyToManyField('Book_Comment', symmetrical=False,  related_name='books', default=None, blank=True) #SpaT_edition
+    comments = models.ManyToManyField('Book_Comment', related_name='books', default=None, blank=True) #SpaT_edition
 
     def __unicode__(self):
         return self.title
@@ -107,6 +108,8 @@ class Book(models.Model):
             return self.book_rating.latest('id').votes
         return 0
 
+    class Meta:
+        ordering = ['title']
 
 class Book_Tag(models.Model):
     tags = models.Manager()
@@ -131,5 +134,15 @@ class Book_Request(models.Model): #SpaT_edition
     url = models.URLField(null='')
     title = models.CharField(max_length=30)
     vote = models.IntegerField(default=0)
+
     def __unicode__(self):
-        return self.title + ' ' + self.url
+        return  '{0} {1}'.format(self.title , self.url)
+
+
+
+class Request_Return(models.Model):
+    user_request = models.ForeignKey(User)
+    book = models.ForeignKey(Book)
+    time_request = models.DateTimeField(auto_now_add=True)
+    processing_time = models.DateTimeField(blank=True,null=True)
+
