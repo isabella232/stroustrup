@@ -1,28 +1,17 @@
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.generic.list import ListView, MultipleObjectMixin
-from django.views.generic.base import ContextMixin
+from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
-from django.utils import simplejson
-from dajaxice.decorators import dajaxice_register
-from django.core import mail
-from django.contrib.sites.models import RequestSite
-from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
-from Library.profile.models import Profile_addition
-from django.core.paginator import Paginator
-from os import environ
-
 
 from pure_pagination.mixins import PaginationMixin
 from Library.main.settings import BOOKS_ON_PAGE,REQUEST_ON_PAGE,USERS_ON_PAGE
-import datetime
 import json
 import math
 
@@ -220,25 +209,8 @@ def ask_to_return(request, *args, **kwargs):
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:
-            authors_string = ""
-            for author in book.authors.all():
-                authors_string += author.__unicode__()
-            site = RequestSite(request)
-            server_email = settings.EMAIL_HOST_USER
-            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) is asking you"
-                                                             " to return the book %(book)s %(author)s."
-                                                             " You can return it by click on this link: %(link)s"%
-                                                             {'username': request.user.username,
-                                                              'firstname': request.user.first_name,
-                                                              'lastname': request.user.last_name,
-                                                              'book': book.__unicode__(),
-                                                              'author': authors_string,
-                                                              'link': "http://%(site)s/books/%(id)s"
-                                                                      % {'id': book.id, 'site': site.domain}
-                                                             },
-                                      server_email,
-                                      [profile.email])
-            email.send()
+            request_return=Request_Return.objects.create(book=book , user_request=request.user)
+            request_return.save()
             return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
@@ -404,7 +376,7 @@ def rating_post(request, *args, **kwargs):
 
     common = (float(request.GET['val'])*(_votes-1)+_rate)/_votes
     common = math.ceil(common*100)/100
-    elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
+    elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
     elem.save()
     book.book_rating.add(elem)
     return HttpResponse(content=json.dumps({

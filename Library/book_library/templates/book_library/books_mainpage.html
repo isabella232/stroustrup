@@ -23,7 +23,7 @@
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
+    <div class="text-center">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="icon-bar"></span>
@@ -43,26 +43,27 @@
                 <li id="add_bar"><a href="{%  url 'books:add' %}">Add book in Library</a></li>
                 {% endif %}
             </ul>
-            <p class="navbar-text pull-right">
+            <p class="navbar-text pull-right">Signed in as<a href="{% url "profile:profile" user.pk %}" class="navbar-link"> {{ user }} </a>
                 <a class="btn btn-xs btn-danger" href="{% url 'authorisation:auth_logout' %}">
                     <span class="glyphicon glyphicon-off"></span>
                 </a>
             </p>
-            <p class="navbar-text pull-right">Signed in as
-                <a href="{% url "profile:profile" user.pk %}" class="navbar-link"> {{ user }} </a></p>
+
 
         </div><!--/.nav-collapse -->
-        {%  block filter %}
-
-        {% endblock %}
 
     </div>
 </div>
 
 
 
-<div class="container" >
     <div class="books-content">
+
+        <div class="container">
+
+        </div>
+<div class="container" >
+             {%  block filter %} {% endblock %}
             {% block content %}{% endblock %}
     </div>
 </div>

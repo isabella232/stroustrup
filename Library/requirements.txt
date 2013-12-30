@@ -20,3 +20,4 @@ django-crispy-forms==1.4.0
 django-pure-pagination==0.2.1
 PIL==1.1.6
 easy-thumbnails==1.4
+south==0.8.4

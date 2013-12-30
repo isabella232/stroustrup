@@ -75,7 +75,7 @@ body {
 }
 
 .books-content{
-    margin-top: 70px;
+    margin-top: 100px;
 
 }
 
@@ -134,6 +134,7 @@ body {
 
 .tag{
     font-size: 14pt;
+    word-wrap: break-word;
 }
 
 .page_number{
@@ -171,4 +172,18 @@ body {
 
 .media-body{
     word-wrap: break-word;
+<<<<<<< HEAD
 }
+
+#body_book{
+    padding-left: 25px;
+    padding-right: 25px ;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+
+=======
+}
+>>>>>>> origin/master

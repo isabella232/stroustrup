@@ -18,7 +18,7 @@
 
 {% block content %}
 
-    {#  #}
+
     <div class="main_container">
 
     <div class="panel panel-default">
@@ -108,14 +108,13 @@
                                     <td class="success">{{ book.taken_about }} day(s)</td>
 
                                     <td class="text-right">
-                                            {% if user in book.users.all %}
-                                                     <a id="take_return_send_button_user"
-
-                                                     onclick="book_return('/../books/{{ book.id }}/return/{{ book.id }}',{{ book.id }});"
+                                            {% ifequal user book.taken_by %}
+                                                     <a id="take_return_send_button_user_{{ book.id }}"
+                                                     onclick="book_return('{% url 'books:return' book.id%}',{{ book.id }});"
                                                      class="take_return_button btn btn-warning  btn-lg">
                                                      Return...
                                                      </a>
-                                            {% endif %}
+                                            {% endifequal %}
                                     </td>
                                 </tr>
 

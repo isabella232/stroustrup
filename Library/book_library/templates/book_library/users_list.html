@@ -59,30 +59,21 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for book in user.get_users_books %}
+                                        {% for book in user.get_users_books %}
+                                            <tr>
+                                                <td>{{ book.id }}</td>
 
+                                                <td>
+                                                    <a class="btn btn-full-row text-left" href="{% url 'books:book' book.id  %}">
+                                                         {{ book.title }}
+                                                    </a>
+                                                </td>
 
-                                        <tr>
-                                            <td>{{ book.id }}</td>
-                                            <td>
-                                            <a class="btn btn-full-row text-left" href="{% url 'books:book' book.id  %}">
-                                                 {{ book.title }}
-                                            </a>
-                                            </td>
-
-                                            <td class="success">{{ book.taken_about }} day(s)</td>
-
-                                        </tr>
-
-
-
-
-
-                                    {% endfor %}
+                                                <td class="success">{{ book.taken_about }} day(s)</td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
-
-
 
                             {% else %}
                                 <div class="panel panel-danger">
@@ -92,9 +83,6 @@
                                 </div>
                             {% endif %}
                         </li>
-
-
-
 
                     </ul>
                 </div>

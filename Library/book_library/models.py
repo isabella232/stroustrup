@@ -23,7 +23,7 @@ class Author(models.Model):
     last_name = models.CharField(max_length=45, verbose_name="Last name")
 
     def __unicode__(self):
-        return self.first_name+' '+self.last_name
+        return '{0} {1}'.format(self.first_name,self.last_name)
 
 
 class Book_Rating(models.Model): #SpaT_edition
@@ -63,13 +63,13 @@ class Book(models.Model):
     paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
     description = models.TextField(max_length=255, default="No description available.")
     picture = ThumbnailerImageField(upload_to='book_images', blank=True)
-    authors = models.ManyToManyField(Author, symmetrical=True, related_name="books")
-    users = models.ManyToManyField(User, symmetrical=True, related_name="books", through=Client_Story_Record, blank=True)
-    tags = models.ManyToManyField("Book_Tag", symmetrical=True, related_name="books", blank=True)
+    authors = models.ManyToManyField(Author, related_name="books")
+    users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
+    tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
     file = models.FileField(upload_to='book_files', blank=True)
 
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
-    comments = models.ManyToManyField('Book_Comment', symmetrical=False,  related_name='books', default=None, blank=True) #SpaT_edition
+    comments = models.ManyToManyField('Book_Comment', related_name='books', default=None, blank=True) #SpaT_edition
 
     def __unicode__(self):
         return self.title
@@ -137,4 +137,12 @@ class Book_Request(models.Model): #SpaT_edition
 
     def __unicode__(self):
         return  '{0} {1}'.format(self.title , self.url)
+
+
+
+class Request_Return(models.Model):
+    user_request = models.ForeignKey(User)
+    book = models.ForeignKey(Book)
+    time_request = models.DateTimeField(auto_now_add=True)
+    processing_time = models.DateTimeField(blank=True,null=True)
 
