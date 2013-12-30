@@ -10,8 +10,8 @@ html{
 }
 
 body {
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-top: 10px;
+    padding-bottom: 30px;
     background: none;
 }
 
@@ -172,7 +172,6 @@ body {
 
 .media-body{
     word-wrap: break-word;
-<<<<<<< HEAD
 }
 
 #body_book{
@@ -182,8 +181,3 @@ body {
     padding-bottom: 10px;
 }
 
-
-
-=======
-}
->>>>>>> origin/master

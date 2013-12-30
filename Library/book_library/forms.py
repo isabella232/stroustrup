@@ -50,7 +50,7 @@ class BookForm(ModelForm):
             Field('paperback_version_exists',css_class='form-group'),
             Field('description', rows="3", css_class='form-control', style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;" ),
             Field('picture', css_class='form-control'),
-            Field('file', css_class='form-control'),
+            Field('file', css_class='form-control',style="> visibility:hidden"),
             Field('authors_names', css_class='form-control'),
             Field('tag_field', css_class='form-group'),
             Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),
@@ -66,7 +66,25 @@ class BookForm(ModelForm):
             Book.books.get(isbn= data)
         except Book.DoesNotExist:
             return data
-        raise  forms.ValidationError('This ISBN is already taken.')
+        raise forms.ValidationError('This ISBN is already taken.')
+
+
+
+    def clean_file(self):
+        e_version_exists = self.cleaned_data['e_version_exists']
+        file = self.cleaned_data['file']
+        if e_version_exists and file:
+            return file
+        else:
+            if e_version_exists and file:
+                raise  forms.ValidationError('You select a file but not selected "E-version"')
+            else:
+                raise forms.ValidationError('You select "E-version" but not selected a file')
+
+
+
+
+
 
 
     class Meta:

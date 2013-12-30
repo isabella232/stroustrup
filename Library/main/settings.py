@@ -37,13 +37,13 @@ THUMBNAIL_ALIASES = {
 
         },
 
-        'avatar_profile': {'size': (36,36), 'crop': False
+        'avatar_profile': {'size': (36, 36), 'crop': False
 
          },
 
-        'book_size':{'size': (119,100), 'crop': False},
+        'book_size': {'size': (119, 100), 'crop': False},
 
-        'book_profile': {'size': (52,44), 'crop': False}
+        'book_profile': {'size': (52, 44), 'crop': False}
 }
 }
 
@@ -55,7 +55,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '5432',                      # Set to empty string for default.
+        'PORT': '5433',                      # Set to empty string for default.
         'OPTIONS': {
             'autocommit': True,
         }

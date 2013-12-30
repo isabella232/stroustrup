@@ -7,15 +7,7 @@
     {% load static %}
     <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
         $(document).ready((function(){
-            $('#books_bar').attr('class', 'active');
-
-            if ($('#id_busy').checked())
-            {
-                $('#id_free').prop("checked","false")
-            }
-
-        }));
-
+                        $('#books_bar').attr('class', 'active');
                         $(".search_box").parent().click(function() {
                             if ($(this).children().is(":checked"))
                             {
@@ -24,8 +16,8 @@
                             }
                             else $(this).children().prop("checked",false);
                          });
-
-        $('div.rating').rating();
+                        $('div.rating').rating();
+            }));
     </script>
 {% endblock %}
 

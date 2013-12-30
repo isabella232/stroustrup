@@ -174,7 +174,7 @@ class BookListView(PaginationMixin, LoginRequiredView, ListView):
                 query = query & Q(busy=False)
 
             if query:
-                self.queryset = Book.books.filter(query)
+                self.queryset = Book.books.filter(query).distinct()
         if self.kwargs['page']:
             self.page = int(self.kwargs['page'])
 
@@ -239,8 +239,8 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
-    queryset = Book_Request.requests.all()
-    page=1
+    queryset = Book_Request.requests.order_by('-id')
+    page= 1
     paginate_by = REQUEST_ON_PAGE
 
 

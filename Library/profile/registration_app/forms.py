@@ -6,7 +6,7 @@ from captcha.fields import ReCaptchaField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, FieldWithButtons, InlineField, StrictButton
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
 
 class CustomRegistrationForm(RegistrationForm):
@@ -97,3 +97,19 @@ class LandingForm(forms.Form):
                            )
     )
 
+
+class CustomChangePassForm(PasswordChangeForm):
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Old password'}))
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'New password'}))
+    new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password (again)'}))
+
+    helper = FormHelper()
+    helper.form_class = 'form-signin'
+    helper.form_show_labels = False
+    helper.layout = Layout(
+        'old_password',
+        'new_password1',
+        'new_password2',
+        FormActions(Submit('change_pass','Change my password', css_class='btn btn-lg btn-block btn-primary'),
+        )
+    )
