@@ -6,7 +6,7 @@ from django.test.client import Client
 from django.test.client import RequestFactory
 
 from testbase import create_random_user, write_percentage, count_delta
-from book_library.views import *
+from Library.book_library.views import *
 
 MAX_NUMBER_OF_ADMINS = 6
 

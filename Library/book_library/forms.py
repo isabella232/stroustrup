@@ -64,11 +64,22 @@ class BookForm(ModelForm):
             return data
         try:
             Book.books.get(isbn= data)
-        except:
-            Book.DoesNotExist
+        except Book.DoesNotExist:
             return data
-        raise  forms.ValidationError('This ISBN is already taken.')
+        raise forms.ValidationError('This ISBN is already taken.')
 
+
+
+    def clean_file(self):
+        e_version_exists = self.cleaned_data['e_version_exists']
+        file = self.cleaned_data['file']
+        if e_version_exists and file:
+            return file
+        else:
+            if e_version_exists and file:
+                raise forms.ValidationError('You select a file but not selected "E-version"')
+            else:
+                raise forms.ValidationError('You select "E-version" but not selected a file')
 
     class Meta:
         model = Book
@@ -145,7 +156,7 @@ class SearchForm(forms.Form):
     helper.form_method='get'
     helper.form_class = "form-inline"
     helper.field_template = 'bootstrap3/layout/inline_field.html'
-    helper.form_show_labels=False
+    helper.form_show_labels = False
     helper.layout = Layout(
             InlineField('busy'),
             InlineField('free'),
@@ -181,27 +192,26 @@ class Book_UpdateForm(BookForm):
                 return data
             try:
                 Book.books.get(isbn=data)
-            except:
-                Book.DoesNotExist
+            except Book.DoesNotExist:
                 return data
-            raise  forms.ValidationError('This ISBN is already taken.')
+            raise forms.ValidationError('This ISBN is already taken.')
 
 
 
 
 class Book_RequestForm(ModelForm): #SpaT_edition
-    title=forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
-    url=forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
+    url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
     helper = FormHelper()
-    helper.form_method='post'
+    helper.form_method = 'post'
     helper.form_class = "form-group row"
-    helper.form_show_labels=False
-    helper.error_text_inline=True
+    helper.form_show_labels = False
+    helper.error_text_inline = True
     helper.field_template = 'bootstrap3/layout/inline_field.html'
     helper.layout = Layout(
             Field('title',wrapper_class="col-xs-5"),
             Field('url',wrapper_class="col-xs-5"),
-            Submit('send','Send!',css_class="btn  btn-success col-md-2")
+            Submit('send', 'Send!', css_class="btn  btn-success col-md-2")
     )
 
     class Meta:

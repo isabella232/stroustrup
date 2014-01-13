@@ -10,8 +10,8 @@ from easy_thumbnails.fields import ThumbnailerImageField
 
 
 class Profile_addition(models.Model):
-    user=models.ForeignKey(User, unique=True ,related_name='profile')
-    avatar=ThumbnailerImageField(upload_to='user_avatar')
+    user = models.ForeignKey(User, unique=True ,related_name='profile')
+    avatar = ThumbnailerImageField(upload_to='user_avatar')
 
 
 

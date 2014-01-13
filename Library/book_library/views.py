@@ -1,28 +1,18 @@
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.generic.list import ListView, MultipleObjectMixin
-from django.views.generic.base import ContextMixin
+from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
-from django.utils import simplejson
-from dajaxice.decorators import dajaxice_register
 from django.core import mail
 from django.contrib.sites.models import RequestSite
-from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
-from Library.profile.models import Profile_addition
-from django.core.paginator import Paginator
-from os import environ
-
-
 from pure_pagination.mixins import PaginationMixin
-from Library.main.settings import BOOKS_ON_PAGE,REQUEST_ON_PAGE,USERS_ON_PAGE
-import datetime
+from Library.main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE
 import json
 import math
 
@@ -340,20 +330,20 @@ def LikeRequest(request, number, *args): #SpaT_edition
 
                 break
 
-            req.vote+=1
+            req.vote += 1
             req.users.add(user)
             req.save()
             for i in req.users.all():
                     all_users.append(i.username)
-            result_vote=req.vote
+            result_vote = req.vote
             break
 
     return HttpResponse(content=json.dumps({
-        'status':'OK',
-        'vote':result_vote,
-        'listuser':all_users,
+        'status': 'OK',
+        'vote': result_vote,
+        'listuser': all_users,
 
-        }, sort_keys = True))
+        }, sort_keys=True))
 
 def rating_post(request, *args, **kwargs):
     number = int(args[0])
@@ -374,22 +364,22 @@ def rating_post(request, *args, **kwargs):
         value = book.book_rating.all()
     except Exception:
         return HttpResponse(content=json.dumps({
-            'status':'BAD_GATE',
+            'status': 'BAD_GATE',
             'score': request.GET['score'],
             'msg': 'Unexpected error',
-            }, sort_keys = True))
-    if (value):
+            }, sort_keys=True))
+    if value:
         for record in value:
             if record.user_owner.id == _user.id:
-                _votes-=1
-                if _votes>1:
+                _votes -= 1
+                if _votes > 1:
                     common = float(request.GET['val'])-record.user_rating/_votes
                 else:
-                    common=0
+                    common = 0
                 common += _rate/_votes
                 common = math.ceil(common*100)/100
                 book.book_rating.remove(record)
-                elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
+                elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
                 elem.save()
                 book.book_rating.add(elem)
 
@@ -399,7 +389,7 @@ def rating_post(request, *args, **kwargs):
                     'votes': request.GET['votes'],
                     'val': common,
                     'msg': 'Your vote has been changed',
-                    }, sort_keys = True))
+                    }, sort_keys=True))
 
 
     common = (float(request.GET['val'])*(_votes-1)+_rate)/_votes

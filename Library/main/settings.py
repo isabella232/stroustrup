@@ -32,29 +32,33 @@ AUTH_PROFILE_MODULE = 'profile.Profile_addition'
 
 THUMBNAIL_ALIASES = {
     '': {
-        'avatar_size': {'size': (100, 100), 'crop': False,
+        'avatar_size': {'size': (100, 100), 'crop': False
 
         },
 
-        'avatar_profile': {'size': (36,36), 'crop': False
+        'avatar_profile': {'size': (36, 36), 'crop': False
 
          },
 
-        'book_size':{'size': (119,100), 'crop': False},
+        'book_size': {'size': (119, 100), 'crop': False},
 
-        'book_profile': {'size': (52,44), 'crop': False}
+        'book_profile': {'size': (52, 44), 'crop': False}
 }
 }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'libarydb',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'postgres',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '5433',                           # Set to empty string for default.
+        'OPTIONS': {
+            'autocommit': True,
+        }
+
     }
 }
 
@@ -176,11 +180,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_openid_auth',
     'registration',
-    'book_library',
-    'registration_app',
-    'profile',
+    'Library.book_library',
+    'Library.profile.registration_app',
+    'Library.profile',
     'dajaxice',
-    'main',
+    'Library.main',
     'pure_pagination',
     'crispy_forms',
     'south',

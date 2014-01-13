@@ -4,9 +4,10 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from captcha.fields import ReCaptchaField
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
-from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, FieldWithButtons, InlineField, StrictButton
-from django.contrib.auth.forms import AuthenticationForm
+from crispy_forms.layout import Layout, Submit, Field
+from crispy_forms.bootstrap import FormActions
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+
 
 
 class CustomRegistrationForm(RegistrationForm):
@@ -49,8 +50,6 @@ class CustomRegistrationForm(RegistrationForm):
         email_domain = self.cleaned_data['email'].split('@')[1]
         if not email_domain in self.good_domains:
             raise forms.ValidationError("You must use the domain crystalnix.com.")
-            return self.cleaned_data['email']
-
         existing = User.objects.filter(email__iexact=self.cleaned_data['email'])
         if existing.exists():
             raise forms.ValidationError(_("A user with that email already exists."))
@@ -82,3 +81,34 @@ class CustomAuthForm(AuthenticationForm):
                            )
     )
 
+
+class LandingForm(forms.Form):
+    email=forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'E-mail'}))
+
+    helper = FormHelper()
+    helper.form_method = 'post'
+    helper.form_class = "form-signin"
+    helper.form_show_labels = False
+    helper.layout = Layout(
+                'email',
+                 FormActions(
+                                Submit('send_letter', 'Send!', css_class='btn btn-lg btn-block btn-primary'),
+                           )
+    )
+
+
+class CustomChangePassForm(PasswordChangeForm):
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Old password'}))
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'New password'}))
+    new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password (again)'}))
+
+    helper = FormHelper()
+    helper.form_class = 'form-signin'
+    helper.form_show_labels = False
+    helper.layout = Layout(
+        'old_password',
+        'new_password1',
+        'new_password2',
+        FormActions(Submit('change_pass','Change my password', css_class='btn btn-lg btn-block btn-primary'),
+        )
+    )

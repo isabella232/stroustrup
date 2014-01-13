@@ -7,8 +7,8 @@ from django.test.client import Client
 from django.test.client import RequestFactory
 from django.contrib.auth import authenticate
 
-from testbase import create_random_user, write_percentage, count_delta, random_string
-from book_library.views import *
+from Library.testbase import create_random_user, write_percentage, count_delta, random_string
+from Library.book_library.views import *
 
 MAX_NUMBER_OF_AUTHORS = 50
 
