@@ -2,12 +2,15 @@ div.vote-wrap{
 }
 
 div.vote-block{
-	position: relative;	
+	position: relative;
 }
 
 div.vote-hover{
-    float: right;
+    position: relative;
+    /*left: 60px;*/
+    /*float: right;*/
     cursor:  pointer;
+    /*margin-right: 0;*/
 }
 
 
@@ -26,25 +29,22 @@ div.vote-active{
 div.vote-result{
     position: relative;
     color: black;
-    top: 45px;
+    /*top: 45px;*/
     font-size: 18px;
-    float: right;
-    margin-left: 10px;
-    left: 150px;
+    /*float: right;*/
     padding: 5px;
-
 }
 
 div.vote-success{
 
     color: black;
     font-size: 14px;
-    margin: 10px 0 0 10px;
+
 }
 
 div.your_rate{
     position: relative;
+    left: 30px;
 
-    float: right;
-    margin-right: 15px;
+
 }

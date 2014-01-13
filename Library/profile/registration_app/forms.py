@@ -83,12 +83,12 @@ class CustomAuthForm(AuthenticationForm):
 
 
 class LandingForm(forms.Form):
-    email=forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'E-mail'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'E-mail'}))
 
     helper = FormHelper()
-    helper.form_method = 'post'
+    helper.form_method='post'
     helper.form_class = "form-signin"
-    helper.form_show_labels = False
+    helper.form_show_labels=False
     helper.layout = Layout(
                 'email',
                  FormActions(

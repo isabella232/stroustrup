@@ -50,7 +50,7 @@ class BookForm(ModelForm):
             Field('paperback_version_exists',css_class='form-group'),
             Field('description', rows="3", css_class='form-control', style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;" ),
             Field('picture', css_class='form-control'),
-            Field('file', css_class='form-control'),
+            Field('file', css_class='form-control',style="> visibility:hidden"),
             Field('authors_names', css_class='form-control'),
             Field('tag_field', css_class='form-group'),
             Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),
@@ -60,14 +60,13 @@ class BookForm(ModelForm):
 
     def clean_isbn(self):
         data = self.cleaned_data['isbn']
-        if data=='':
+        if data == '':
             return data
         try:
             Book.books.get(isbn= data)
         except Book.DoesNotExist:
             return data
         raise forms.ValidationError('This ISBN is already taken.')
-
 
 
     def clean_file(self):
@@ -88,11 +87,9 @@ class BookForm(ModelForm):
     def save(self, commit=True):
         authors = self.cleaned_data['authors_names']
         tags = self.cleaned_data['tag_field']
-        book= super(BookForm, self).save(commit)
+        book = super(BookForm, self).save(commit)
         book.authors.clear()
         book.tags.clear()
-        book.authors.remove( )
-        book.tags.remove( )
 
         for author in authors:
         # all inputs checks to belong to db
@@ -155,13 +152,14 @@ class SearchForm(forms.Form):
     helper = FormHelper()
     helper.form_method='get'
     helper.form_class = "form-inline"
+    helper.form_id = "search_form"
     helper.field_template = 'bootstrap3/layout/inline_field.html'
     helper.form_show_labels = False
     helper.layout = Layout(
-            InlineField('busy'),
-            InlineField('free'),
-            InlineField('keywords',wrapper_class="col-xs-5"),
-            Submit('search','Search',css_class="btn btn-default")
+            InlineField('busy', css_class="search_box"),
+            InlineField('free', css_class="search_box"),
+            InlineField('keywords', wrapper_class="col-xs-5"),
+            Submit('search','Search', css_class="btn btn-default")
     )
 
 
@@ -171,32 +169,22 @@ class Book_UpdateForm(BookForm):
             super(BookForm, self).__init__(*args, **kwargs)
             if not self.is_bound and self.instance.pk:
                 queryset_authors = self.instance.authors.all()
-                authors=''
-                for count in range(len(queryset_authors)):
-                    authors = authors+'{0} {1},'.format(queryset_authors[count].first_name,queryset_authors[count].last_name)
-                    if count+1 == len(queryset_authors):
-                        authors = authors[0:-1]
+                authors = u", ".join(unicode(v) for v in queryset_authors)
                 self.fields['authors_names'].initial = authors
                 queryset_tags = self.instance.tags.all()
-                tags=''
-                for count in range(len(queryset_tags)):
-                    tags = tags + '{0},'.format(queryset_tags[count].tag)
-                    if count+1 == len(queryset_tags):
-                        tags = tags[0:-1]
+                tags = u",".join(unicode(v) for v in queryset_tags)
                 self.fields['tag_field'].initial = tags
 
 
         def clean_isbn(self):
             data = self.cleaned_data['isbn']
-            if data or self.instance.isbn == data:
+            if data and self.instance.isbn == data:
                 return data
             try:
                 Book.books.get(isbn=data)
             except Book.DoesNotExist:
                 return data
             raise forms.ValidationError('This ISBN is already taken.')
-
-
 
 
 class Book_RequestForm(ModelForm): #SpaT_edition
@@ -223,8 +211,8 @@ class Book_RequestForm(ModelForm): #SpaT_edition
 
     def save(self, commit=True):   #Probably it's became useless
         if self.cleaned_data['url'] and self.cleaned_data['title']:
-            _url=self.cleaned_data['url']
-            _title=self.cleaned_data['title']
+            _url = self.cleaned_data['url']
+            _title = self.cleaned_data['title']
             req = Book_Request.requests.create(url=_url, title=_title)
             req.save()
             return req

@@ -33,63 +33,55 @@
             </div>
             <div class="panel-body">
                 <ul class="media-list">
-                    <li class="pull-right">
-                        <div class="rating_{{ book.id }}">
-                            <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
-                        </div>
-                    </li>
+                    <li class="row">
+                            <div class="col-md-2">
+                            {% if book.picture%}
+                                <a  href="{% url "books:book" book.id %}">
+                                    <img class="media-object" src="{{ book.picture.book_size.url }}" alt="image">
+                                </a>
+                            {% endif%}
+                            {% if not book.picture%}
 
-                    <li class="media">
-                        {% if book.picture%}
-                            <a class="pull-left" href="{% url "books:book" book.id %}">
-                                <img class="media-object" src="{{ book.picture.url }}" alt="image">
-                            </a>
-                        {% endif%}
-                        {% if not book.picture%}
+                                <a  href="{% url "books:book" book.id %}">
+                                    <img class="media-object" src="{% static 'image/book_index.png' %}" alt="image">
+                                </a>
 
-                            <a class="pull-left" href="{% url "books:book" book.id %}">
-                                <img class="media-object" src="{% static 'image/book_index.png' %}" alt="image">
-                            </a>
-
-                        {% endif %}
-
-                    </li>
-
-                    <li>
-
-                        <ul id="myTab_{{ book.id }}" class="nav nav-tabs">
-                            <li class="active"><a href="#authors{{ book.id }}" data-toggle="tab">Authors <span class="glyphicon glyphicon-info-sign"></span></a></li>
-                            <li><a href="#tags{{ book.id }}" data-toggle="tab">Tags <span class="glyphicon glyphicon-tags"></span></a></li>
-                        </ul>
-                        <div id="myTabContent_{{ book.id }}" class="tab-content">
-                            <div class="tab-pane fade in active" id="authors{{ book.id }}">
-                                <ul class="list-group">
-                                    {% for author in book.authors.all %}
-                                        <li class="list-group-item">
-                                            <a class="author" href="{% url "books:author" author.id %}">
-                                                <span class="glyphicon glyphicon-chevron-right"></span> {{ author.first_name }} {{ author.last_name }}
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-
-                                </ul>
+                            {% endif %}
                             </div>
 
-                            <div class="tab-pane fade" id="tags{{ book.id }}">
-                                <div class="panel panel-info">
-                                    <div class="panel-body">
-                                        {% for tag in book.tags.all %}
-
-                                            <a href="{% url 'books:tag' tag.id %}" class="btn btn-primary tag">{{ tag.tag }} </a>,
-
+                            <div class="col-md-7" id="body_book">
+                                <div class="row">
+                                    <p>Authors <span class="glyphicon glyphicon-info-sign"></span><p>
+                                    <ul class="list-group">
+                                        {% for author in book.authors.all %}
+                                            <li class="list-group-item">
+                                                <a class="author" href="{% url "books:author" author.id %}">
+                                                    <span class="glyphicon glyphicon-chevron-right"></span> {{ author.first_name }} {{ author.last_name }}
+                                                </a>
+                                            </li>
                                         {% endfor %}
+                                    </ul>
+                                </div>
 
+                                <div class="row">
+                                    <p href="#tags{{ book.id }}" data-toggle="tab">Tags <span class="glyphicon glyphicon-tags"></span></p>
+                                    <div class="well well-lg">
+                                            {% for tag in book.tags.all %}
+                                                <a href="{% url 'books:tag' tag.id %}" class="tag">#{{ tag.tag }} </a>,
+                                            {% endfor %}
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <hr/>
 
+
+                            <div class="col-md-3">
+                                    <div class="rating_{{ book.id }}">
+                                        <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+                                    </div>
+                            </div>
+                    </li>
+                        <hr/>
+                    <li>
                         <h4 class="col-sm-offset-0">
                             Status:
                             {% if book.busy %}

@@ -12,13 +12,14 @@ ADMINS = (
     ('Roman', 'r.vaseev@crystalnix.com'),
 )
 
-DOMAIN = '127.0.0.1:8001'
+DOMAIN = '127.0.0.1:8000'
 
 MANAGERS = ADMINS
 
 BOOKS_ON_PAGE = 5
 REQUEST_ON_PAGE = 3
 USERS_ON_PAGE = 2
+DEADLINE = 14
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CRISPY_FAIL_SILENTLY = not DEBUG
@@ -54,11 +55,11 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+
         'PORT': '5433',                           # Set to empty string for default.
         'OPTIONS': {
             'autocommit': True,
         }
-
     }
 }
 
@@ -102,7 +103,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, '../media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.

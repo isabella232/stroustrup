@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from pure_pagination.mixins import PaginationMixin
 from Library.main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE
+
 import json
 import math
 
@@ -130,7 +131,7 @@ def return_book_view(request, number, *args, **kwargs):
         book.return_by(client)
         book.save()
         return HttpResponse(content= json.dumps({'message': 'Book returned'}))
-    return  HttpResponseRedirect(reverse('book:list'))
+    return HttpResponseRedirect(reverse('book:list'))
 
 
 class BookListView(PaginationMixin, LoginRequiredView, ListView):
@@ -175,7 +176,7 @@ class BookListView(PaginationMixin, LoginRequiredView, ListView):
                 query = query & Q(busy=False)
 
             if query:
-                self.queryset = Book.books.filter(query)
+                self.queryset = Book.books.filter(query).distinct()
         if self.kwargs['page']:
             self.page = int(self.kwargs['page'])
 
@@ -210,25 +211,8 @@ def ask_to_return(request, *args, **kwargs):
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:
-            authors_string = ""
-            for author in book.authors.all():
-                authors_string += author.__unicode__()
-            site = RequestSite(request)
-            server_email = settings.EMAIL_HOST_USER
-            email = mail.EmailMessage('Book return request', "User %(username)s (%(firstname)s %(lastname)s) is asking you"
-                                                             " to return the book %(book)s %(author)s."
-                                                             " You can return it by click on this link: %(link)s"%
-                                                             {'username': request.user.username,
-                                                              'firstname': request.user.first_name,
-                                                              'lastname': request.user.last_name,
-                                                              'book': book.__unicode__(),
-                                                              'author': authors_string,
-                                                              'link': "http://%(site)s/books/%(id)s"
-                                                                      % {'id': book.id, 'site': site.domain}
-                                                             },
-                                      server_email,
-                                      [profile.email])
-            email.send()
+            request_return=Request_Return.objects.create(book=book , user_request=request.user)
+            request_return.save()
             return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
@@ -257,8 +241,8 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
-    queryset = Book_Request.requests.all()
-    page=1
+    queryset = Book_Request.requests.order_by('-id')
+    page = 1
     paginate_by = REQUEST_ON_PAGE
 
 
@@ -273,11 +257,11 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
     def post(self, request, *args, **kwargs):
         form=self.form_class(request.POST)
         if request.POST and form.is_valid():
-            _url=request.POST['url']
-            start_str='http'
-            if(not _url.startswith(start_str)):
-                _url=start_str+'://'+_url
-            _title=request.POST['title']
+            _url = request.POST['url']
+            start_str = 'http'
+            if not _url.startswith(start_str):
+                _url = start_str+'://'+_url
+            _title = request.POST['title']
             req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
 
             req.save()
@@ -287,7 +271,7 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
 
 def CommentAdd(request, number, *args): #SpaT_edition
     queryset = Book.books.all()
-    number=int(number)
+    number = int(number)
     book = None
     for _book in queryset:
         if number == _book.id:
@@ -305,9 +289,9 @@ def CommentAdd(request, number, *args): #SpaT_edition
 
 def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
-    user=request.user
+    user = request.user
     result_vote = 0
-    all_users=[]
+    all_users = []
     for req in queryset:
 
         if req.id == int(number):
@@ -326,7 +310,7 @@ def LikeRequest(request, number, *args): #SpaT_edition
                 req.save()
 
                 for i in req.users.all():
-                   all_users.append(i.username)
+                    all_users.append(i.username)
 
                 break
 
@@ -384,7 +368,7 @@ def rating_post(request, *args, **kwargs):
                 book.book_rating.add(elem)
 
                 return HttpResponse(content=json.dumps({
-                    'status':'CHANGED',
+                    'status': 'CHANGED',
                     'score': request.GET['score'],
                     'votes': request.GET['votes'],
                     'val': common,
@@ -394,7 +378,7 @@ def rating_post(request, *args, **kwargs):
 
     common = (float(request.GET['val'])*(_votes-1)+_rate)/_votes
     common = math.ceil(common*100)/100
-    elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
+    elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
     elem.save()
     book.book_rating.add(elem)
     return HttpResponse(content=json.dumps({

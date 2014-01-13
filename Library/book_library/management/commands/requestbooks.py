@@ -27,7 +27,7 @@ class Command(NoArgsCommand):
                         continue
                     if request_return.processing_time is not None:
                         round_day = datetime.now() - request_return.processing_time
-                    if book.taken_about() == 0 and (request_return.processing_time is None or round_day.days > 0):
+                    if book.taken_about() == DEADLINE and (request_return.processing_time is None or round_day.days > 0):
                         user = book.taken_by()
                         email = EmailMessage('Book return request',
                                              "We is asking you to return the book: ''{0}''author(s): {1}"
@@ -37,4 +37,3 @@ class Command(NoArgsCommand):
                         email.send()
                         request_return.processing_time = datetime.now()
                         request_return.save()
-

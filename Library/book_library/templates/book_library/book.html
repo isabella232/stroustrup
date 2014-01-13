@@ -146,7 +146,7 @@
                                     Take!
                                 </a>
                             {% else %}
-                                {% if user in book.users.all %}
+                                {% ifequal user  book.taken_by %}
                                     <a id="take_return_send_button"
 
                                        onclick="book_action('return','return/{{ book.id }}',{{ book.id }});"
@@ -158,7 +158,7 @@
 
                                        onclick=" book_action('ask','ask_to_return/{{ book.id }}',{{ book.id }});"
                                        class="take_return_button btn btn-danger  btn-lg"> Send a request! </a>
-                                {% endif %}
+                                {% endifequal %}
                             {% endif %}
 
                         </h4>
