@@ -11,7 +11,7 @@ from django.test.client import RequestFactory
 
 from registration.models import RegistrationProfile
 
-from testbase import create_random_user, write_percentage, count_delta, random_string
+from Library.testbase import create_random_user, write_percentage, count_delta, random_string
 from Library.book_library.views import *
 
 os.environ['RECAPTCHA_TESTING'] = 'True'  # read https://pypi.python.org/pypi/django-recaptcha
@@ -22,12 +22,18 @@ MAX_PASSWORD_LENGTH = 250
 
 MAX_EMAIL_LENGTH = 100
 
+MAX_NUMBER_OF_USERS = 25
+
+
 
 class AvailabilityTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.factory = RequestFactory()
-        self.urls_to_test = ['auth_login', 'auth_logout', 'registration_register']
+        self.users = [create_random_user() for item in range(1, random.randint(1, MAX_NUMBER_OF_USERS))]
+        self.urls_to_test = ['auth_login', 'auth_logout', 'registration_register', 'registration_activation_complete',
+                             'registration_activate', 'registration_complete', 'registration_disallowed',
+                             'password_change', 'auth_password_change_done']
 
     def test_availability(self):
         delta_percent = count_delta(len(self.urls_to_test))
@@ -75,7 +81,7 @@ class AvailabilityTests(TestCase):
                 self.assertEqual(new_user.is_active, True)
 
                 request = self.client.post(reverse('auth_login'), {'username': new_user.username,
-                                                                  'password': password})
+                                                                   'password': password})
                 new_user = User.objects.get(pk=users_count)
                 self.assertEqual('http://testserver/', request['location'])
                 delta = new_user.last_login - timezone.now()
@@ -83,6 +89,11 @@ class AvailabilityTests(TestCase):
             else:
                 self.assertTrue(not request.context_data['form'].is_valid())
 
+    def test_pass_change_post_req(self):
+        for user in User.objects.all():
+            self.client.login(username=user.username, password=user.password)
+            request = self.client.post(reverse('password_change'))
+            self.assertEqual(request.status_code, 302)
 
 
 

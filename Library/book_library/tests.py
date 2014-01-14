@@ -204,11 +204,11 @@ class FormsTests(TestCase):
             #     tags = random_string(size=random.randint(1, 90), chars=string.letters)
             # else:
             #     tags = random_string(size=random.randint(1, MAX_LENGTH_OF_TAGS), chars=string.printable)
-            form_context =  {'title': title,
-                             'e_version_exists': e_version_exists,
-                             'paperback_version_exists': paperback_version_exists,
-                             'description': description,
-                             'authors_names': authors}
+            form_context = {'title': title,
+                            'e_version_exists': e_version_exists,
+                            'paperback_version_exists': paperback_version_exists,
+                            'description': description,
+                            'authors_names': authors}
             if there_is_isbn:
                 form_context['isbn'] = isbn
             request = self.client.post(reverse('books:add'), form_context)

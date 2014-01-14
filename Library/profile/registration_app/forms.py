@@ -70,15 +70,12 @@ class CustomAuthForm(AuthenticationForm):
     helper = FormHelper()
     helper.form_class = 'form-signin'
     helper.form_method = 'POST'
-    helper.help_text_inline=False
+    helper.help_text_inline = False
     helper.error_messages = True
-    helper.form_show_labels=False
-    helper.layout = Layout(
-                'username',
-                'password',
-                FormActions(
-                                Submit('sign_in_auth', 'Sign in!', css_class='btn btn-lg btn-block btn-primary'),
-                           )
+    helper.form_show_labels = False
+    helper.layout = Layout('username',
+                           'password',
+                           FormActions(Submit('sign_in_auth', 'Sign in!', css_class='btn btn-lg btn-block btn-primary'))
     )
 
 

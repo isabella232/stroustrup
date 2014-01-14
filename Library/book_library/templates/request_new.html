@@ -1,4 +1,4 @@
-{% extends 'book_library/books_mainpage.html' %}
+{% extends 'books_mainpage.html' %}
 {% load crispy_forms_tags %}
 {% block title %}Request new book.{% endblock %}
 {% block location %}Requests page{% endblock %}
@@ -92,7 +92,7 @@
 
         </div>
     {% endif %}
-    {% include "book_library/pagination.html"  %}
+    {% include "pagination.html" %}
 {% endblock %}
 
 
