@@ -193,8 +193,12 @@ class FormsTests(TestCase):
                 was_error = True
             else:
                 title = random_string(size=(random.randint(1, 45)))
-            e_version_exists = random.randint(0, 1)
+            e_version_exists = 0
             paperback_version_exists = random.randint(0, 1)
+            # if e_version_exists ==0:
+            #     file = None
+            # else:
+            #     file = 'file'
             description = random_string(size=random.randint(1, MAX_LENGTH_OF_DESCRIPTION), chars=string.printable)
             if will_be_an_error and (random.randint(0, 1) or not was_error):
                 authors = random_string(size=random.randint(1, 90), chars=string.letters)
@@ -208,6 +212,7 @@ class FormsTests(TestCase):
                             'e_version_exists': e_version_exists,
                             'paperback_version_exists': paperback_version_exists,
                             'description': description,
+                            'file': file,
                             'authors_names': authors}
             if there_is_isbn:
                 form_context['isbn'] = isbn
@@ -383,3 +388,6 @@ class SpecialCaseTests(TestCase):
             self.assertTrue(not book.busy and (book not in user2[0].get_users_books()))
 
             self.client.logout()
+
+    # def test_request_book_post(self):
+

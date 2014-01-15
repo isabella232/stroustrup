@@ -27,8 +27,8 @@ class AvailabilityTests(TestCase):
 
     def test_login_post_request(self):
         request = self.client.post(reverse('auth_login'),
-                                   {'username': self.user[0].username, 'password': self.user[0].password})
-        self.assertEqual(request.status_code, 200)
+                                   {'username': self.user[0].username, 'password': self.user[1]})
+        self.assertEqual(request.status_code, 302)
 
     def test_landing_page_post_request(self):
         request = self.client.post(reverse('landing_page'), {'email': self.user[0].email})

@@ -32,7 +32,7 @@ class AvailabilityTests(TestCase):
         self.factory = RequestFactory()
         self.users = [create_random_user() for item in range(1, random.randint(1, MAX_NUMBER_OF_USERS))]
         self.urls_to_test = ['auth_login', 'auth_logout', 'registration_register', 'registration_activation_complete',
-                             'registration_activate', 'registration_complete', 'registration_disallowed',
+                             'registration_complete', 'registration_disallowed',
                              'password_change', 'auth_password_change_done']
 
     def test_availability(self):
@@ -63,11 +63,12 @@ class AvailabilityTests(TestCase):
                 list_pass = list(password2)
                 list_pass = chr(ord(password2[0]) + 1)
                 password2 = ''.join(list_pass)
-            request = self.client.post(reverse('registration_register'), {'username': username,
-                                                                 'password1': password,
-                                                                 'password2': password2,
-                                                                 'email': email,
-                                                                 'recaptcha_response_field': 'PASSED'})
+            request = self.client.post(reverse('registration_register'),
+                                       {'username': username,
+                                        'password1': password,
+                                        'password2': password2,
+                                        'email': email,
+                                        'recaptcha_response_field': 'PASSED'})
             if pass_are_equal:
                 users_count += 1
                 add = 1
@@ -90,10 +91,15 @@ class AvailabilityTests(TestCase):
                 self.assertTrue(not request.context_data['form'].is_valid())
 
     def test_pass_change_post_req(self):
-        for user in User.objects.all():
-            self.client.login(username=user.username, password=user.password)
-            request = self.client.post(reverse('password_change'))
+        for user in self.users:
+            self.client.login(username=user[0].username, password=user[1])
+            request = self.client.post(reverse('password_change'),
+                                       {'old_password': user[1],
+                                        'new_password1': user[1][::-1],
+                                        'new_password2': user[1][::-1]}
+                                       )
             self.assertEqual(request.status_code, 302)
+            self.client.logout()
 
 
 

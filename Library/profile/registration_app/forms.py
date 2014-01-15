@@ -30,7 +30,7 @@ class CustomRegistrationForm(RegistrationForm):
                                 )
     captcha = ReCaptchaField()
 
-    good_domains=['crystalnix.com']
+    good_domains = ['crystalnix.com']
 
     helper = FormHelper()
     helper.form_class = 'form-signin'

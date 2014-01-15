@@ -37,7 +37,7 @@ class TagField(forms.CharField):
 
 class BookForm(ModelForm):
     authors_names = NameField(max_length=100, label="Add authors full names (to separate use a comma):")
-    tag_field = TagField(max_length=50, label = 'Add tags (to separate use a comma):', required=False)
+    tag_field = TagField(max_length=50, label='Add tags (to separate use a comma):', required=False)
     e_version_exists = forms.BooleanField(label='E-version', required=False)
     paperback_version_exists = forms.BooleanField(label='Paper version', required=False)
 
@@ -50,7 +50,7 @@ class BookForm(ModelForm):
             Field('paperback_version_exists',css_class='form-group'),
             Field('description', rows="3", css_class='form-control', style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;" ),
             Field('picture', css_class='form-control'),
-            Field('file', css_class='form-control',style="> visibility:hidden"),
+            Field('file', css_class='form-control', style="> visibility:hidden"),
             Field('authors_names', css_class='form-control'),
             Field('tag_field', css_class='form-group'),
             Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),

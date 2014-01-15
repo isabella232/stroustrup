@@ -255,7 +255,7 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
 
 
     def post(self, request, *args, **kwargs):
-        form=self.form_class(request.POST)
+        form = self.form_class(request.POST)
         if request.POST and form.is_valid():
             _url = request.POST['url']
             start_str = 'http'
