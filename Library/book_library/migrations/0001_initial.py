@@ -54,7 +54,7 @@ class Migration(SchemaMigration):
             ('e_version_exists', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('paperback_version_exists', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('description', self.gf('django.db.models.fields.TextField')(default='No description available.', max_length=255)),
-            ('picture', self.gf('django.db.models.fields.files.FileField')(max_length=100, blank=True)),
+            ('picture', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
             ('file', self.gf('django.db.models.fields.files.FileField')(max_length=100, blank=True)),
         ))
         db.send_create_signal(u'book_library', ['Book'])
@@ -121,6 +121,24 @@ class Migration(SchemaMigration):
         ))
         db.create_unique(m2m_table_name, ['book_request_id', 'user_id'])
 
+        # Adding model 'Request_Return'
+        db.create_table(u'book_library_request_return', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user_request', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('book', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['book_library.Book'])),
+            ('time_request', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('processing_time', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+        ))
+        db.send_create_signal(u'book_library', ['Request_Return'])
+
+        # Adding model 'Books_QR'
+        db.create_table(u'book_library_books_qr', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('book', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['book_library.Book'])),
+            ('qr', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
+        ))
+        db.send_create_signal(u'book_library', ['Books_QR'])
+
 
     def backwards(self, orm):
         # Deleting model 'Client_Story_Record'
@@ -158,6 +176,12 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field users on 'Book_Request'
         db.delete_table(db.shorten_name(u'book_library_book_request_users'))
+
+        # Deleting model 'Request_Return'
+        db.delete_table(u'book_library_request_return')
+
+        # Deleting model 'Books_QR'
+        db.delete_table(u'book_library_books_qr')
 
 
     models = {
@@ -198,7 +222,7 @@ class Migration(SchemaMigration):
         },
         u'book_library.book': {
             'Meta': {'ordering': "['title']", 'object_name': 'Book'},
-            'authors': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'books'", 'to': u"orm['book_library.Author']"}),
+            'authors': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'books'", 'symmetrical': 'False', 'to': u"orm['book_library.Author']"}),
             'book_rating': ('django.db.models.fields.related.ManyToManyField', [], {'default': 'None', 'to': u"orm['book_library.Book_Rating']", 'null': 'None', 'symmetrical': 'False', 'blank': 'True'}),
             'busy': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'comments': ('django.db.models.fields.related.ManyToManyField', [], {'default': 'None', 'related_name': "'books'", 'blank': 'True', 'symmetrical': 'False', 'to': u"orm['book_library.Book_Comment']"}),
@@ -208,10 +232,10 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'isbn': ('django.db.models.fields.CharField', [], {'max_length': '13', 'blank': 'True'}),
             'paperback_version_exists': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'picture': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'blank': 'True'}),
-            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'books'", 'blank': 'True', 'to': u"orm['book_library.Book_Tag']"}),
+            'picture': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
+            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'books'", 'blank': 'True', 'to': u"orm['book_library.Book_Tag']"}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '45'}),
-            'users': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'books'", 'blank': 'True', 'through': u"orm['book_library.Client_Story_Record']", 'to': u"orm['auth.User']"})
+            'users': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'books'", 'blank': 'True', 'through': u"orm['book_library.Client_Story_Record']", 'to': u"orm['auth.User']"})
         },
         u'book_library.book_comment': {
             'Meta': {'object_name': 'Book_Comment'},
@@ -242,6 +266,12 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'tag': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '20'})
         },
+        u'book_library.books_qr': {
+            'Meta': {'object_name': 'Books_QR'},
+            'book': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['book_library.Book']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'qr': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'})
+        },
         u'book_library.client_story_record': {
             'Meta': {'object_name': 'Client_Story_Record'},
             'book': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['book_library.Book']"}),
@@ -249,6 +279,14 @@ class Migration(SchemaMigration):
             'book_taken': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'book_library.request_return': {
+            'Meta': {'object_name': 'Request_Return'},
+            'book': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['book_library.Book']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'processing_time': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'time_request': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'user_request': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},

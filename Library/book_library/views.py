@@ -130,7 +130,7 @@ def return_book_view(request, number, *args, **kwargs):
     if book.busy and books and book in books:
         book.return_by(client)
         book.save()
-        return HttpResponse(content= json.dumps({'message': 'Book returned'}))
+        return HttpResponse(content=json.dumps({'message': 'Book returned'}))
     return HttpResponseRedirect(reverse('book:list'))
 
 

@@ -8,27 +8,25 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Request_Return'
-        db.create_table(u'book_library_request_return', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user_request', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('book', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['book_library.Book'])),
-            ('time_request', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('processing_time', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-        ))
-        db.send_create_signal(u'book_library', ['Request_Return'])
 
+        # Adding field 'Book.qr_image'
+        db.add_column(u'book_library_book', 'qr_image',
+                      self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True),
+                      keep_default=False)
 
-        # Changing field 'Book.picture'
-        db.alter_column(u'book_library_book', 'picture', self.gf('django.db.models.fields.files.ImageField')(max_length=100))
 
     def backwards(self, orm):
-        # Deleting model 'Request_Return'
-        db.delete_table(u'book_library_request_return')
+        # Adding model 'Books_QR'
+        db.create_table(u'book_library_books_qr', (
+            ('qr', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True)),
+            ('book', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['book_library.Book'])),
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+        ))
+        db.send_create_signal(u'book_library', ['Books_QR'])
 
+        # Deleting field 'Book.qr_image'
+        db.delete_column(u'book_library_book', 'qr_image')
 
-        # Changing field 'Book.picture'
-        db.alter_column(u'book_library_book', 'picture', self.gf('django.db.models.fields.files.FileField')(max_length=100))
 
     models = {
         u'auth.group': {
@@ -79,6 +77,7 @@ class Migration(SchemaMigration):
             'isbn': ('django.db.models.fields.CharField', [], {'max_length': '13', 'blank': 'True'}),
             'paperback_version_exists': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'picture': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
+            'qr_image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'tags': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'books'", 'blank': 'True', 'to': u"orm['book_library.Book_Tag']"}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '45'}),
             'users': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'books'", 'blank': 'True', 'through': u"orm['book_library.Client_Story_Record']", 'to': u"orm['auth.User']"})

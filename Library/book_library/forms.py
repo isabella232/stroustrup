@@ -1,16 +1,11 @@
 from django.forms import ModelForm
 from models import Book, Book_Tag, Author, Book_Request, Book_Comment, Book_Rating
 from django import forms
-from django.core import validators
 from django.core.exceptions import ValidationError
-from django.forms.fields import FileField
-from django.forms.models import save_instance
-from django.db.models import Q
-from django.contrib.auth import models
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, URLValidator
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
-from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, FieldWithButtons, InlineField, StrictButton
+from crispy_forms.layout import Layout, Submit, Field
+from crispy_forms.bootstrap import PrependedText, InlineField
 
 
 
@@ -26,6 +21,7 @@ class NameField(forms.CharField):
     def validate(self, value):
         if not value:
             raise ValidationError(["Enter first name and last name with namespace. Every author shold be separated by comma from another author. Probably you wrote single (last or first) name."])
+
 
 class TagField(forms.CharField):
 
@@ -43,42 +39,39 @@ class BookForm(ModelForm):
 
     helper = FormHelper()
     helper.form_class = 'form-group'
-    helper.layout = Layout(
-            PrependedText('isbn', '13 digits'),
-            Field('title', css_class='form-control'),
-            Field('e_version_exists',css_class='form-group'),
-            Field('paperback_version_exists',css_class='form-group'),
-            Field('description', rows="3", css_class='form-control', style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;" ),
-            Field('picture', css_class='form-control'),
-            Field('file', css_class='form-control', style="> visibility:hidden"),
-            Field('authors_names', css_class='form-control'),
-            Field('tag_field', css_class='form-group'),
-            Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),
-            )
-
-
+    helper.layout = Layout(PrependedText('isbn', '13 digits'),
+                           Field('title', css_class='form-control'),
+                           Field('e_version_exists', css_class='form-group'),
+                           Field('paperback_version_exists',css_class='form-group'),
+                           Field('description', rows="3", css_class='form-control',
+                                 style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;"),
+                           Field('picture', css_class='form-control'),
+                           Field('file', css_class='form-control', style="> visibility:hidden"),
+                           Field('authors_names', css_class='form-control'),
+                           Field('tag_field', css_class='form-group'),
+                           Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),
+                           )
 
     def clean_isbn(self):
         data = self.cleaned_data['isbn']
         if data == '':
             return data
         try:
-            Book.books.get(isbn= data)
+            Book.books.get(isbn=data)
         except Book.DoesNotExist:
             return data
         raise forms.ValidationError('This ISBN is already taken.')
 
-
     def clean_file(self):
         e_version_exists = self.cleaned_data['e_version_exists']
-        file = self.cleaned_data['file']
-        if e_version_exists and file:
-            return file
+        file_book = self.cleaned_data['file']
+        if (e_version_exists and (file_book is not None)) or (e_version_exists is False and (file_book is None)):
+            return file_book
         else:
-            if e_version_exists and file:
-                raise forms.ValidationError('You select a file but not selected "E-version"')
-            else:
+            if e_version_exists and (file_book is None):
                 raise forms.ValidationError('You select "E-version" but not selected a file')
+            else:
+                raise forms.ValidationError('You select a file but not selected "E-version"')
 
     class Meta:
         model = Book
@@ -107,10 +100,6 @@ class BookForm(ModelForm):
             if not flag:
                 new_author, created = Author.authors.get_or_create(first_name=author[0], last_name=author[1])
             book.authors.add(new_author)
-
-
-
-
 
         for _tag in tags:
         #as same as authors
@@ -155,11 +144,10 @@ class SearchForm(forms.Form):
     helper.form_id = "search_form"
     helper.field_template = 'bootstrap3/layout/inline_field.html'
     helper.form_show_labels = False
-    helper.layout = Layout(
-            InlineField('busy', css_class="search_box"),
-            InlineField('free', css_class="search_box"),
-            InlineField('keywords', wrapper_class="col-xs-5"),
-            Submit('search','Search', css_class="btn btn-default")
+    helper.layout = Layout(InlineField('busy', css_class="search_box"),
+                           InlineField('free', css_class="search_box"),
+                           InlineField('keywords', wrapper_class="col-xs-5"),
+                           Submit('search','Search', css_class="btn btn-default")
     )
 
 
@@ -175,7 +163,6 @@ class Book_UpdateForm(BookForm):
                 tags = u",".join(unicode(v) for v in queryset_tags)
                 self.fields['tag_field'].initial = tags
 
-
         def clean_isbn(self):
             data = self.cleaned_data['isbn']
             if data and self.instance.isbn == data:
@@ -189,25 +176,21 @@ class Book_UpdateForm(BookForm):
 
 class Book_RequestForm(ModelForm): #SpaT_edition
     title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
-    url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
+    url = forms.URLField(validators=URLValidator(verify_exists=True),
+                         widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
     helper = FormHelper()
     helper.form_method = 'post'
     helper.form_class = "form-group row"
     helper.form_show_labels = False
     helper.error_text_inline = True
     helper.field_template = 'bootstrap3/layout/inline_field.html'
-    helper.layout = Layout(
-            Field('title',wrapper_class="col-xs-5"),
-            Field('url',wrapper_class="col-xs-5"),
-            Submit('send', 'Send!', css_class="btn  btn-success col-md-2")
-    )
+    helper.layout = Layout(Field('title', wrapper_class="col-xs-5"),
+                           Field('url', wrapper_class="col-xs-5"),
+                           Submit('send', 'Send!', css_class="btn  btn-success col-md-2"))
 
     class Meta:
         model = Book_Request
         fields = ['title', 'url']
-
-
-
 
     def save(self, commit=True):   #Probably it's became useless
         if self.cleaned_data['url'] and self.cleaned_data['title']:
@@ -219,10 +202,12 @@ class Book_RequestForm(ModelForm): #SpaT_edition
         else:
             return super(Book_RequestForm, self).save(commit=True)
 
+
 class Book_RatingForm(ModelForm):
 
     class Meta:
         model = Book_Rating
+
 
 class Book_CommentForm(ModelForm):
 

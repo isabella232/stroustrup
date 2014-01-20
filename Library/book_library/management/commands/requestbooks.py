@@ -2,6 +2,7 @@ __author__ = 'romanusynin'
 from Library.book_library.models import Request_Return
 from django.core.management.base import NoArgsCommand
 from Library.main.settings import DOMAIN, DEADLINE, EMAIL_HOST_USER
+from django.core.urlresolvers import reverse
 from datetime import datetime
 from django.core.mail import EmailMessage
 
@@ -20,7 +21,9 @@ class Command(NoArgsCommand):
                         user = request_return.user_request
                         email = EmailMessage('Book free request',
                                              "Book (''{0}'' author(s): {1}) has been returned."
-                                             " You can take it by click on this link: {2}/books/{3}".format(book.title, authors, DOMAIN, book.id),
+                                             " You can take it by click on this link: {2}{3}"
+                                             .format(book.title, authors, DOMAIN,
+                                             reverse('books:book', kwargs={'pk': book.id})),
                                              server_email, [user.email])
                         email.send()
                         request_return.delete()
@@ -31,8 +34,9 @@ class Command(NoArgsCommand):
                         user = book.taken_by()
                         email = EmailMessage('Book return request',
                                              "We is asking you to return the book: ''{0}''author(s): {1}"
-                                             " You can return it by click on this link: {2}/books/{3}"
-                                             .format(book.title, authors, DOMAIN, book.id),
+                                             " You can return it by click on this link: {2}{3}"
+                                             .format(book.title, authors, DOMAIN,
+                                             reverse('books:book', kwargs={'pk': book.id})),
                                              server_email, [user.email])
                         email.send()
                         request_return.processing_time = datetime.now()

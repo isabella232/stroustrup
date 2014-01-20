@@ -4,7 +4,14 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib import auth
 from easy_thumbnails.fields import ThumbnailerImageField
-
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from PyQRNative import *
+from django.core.files import File
+from django.core.files.base import ContentFile
+from cStringIO import StringIO
+from django.core.urlresolvers import reverse
+from Library.main.settings import DOMAIN
 
 
 class Client_Story_Record(models.Model):
@@ -23,38 +30,35 @@ class Author(models.Model):
     last_name = models.CharField(max_length=45, verbose_name="Last name")
 
     def __unicode__(self):
-        return '{0} {1}'.format(self.first_name,self.last_name)
+        return '{0} {1}'.format(self.first_name, self.last_name)
 
 
 class Book_Rating(models.Model): #SpaT_edition
     rating_manager = models.Manager()
     user_owner = models.ForeignKey(User, related_name="rating", default=0, blank=True)
-    user_rating = models.FloatField(null = 0, default = 0)
-    common_rating = models.FloatField(null = 0, default = 0, blank=True )
-    votes = models.IntegerField(null = 0, default = 0, blank=True )
+    user_rating = models.FloatField(null=0, default=0)
+    common_rating = models.FloatField(null=0, default=0, blank=True)
+    votes = models.IntegerField(null=0, default=0, blank=True)
 
     def __unicode__(self):
-        return str('total=' + str(self.common_rating)+ ' by ' + str(self.votes) + ' vote(s)'+';\n'+'current_rate=' +
-                   str(self.user_rating) + ' user: ' + self.user_owner.username )
-
-
+        return str('total=' + str(self.common_rating)+' by ' + str(self.votes) + ' vote(s)'+';\n'+'current_rate=' +
+                   str(self.user_rating) + ' user: ' + self.user_owner.username)
 
 
 class Book_Comment(models.Model):
     comments = models.Manager()
     sent_time = models.DateTimeField(auto_now_add=True)
-    comment = models.CharField(max_length= 255, default='')
+    comment = models.CharField(max_length=255, default='')
     user = models.ForeignKey(User, related_name="comment", default=0, blank=True)
+
     def __unicode__(self):
         return self.user.username + ": " + self.comment
-
-
 
 
 class Book(models.Model):
     books = models.Manager()
 
-    isbn = models.CharField( max_length=13, blank=True,
+    isbn = models.CharField(max_length=13, blank=True,
                             validators=[RegexValidator(regex="\d{13,13}", message="Please just 13 digits")],
                             )
     title = models.CharField(max_length=45)
@@ -67,7 +71,7 @@ class Book(models.Model):
     users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
     file = models.FileField(upload_to='book_files', blank=True)
-
+    qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True)
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', related_name='books', default=None, blank=True) #SpaT_edition
 
@@ -111,6 +115,24 @@ class Book(models.Model):
     class Meta:
         ordering = ['title']
 
+
+@receiver(post_save, sender=Book)
+def qrcode_post_save(sender, instance, **kwargs):
+        if instance.qr_image:
+            return instance.qr_image
+        qr = QRCode(4, QRErrorCorrectLevel.L)
+        qr.addData(DOMAIN+reverse('books:book', kwargs={'pk': instance.id}))
+        qr.make()
+        image = qr.makeImage()
+        image_buffer = StringIO()
+        image.save(image_buffer, format='PNG')
+        image_buffer.seek(0)
+        file_name = 'QR_%s.png' % instance.id
+        file_object = File(image_buffer, file_name)
+        content_file = ContentFile(file_object.read())
+        instance.qr_image.save(file_name, content_file, save=True)
+
+
 class Book_Tag(models.Model):
     tags = models.Manager()
 
@@ -126,7 +148,6 @@ def get_users_books(self):
 auth.models.User.add_to_class('get_users_books', get_users_books)
 
 
-
 class Book_Request(models.Model): #SpaT_edition
     requests = models.Manager()
     user = models.ForeignKey(User, default=None, blank=True)
@@ -139,10 +160,10 @@ class Book_Request(models.Model): #SpaT_edition
         return '{0} {1}'.format(self.title, self.url)
 
 
-
 class Request_Return(models.Model):
     user_request = models.ForeignKey(User)
     book = models.ForeignKey(Book)
     time_request = models.DateTimeField(auto_now_add=True)
-    processing_time = models.DateTimeField(blank=True,null=True)
+    processing_time = models.DateTimeField(blank=True, null=True)
+
 
