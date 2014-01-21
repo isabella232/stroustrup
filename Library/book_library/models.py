@@ -12,6 +12,11 @@ from django.core.files.base import ContentFile
 from cStringIO import StringIO
 from django.core.urlresolvers import reverse
 from Library.main.settings import DOMAIN
+from django_xhtml2pdf.utils import generate_pdf
+from django.http import HttpResponse
+from django.shortcuts import render_to_response
+from django.template.response import TemplateResponse
+from django_xhtml2pdf.utils import generate_pdf_template_object
 
 
 class Client_Story_Record(models.Model):
@@ -72,6 +77,7 @@ class Book(models.Model):
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
     file = models.FileField(upload_to='book_files', blank=True)
     qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True)
+    book_table = models.FileField(upload_to='book_tables', null=True, blank=True)
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', related_name='books', default=None, blank=True) #SpaT_edition
 
@@ -131,7 +137,11 @@ def qrcode_post_save(sender, instance, **kwargs):
         file_object = File(image_buffer, file_name)
         content_file = ContentFile(file_object.read())
         instance.qr_image.save(file_name, content_file, save=True)
-
+        context = {'book': instance}
+        result = generate_pdf('book_card.html', context=context)
+        file_pdf = 'pdf_%s.pdf' % instance.id
+        file_object2 = File(result, file_pdf)
+        instance.book_table.save(file_pdf, file_object2, save=True)
 
 class Book_Tag(models.Model):
     tags = models.Manager()

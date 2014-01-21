@@ -6,6 +6,7 @@ from django.core.validators import RegexValidator, URLValidator
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from crispy_forms.bootstrap import PrependedText, InlineField
+from urllib2 import urlopen
 
 
 
@@ -20,7 +21,9 @@ class NameField(forms.CharField):
 
     def validate(self, value):
         if not value:
-            raise ValidationError(["Enter first name and last name with namespace. Every author shold be separated by comma from another author. Probably you wrote single (last or first) name."])
+            raise ValidationError(["Enter first name and last name with namespace. "
+                                   "Every author should be separated by comma from another author. "
+                                   "Probably you wrote single (last or first) name."])
 
 
 class TagField(forms.CharField):
@@ -42,7 +45,7 @@ class BookForm(ModelForm):
     helper.layout = Layout(PrependedText('isbn', '13 digits'),
                            Field('title', css_class='form-control'),
                            Field('e_version_exists', css_class='form-group'),
-                           Field('paperback_version_exists',css_class='form-group'),
+                           Field('paperback_version_exists', css_class='form-group'),
                            Field('description', rows="3", css_class='form-control',
                                  style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;"),
                            Field('picture', css_class='form-control'),
@@ -136,10 +139,10 @@ class SureForm(forms.Form):
 class SearchForm(forms.Form):
     busy = forms.BooleanField(label='Busy', required=False)
     free = forms.BooleanField(label='Free', required=False)
-    keywords = forms.CharField(label='Search',max_length=45)
+    keywords = forms.CharField(label='Search', max_length=45)
 
     helper = FormHelper()
-    helper.form_method='get'
+    helper.form_method = 'get'
     helper.form_class = "form-inline"
     helper.form_id = "search_form"
     helper.field_template = 'bootstrap3/layout/inline_field.html'
@@ -147,8 +150,7 @@ class SearchForm(forms.Form):
     helper.layout = Layout(InlineField('busy', css_class="search_box"),
                            InlineField('free', css_class="search_box"),
                            InlineField('keywords', wrapper_class="col-xs-5"),
-                           Submit('search','Search', css_class="btn btn-default")
-    )
+                           Submit('search', 'Search', css_class="btn btn-default"))
 
 
 class Book_UpdateForm(BookForm):
@@ -171,13 +173,13 @@ class Book_UpdateForm(BookForm):
                 Book.books.get(isbn=data)
             except Book.DoesNotExist:
                 return data
-            raise forms.ValidationError('This ISBN is already taken.')
+            else:
+                raise forms.ValidationError('This ISBN is already taken.')
 
 
 class Book_RequestForm(ModelForm): #SpaT_edition
     title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
-    url = forms.URLField(validators=URLValidator(verify_exists=True),
-                         widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
+    url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
     helper = FormHelper()
     helper.form_method = 'post'
     helper.form_class = "form-group row"
@@ -191,6 +193,13 @@ class Book_RequestForm(ModelForm): #SpaT_edition
     class Meta:
         model = Book_Request
         fields = ['title', 'url']
+
+    def clean_url(self):
+        try:
+            urlopen(self.cleaned_data['url'])
+        except:
+            raise forms.ValidationError('This URL is not available.')
+        return self.cleaned_data['url']
 
     def save(self, commit=True):   #Probably it's became useless
         if self.cleaned_data['url'] and self.cleaned_data['title']:

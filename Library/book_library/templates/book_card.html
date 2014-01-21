@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    {% load static %}
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/custom_styles.css' %}" rel="stylesheet" media="screen">
+</head>
+<body>
+    <div class="media">
+                <a class="pull-right">
+                    <img class="media-object" src="{{ book.qr_image.url }}" alt="qr" width="300" height="300">
+                </a>
+        <div class="media-body">
+            <h2 class="media-heading"><b>ISBN:</b> {{ book.isbn }} </h2>
+            <h2 class="media-heading"><b>Title:</b> {{ book.title }} </h2>
+        </div>
+</div>
+
+
+</body>
+</html>
