@@ -7,12 +7,11 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
 from django.core import mail
-from django.contrib.sites.models import RequestSite
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
 from pure_pagination.mixins import PaginationMixin
-from Library.main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE
+from Library.main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE, EMAIL_HOST_USER
 
 import json
 import math
@@ -107,6 +106,7 @@ class DeleteTag(Delete):
 class DeleteAuthor(Delete):
     model = Author
 
+
 class DeleteAuthor(Delete):
     model = Author
 
@@ -184,9 +184,9 @@ class BookListView(PaginationMixin, LoginRequiredView, ListView):
 
     def get_context_data(self, **kwargs):
         context = {}
-        context['object_list']=self.queryset
-        context['form']=self.form_class(self.request.GET)
-        context['busy']=self.busy
+        context['object_list'] = self.queryset
+        context['form'] = self.form_class(self.request.GET)
+        context['busy'] = self.busy
         return super(BookListView, self).get_context_data(**context)
 
 
@@ -207,13 +207,26 @@ class BookStoryListView(LoginRequiredView, ListView):
 
 @login_required()
 def ask_to_return(request, *args, **kwargs):
-    book = get_object_or_404(Book, id = request.GET['ID'])
+    book = get_object_or_404(Book, id=request.GET['ID'])
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:
-            request_return=Request_Return.objects.create(book=book , user_request=request.user)
-            request_return.save()
-            return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
+            if request.user.is_staff:
+                authors = u", ".join(unicode(v) for v in book.authors.all())
+                server_email = EMAIL_HOST_USER
+                email = mail.EmailMessage('Book return request', "Manager {0} ({1} {2}) is asking you to return "
+                                                                 "the book: ''{3}'' author(s): {4}."
+                                                                 " You can return it by click on this link: {5}{6}"
+                                                                 .format(request.user.username, request.user.first_name,
+                                                                         request.user.last_name, book.title,
+                                                                         authors, DOMAIN,
+                                                                         reverse('books:book', kwargs={'pk': book.id})),
+                                          server_email, [profile.email])
+                email.send()
+            else:
+                request_return = Request_Return.objects.create(book=book, user_request=request.user)
+                request_return.save()
+            return HttpResponse(content=json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
 
@@ -245,11 +258,10 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
     page = 1
     paginate_by = REQUEST_ON_PAGE
 
-
     def get_context_data(self, **kwargs):
         context = {}
-        context['object_list']=self.queryset
-        context['form']=self.get_form(self.form_class)
+        context['object_list'] = self.queryset
+        context['form'] = self.get_form(self.form_class)
         return super(requestBook, self).get_context_data(**context)
 
 
@@ -350,8 +362,8 @@ def rating_post(request, *args, **kwargs):
         return HttpResponse(content=json.dumps({
             'status': 'BAD_GATE',
             'score': request.GET['score'],
-            'msg': 'Unexpected error',
-            }, sort_keys=True))
+            'msg': 'Unexpected error'},
+            sort_keys=True))
     if value:
         for record in value:
             if record.user_owner.id == _user.id:

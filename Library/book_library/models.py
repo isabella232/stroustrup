@@ -66,7 +66,7 @@ class Book(models.Model):
     isbn = models.CharField(max_length=13, blank=True,
                             validators=[RegexValidator(regex="\d{13,13}", message="Please just 13 digits")],
                             )
-    title = models.CharField(max_length=45)
+    title = models.CharField(max_length=75)
     busy = models.BooleanField(default=False)
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
@@ -137,7 +137,8 @@ def qrcode_post_save(sender, instance, **kwargs):
         file_object = File(image_buffer, file_name)
         content_file = ContentFile(file_object.read())
         instance.qr_image.save(file_name, content_file, save=True)
-        context = {'book': instance}
+        authors = u", ".join(unicode(v) for v in instance.authors.all())
+        context = {'book': instance, 'authors': authors}
         result = generate_pdf('book_card.html', context=context)
         file_pdf = 'pdf_%s.pdf' % instance.id
         file_object2 = File(result, file_pdf)
