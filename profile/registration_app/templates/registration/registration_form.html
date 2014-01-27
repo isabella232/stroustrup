@@ -1,0 +1,30 @@
+{% extends '../../../../main/templates/main/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Crystalnix library: Welcome! {% endblock %}
+
+{% block content %}
+    {% load static %}
+        <h2 class="text-center">Please sign up</h2>
+
+        {% crispy form  %}
+
+
+    <div class="col-md-3"></div>
+    <div class="col-md-3">
+        <div class="help-block">
+            If you have an account:
+        </div>
+        <a href="{% url 'authorisation:auth_login'%}" class="btn btn-block btn-lg btn-primary">
+            Sign in! <span class="glyphicon glyphicon-hand-right"></span>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <div class="help-block">
+            If you have google account:
+        </div>
+        <a href="{% url 'openid-login' %}" class="btn btn-block btn-lg btn-primary">
+            Sign in via Google <span class="glyphicon glyphicon-search"></span>
+        </a>
+    </div>
+    <div class="col-md-3"></div>
+{% endblock %}
