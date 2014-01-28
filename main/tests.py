@@ -3,7 +3,7 @@ from django.test.client import Client
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 
-from Library.testbase import create_random_user, write_percentage, count_delta
+from testbase import create_random_user, write_percentage, count_delta
 
 
 class AvailabilityTests(TestCase):
