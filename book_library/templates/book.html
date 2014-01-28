@@ -1,4 +1,5 @@
 {% extends 'books_mainpage.html' %}
+{% load crispy_forms_tags %}
 {% block title %}{{ book.title }}{% endblock %}
 {% block location %}Book: {{ book.title }}{% endblock %}
 {% block link_extension %}
@@ -268,18 +269,20 @@
                     <div class="modal-footer">
                         <div class="row">
                             <div class="col-lg-6 pull-right">
-                                <div class="input-group">
-                                    <input id="input{{ book.id }}"
-                                           onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"
-                                           onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"
-                                           type="text" class="form-control">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary"
-                                                onclick="  comment({{ book.id }}, {{ user.pk }});">
-                                            Send! <span class="glyphicon glyphicon-envelope"></span>
-                                        </button>
-                                    </span>
-                                </div><!-- /input-group -->
+{#                                <div class="input-group">#}
+{#                                    <input id="input{{ book.id }}"#}
+{#                                           onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"#}
+{#                                           onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"#}
+{#                                           type="text" class="form-control">#}
+{#                                    <span class="input-group-btn">#}
+{#                                        <button type="button" class="btn btn-primary"#}
+{#                                                onclick="  comment({{ book.id }}, {{ user.pk }});">#}
+{#                                            Send! <span class="glyphicon glyphicon-envelope"></span>#}
+{#                                        </button>#}
+{#                                    </span>#}
+{#                                </div><!-- /input-group -->#}
+
+                            {% crispy form  %}
                             </div><!-- /.col-lg-6 -->
                         </div>
                     </div>

@@ -34,6 +34,25 @@ class LoginRequiredView(object):
         return super(LoginRequiredView, self).dispatch(request, *args, **kwargs)
 
 
+class AddView(StaffOnlyView, CreateView):
+
+    def get(self, request, *args, **kwargs):
+        return super(AddView, self).get(self, request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return super(AddView, self).post(self, request, *args, **kwargs)
+
+
+class AddRequestView(CreateView): #SpaT_edition
+    @method_decorator(login_required())
+    def get(self, request, *args, **kwargs):
+        return super(AddRequestView, self).get(self, request, *args, **kwargs)
+
+    @method_decorator(login_required())
+    def post(self, request, *args, **kwargs):
+        return super(AddRequestView, self).post(self, request, *args, **kwargs)
+
+
 class BookFormView(StaffOnlyView, FormView):
     form_class = BookForm
 
@@ -41,14 +60,31 @@ class BookFormView(StaffOnlyView, FormView):
         return super(BookFormView, self).get(self, request, *args, **kwargs)
 
 
-class BookView(LoginRequiredView, DetailView):
+class BookView(LoginRequiredView, DetailView, CreateView):
     model = Book
+    form_class = Book_CommentForm
+    # object=None
+
 
     def get_context_data(self, **kwargs):
         context = super(BookView, self).get_context_data()
         if context['book'].busy:
             context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
+        context['form'] = self.get_form(self.form_class)
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        try:
+            book = Book.books.get(id=int(kwargs['pk']))
+        except Book.DoesNotExist:
+            raise Http404
+        if request.POST and form.is_valid():
+            message = request.POST['comment']
+            comment = Book_Comment.comments.create(user=request.user, comment=message)
+            book.comments.add(comment)
+            return HttpResponseRedirect(reverse("books:book", args=[kwargs['pk']]))
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class TagView(LoginRequiredView, DetailView):
@@ -57,12 +93,6 @@ class TagView(LoginRequiredView, DetailView):
 
 class AuthorView(LoginRequiredView, DetailView):
     model = Author
-
-
-class AddView(StaffOnlyView, CreateView):
-
-    def get(self, request, *args, **kwargs):
-        return super(AddView, self).get(self, request, *args, **kwargs)
 
 
 class AuthorAdd(AddView):
@@ -129,7 +159,7 @@ def return_book_view(request, number, *args, **kwargs):
     if book.busy and books and book in books:
         book.return_by(client)
         book.save()
-        return HttpResponse(content= json.dumps({'message': 'Book returned'}))
+        return HttpResponse(content=json.dumps({'message': 'Book returned'}))
     return HttpResponseRedirect(reverse('book:list'))
 
 
@@ -204,11 +234,11 @@ class BookStoryListView(LoginRequiredView, ListView):
 
 @login_required()
 def ask_to_return(request, *args, **kwargs):
-    book = get_object_or_404(Book, id = request.GET['ID'])
+    book = get_object_or_404(Book, id=request.GET['ID'])
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:
-            request_return=Request_Return.objects.create(book=book , user_request=request.user)
+            request_return = Request_Return.objects.create(book=book, user_request=request.user)
             request_return.save()
             return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
@@ -228,16 +258,12 @@ class UsersView(PaginationMixin,LoginRequiredView, ListView):
         context['object_list']=self.queryset
         return super(UsersView, self).get_context_data(**context)
 
-class AddRequestView(CreateView): #SpaT_edition
-    @method_decorator(login_required())
-    def get(self, request, *args, **kwargs):
-        return super(AddRequestView, self).get(self, request, *args, **kwargs)
-
 
 class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
+    object_list = None
     queryset = Book_Request.requests.order_by('-id')
     page = 1
     paginate_by = REQUEST_ON_PAGE
@@ -250,7 +276,7 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
-        if request.POST and form.is_valid():
+        if form.is_valid():
             _url = request.POST['url']
             start_str = 'http'
             if not _url.startswith(start_str):
@@ -258,26 +284,8 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
             _title = request.POST['title']
             req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
             req.save()
-            return super(AddRequestView, self).get(request, *args, **kwargs)
-        return super(AddRequestView, self).get(request, *args, **kwargs)
-
-
-# class CommentAdd(AddView):
-#     model = Book_Comment
-#     form_class = Book_CommentForm
-#     template_name = 'book.html'
-#
-#     def form
-def CommentAdd(request, number, *args): #SpaT_edition
-    try:
-        book = Book.books.get(id=int(number))
-    except Book.DoesNotExist:
-        raise Http404
-    message = request.REQUEST.dicts[1]['Comment']
-    com = Book_Comment.comments.create(user=request.user, comment=message)
-    book.comments.add(com)
-    com.save()
-    return HttpResponseRedirect('../..')
+            return HttpResponseRedirect(reverse("books:request"))
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 def LikeRequest(request, number, *args): #SpaT_edition

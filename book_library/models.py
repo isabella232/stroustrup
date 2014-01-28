@@ -45,7 +45,7 @@ class Book_Comment(models.Model):
     user = models.ForeignKey(User, related_name="comment", default=0, blank=True)
 
     def __unicode__(self):
-        return self.user.username + ": " + self.comment
+        return "{0}: {1}".format(self.user.username, self.comment)
 
 
 class Book(models.Model):

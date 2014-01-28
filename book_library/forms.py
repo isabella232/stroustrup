@@ -208,3 +208,14 @@ class Book_CommentForm(ModelForm):
     class Meta:
         model = Book_Comment
         fields = ['comment']
+
+    helper = FormHelper()
+    helper.form_method = 'post'
+    helper.form_class = "form-group row"
+    helper.form_show_labels = False
+    helper.error_text_inline = True
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.layout = Layout(Field('comment', wrapper_class="pull-right"),
+                           Submit('send', 'Send!', css_class="btn  btn-success"))
+
+
