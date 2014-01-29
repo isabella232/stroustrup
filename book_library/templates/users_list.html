@@ -1,0 +1,95 @@
+{% extends 'books_mainpage.html' %}
+{% block title %}All Users.{% endblock %}
+{% block location %}Users page{% endblock %}
+
+{% block extensions %}
+    {% load static %}
+    <script>
+        $(document).ready((function(){
+            $('#users_bar').attr('class', 'active');
+        }));
+    </script>
+{% endblock %}
+
+{% block content %}
+{% load thumbnail %}
+        {% for user in object_list %}
+            {# ################# #}
+            <div class="panel panel-primary" id="user_panel_{{user.id}}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <a href="{% url "profile:profile" user.id %}" class="href">{{ user.username }}</a>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="media-list">
+
+
+                        <li class="media pull-left">
+                            {% if  user.get_profile.avatar %}
+
+                                    <a  href="{% url "profile:profile" user.id %}" class="pull-left">
+                                        <img class="media-object" src="{{ user.get_profile.avatar.avatar_size.url }}" alt="image">
+                                    </a>
+
+                            {% else %}
+                                    {% if user.is_staff%}
+                                            <a href="{% url "profile:profile" user.id %}" class="pull-left">
+                                                <img class="media-object" src="{%  static 'image/admin.jpg' %}" alt="Image">
+                                            </a>
+
+                                    {% else%}
+
+                                            <a href="{% url "profile:profile" user.id %}" class="pull-left">
+                                                <img class="media-object" src="{%  static 'image/user.jpeg' %}" alt="Image">
+                                            </a>
+                                    {% endif %}
+                            {% endif %}
+
+                        </li>
+                        <li class="media">
+                            {% if user.get_users_books %}
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th class="text-center">Title</th>
+                                        <th>Keeps</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for book in user.get_users_books %}
+                                            <tr>
+                                                <td>{{ book.id }}</td>
+
+                                                <td>
+                                                    <a class="btn btn-full-row text-left" href="{% url 'books:book' book.id  %}">
+                                                         {{ book.title }}
+                                                    </a>
+                                                </td>
+
+                                                <td class="success">{{ book.taken_about }} day(s)</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            {% else %}
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">
+                                        <h4> The backpack is empty. Yet.</h4>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+        {% endfor %}
+    {% include "pagination.html" %}
+{% endblock %}
+
+

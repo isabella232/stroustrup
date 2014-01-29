@@ -1,0 +1,160 @@
+{% extends 'books_mainpage.html' %}
+{% load crispy_forms_tags %}
+{% block title %}All books.{% endblock %}
+{% block location %}Books page{% endblock %}
+
+{% block extensions %}
+    {% load static %}
+    <script language="JavaScript" xmlns="http://www.w3.org/1999/html">
+        $(document).ready((function(){
+                        $('#books_bar').attr('class', 'active');
+                        $(".search_box").parent().click(function() {
+                            if ($(this).children().is(":checked"))
+                            {
+                                $(".search_box").prop("checked", false);
+                                $(this).children().prop("checked", true);
+                            }
+                            else $(this).children().prop("checked",false);
+                         });
+                        $('div.rating').rating();
+            }));
+    </script>
+{% endblock %}
+
+{% block filter %}
+    <div class="form-group" id="search">
+        {% if not search_flag %}
+            {% crispy form  %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    {% if object_list %}
+        {% for book in object_list %}
+            <div class="panel panel-primary" id="book_panel_{{book.id}}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span class="glyphicon glyphicon-link"></span>
+                        <a href="{% url "books:book" book.id %}" class="href">{{ book.title }}</a>
+
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="media-list">
+
+
+                        <li class="row">
+                            <div class="col-md-2">
+                            {% if  book.picture %}
+                                <a class="pull-left" href="{% url "books:book" book.id %}">
+                                    <img class="media-object" src="{{ book.picture.book_size.url }}" alt="image">
+                                </a>
+
+                            {% else %}
+
+                                <a  href="{% url "books:book" book.id %}">
+                                    <img class="media-object" src="{% static 'image/book_index.png' %}" alt="image">
+                                </a>
+
+                            {% endif %}
+                            </div>
+
+                            <div class="col-md-7" id="body_book">
+                                <div class="row">
+                                    <p>Authors <span class="glyphicon glyphicon-info-sign"></span><p>
+                                    <ul class="list-group">
+                                        {% for author in book.authors.all %}
+                                            <li class="list-group-item">
+                                                <a class="author" href="{% url "books:author" author.id %}">
+                                                    <span class="glyphicon glyphicon-chevron-right"></span> {{ author.first_name }} {{ author.last_name }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+
+                                    </ul>
+                                </div>
+
+                                <div class="row">
+                                    <p href="#tags{{ book.id }}" data-toggle="tab">Tags <span class="glyphicon glyphicon-tags"></span></p>
+
+                                    <div class="well well-lg">
+                                            {% for tag in book.tags.all %}
+
+                                                <a href="{% url 'books:tag' tag.id %}" class="tag">#{{ tag.tag }} </a>,
+
+                                            {% endfor %}
+
+                                        </div>
+
+                                </div>
+
+                            </div>
+
+
+                               <div class="col-md-3">
+                                    <div class="rating_{{ book.id }}">
+                                        <input type="hidden" class="val" value="{{ book.book_rating.common_rating }}"/>
+                                    </div>
+                               </div>
+                        </li>
+                        <hr/>
+                        <li>
+
+
+                            <h4 class="col-sm-offset-0">
+                                Status:
+                                {% if book.busy %}
+                                    {% ifequal user book.taken_by %}
+                                        <span class="label label-warning"> Mine </span>
+                                    {% else %}
+                                        <span class="label label-danger"> Busy </span>
+                                    {% endifequal %}
+                                {% else %}
+                                    <span class="label label-success"> Free </span>
+                                {% endif %}
+
+                            </h4>
+
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+
+            {# NEW EnD #}
+            <script>
+                var user_in_list_{{ book.id }}=false;
+                {%for elem in book.book_rating.all %}
+                    {% ifequal elem.user_owner.id user.id%}
+                        user_in_list_{{ book.id }}=true;
+
+                         {% endifequal %} {% endfor %}
+
+                $('div.rating_'+'{{ book.id }}').rating({{ book.id }}, '{{ book.common_rating}}', '{{ book.votes_amount}}', user_in_list_{{ book.id }});
+
+            </script>
+
+            {# ################# #}
+        {% endfor %}
+    {% else %}
+        <div class="col-md-4 col-md-offset-4">
+            <div class="panel panel-danger">
+                <div class="panel-heading"><span class="glyphicon glyphicon-remove-sign"></span> </div>
+                    <div class="panel-body">
+
+                Here are no books. Yet...
+
+
+
+                    </div>
+            </div>
+        </div>
+    {% endif %}
+    {% include "pagination.html" %}
+{% endblock %}
+
+
+
