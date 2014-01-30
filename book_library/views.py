@@ -63,15 +63,15 @@ class BookFormView(StaffOnlyView, FormView):
 class BookView(LoginRequiredView, DetailView, CreateView):
     model = Book
     form_class = Book_CommentForm
-    # object=None
-
+    object = None
 
     def get_context_data(self, **kwargs):
-        context = super(BookView, self).get_context_data()
+        context = {}
+        context['book'] = Book.books.get(pk=self.kwargs['pk'])
         if context['book'].busy:
-            context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
+            context['book_user'] = context['object'].client_story_record_set.latest('book_taken').user
         context['form'] = self.get_form(self.form_class)
-        return context
+        return super(BookView, self).get_context_data(**context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -113,7 +113,7 @@ class BookAdd(AddView):
 
 class BookUpdate(StaffOnlyView, UpdateView):
     model = Book
-    form_class = Book_UpdateForm
+    form_class = BookAdd
 
     def get(self, request, *args, **kwargs):
         return super(BookUpdate, self).get(self, request, *args, **kwargs)

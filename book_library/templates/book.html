@@ -23,17 +23,10 @@
                     <div class="col-md-1">
 
                                 {% if book.picture%}
-                                    <a TARGET="_blank" href="{{ book.picture.url }}" class="thumbnail">
-                                        <img data-src="holder.js/100%x320" src="{{ book.picture.book_profile.url }}" alt="Image">
-                                    </a>
-
+                                    <img class="thumbnail"  TARGET="_blank" data-src="holder.js/100%x320" src="{{ book.picture.book_profile.url }}" alt="Image">
                                 {% endif%}
                                 {% if not book.picture%}
-
-                                    <a  TARGET="_blank"  href="{% static 'image/book_index.png'%}" class="thumbnail">
-                                        <img data-src="holder.js/100%x180" src="{% static 'image/book_index.png' %}" alt="Image">
-                                    </a>
-
+                                    <img class="thumbnail" TARGET="_blank" data-src="holder.js/100%x320" src="{% static 'image/book_index.png' %}" alt="Image">
                                 {% endif %}
 
                                 {% if book.file %}
@@ -204,9 +197,7 @@
                             </div>
                             {% endif %}
                             <!-- Button trigger modal -->
-                            <a data-toggle="modal" href="#comments_{{book.id}}" class="btn btn-primary btn-lg">
-                                Comments <span class="glyphicon glyphicon-comment"></span>
-                            </a>
+
 
 
                             <a href=" {% url "books:list" current_page%}" class="btn btn-primary">
@@ -219,8 +210,6 @@
             </div>
         </div>
         <!--MODAL-->
-{#        <div class="modal fade" id="comments_{{ book.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
-{#            <div class="modal-dialog">#}
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Share your opinion:</h4>
@@ -269,20 +258,7 @@
                     <div class="modal-footer">
                         <div class="row">
                             <div class="col-lg-6 pull-right">
-{#                                <div class="input-group">#}
-{#                                    <input id="input{{ book.id }}"#}
-{#                                           onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"#}
-{#                                           onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"#}
-{#                                           type="text" class="form-control">#}
-{#                                    <span class="input-group-btn">#}
-{#                                        <button type="button" class="btn btn-primary"#}
-{#                                                onclick="  comment({{ book.id }}, {{ user.pk }});">#}
-{#                                            Send! <span class="glyphicon glyphicon-envelope"></span>#}
-{#                                        </button>#}
-{#                                    </span>#}
-{#                                </div><!-- /input-group -->#}
-
-                            {% crispy form  %}
+                                {% crispy form  %}
                             </div><!-- /.col-lg-6 -->
                         </div>
                     </div>

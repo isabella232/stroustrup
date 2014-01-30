@@ -1,4 +1,4 @@
 *.pyc
 .idea
 libarydb
-main/media/
+media/

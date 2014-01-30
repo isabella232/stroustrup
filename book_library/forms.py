@@ -20,6 +20,7 @@ class NameField(forms.CharField):
         if not value:
             raise ValidationError(["Enter first name and last name with namespace. Every author shold be separated by comma from another author. Probably you wrote single (last or first) name."])
 
+
 class TagField(forms.CharField):
 
     def to_python(self, value):
@@ -39,7 +40,7 @@ class BookForm(ModelForm):
     helper.layout = Layout(PrependedText('isbn', '13 digits'),
                            Field('title', css_class='form-control'),
                            Field('e_version_exists',css_class='form-group'),
-                           Field('paperback_version_exists',css_class='form-group'),
+                           Field('paperback_version_exists', css_class='form-group'),
                            Field('description', rows="3", css_class='form-control',
                                  style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;"),
                            Field('picture', css_class='form-control'),
@@ -204,6 +205,7 @@ class Book_RatingForm(ModelForm):
 
 
 class Book_CommentForm(ModelForm):
+    comment = forms.CharField(widget=forms.Textarea())
 
     class Meta:
         model = Book_Comment
@@ -211,11 +213,11 @@ class Book_CommentForm(ModelForm):
 
     helper = FormHelper()
     helper.form_method = 'post'
-    helper.form_class = "form-group row"
+    helper.form_class = "form-group"
     helper.form_show_labels = False
     helper.error_text_inline = True
     helper.field_template = 'bootstrap3/layout/inline_field.html'
-    helper.layout = Layout(Field('comment', wrapper_class="pull-right"),
+    helper.layout = Layout(Field('comment', rows="4", css_class='form-control'),
                            Submit('send', 'Send!', css_class="btn  btn-success"))
 
 
