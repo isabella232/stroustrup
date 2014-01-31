@@ -8,7 +8,7 @@ from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
 from django.core import mail
 from django.contrib.sites.models import RequestSite
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, Http404
 from django.db.models import Q
 from django.contrib.auth.models import User
 from pure_pagination.mixins import PaginationMixin
@@ -42,14 +42,31 @@ class BookFormView(StaffOnlyView, FormView):
         return super(BookFormView, self).get(self, request, *args, **kwargs)
 
 
-class BookView(LoginRequiredView, DetailView):
+class BookView(LoginRequiredView, DetailView, CreateView):
     model = Book
+    form_class = Book_CommentForm
+    object = None
 
     def get_context_data(self, **kwargs):
-        context = super(BookView, self).get_context_data()
+        context = {}
+        context['book'] = Book.books.get(pk=self.kwargs['pk'])
         if context['book'].busy:
-            context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
-        return context
+            context['book_user'] = context['object'].client_story_record_set.latest('book_taken').user
+        context['form'] = self.get_form(self.form_class)
+        return super(BookView, self).get_context_data(**context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        try:
+            book = Book.books.get(id=int(kwargs['pk']))
+        except Book.DoesNotExist:
+            raise Http404
+        if request.POST and form.is_valid():
+            message = request.POST['comment']
+            comment = Book_Comment.comments.create(user=request.user, comment=message)
+            book.comments.add(comment)
+            return HttpResponseRedirect(reverse("books:book", args=[kwargs['pk']]))
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class TagView(LoginRequiredView, DetailView):
@@ -267,24 +284,6 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
             req.save()
             return super(AddRequestView, self).get(request, *args, **kwargs)
         return super(AddRequestView, self).get(request, *args, **kwargs)
-
-
-def CommentAdd(request, number, *args): #SpaT_edition
-    queryset = Book.books.all()
-    number = int(number)
-    book = None
-    for _book in queryset:
-        if number == _book.id:
-            book = _book
-            break
-    if not book:
-        raise ValueError
-    message = request.REQUEST.dicts[1]['Comment']
-    _user = request.user
-    com = Book_Comment.comments.create(user=_user, comment=message)
-    book.comments.add(com)
-    com.save()
-    return HttpResponseRedirect('../..')
 
 
 def LikeRequest(request, number, *args): #SpaT_edition

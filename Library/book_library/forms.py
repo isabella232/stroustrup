@@ -50,7 +50,7 @@ class BookForm(ModelForm):
             Field('paperback_version_exists',css_class='form-group'),
             Field('description', rows="3", css_class='form-control', style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;" ),
             Field('picture', css_class='form-control'),
-            Field('file', css_class='form-control', style="> visibility:hidden"),
+            Field('file', css_class='form-control'),
             Field('authors_names', css_class='form-control'),
             Field('tag_field', css_class='form-group'),
             Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),
@@ -68,17 +68,26 @@ class BookForm(ModelForm):
             return data
         raise forms.ValidationError('This ISBN is already taken.')
 
-
-    def clean_file(self):
+    def clean(self):
+        cleaned_data = self.cleaned_data
         e_version_exists = self.cleaned_data['e_version_exists']
-        file = self.cleaned_data['file']
-        if e_version_exists and file:
-            return file
+        try:
+            file_book = self.cleaned_data['file']
+        except KeyError:
+            return cleaned_data
+        if (e_version_exists and (file_book is not None)) or (e_version_exists is False and (file_book is None)):
+            return cleaned_data
         else:
-            if e_version_exists and file:
-                raise forms.ValidationError('You select a file but not selected "E-version"')
+            if e_version_exists and (file_book is None):
+                msg = 'You select "E-version" but not selected a file.'
+                self._errors['file'] = self.error_class([msg])
+                del cleaned_data['file']
+                return cleaned_data
             else:
-                raise forms.ValidationError('You select "E-version" but not selected a file')
+                msg = 'You select a file but not selected "E-version".'
+                self._errors['file'] = self.error_class([msg])
+                del cleaned_data['file']
+                return cleaned_data
 
     class Meta:
         model = Book
