@@ -201,7 +201,6 @@ class Book_RequestForm(ModelForm): #SpaT_edition
             _url = self.cleaned_data['url']
             _title = self.cleaned_data['title']
             req = Book_Request.requests.create(url=_url, title=_title)
-            req.save()
             return req
         else:
             return super(Book_RequestForm, self).save(commit=True)

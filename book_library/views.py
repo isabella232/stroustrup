@@ -34,23 +34,10 @@ class LoginRequiredView(object):
         return super(LoginRequiredView, self).dispatch(request, *args, **kwargs)
 
 
-class AddView(StaffOnlyView, CreateView):
-
-    def get(self, request, *args, **kwargs):
-        return super(AddView, self).get(self, request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return super(AddView, self).post(self, request, *args, **kwargs)
-
-
 class AddRequestView(CreateView): #SpaT_edition
     @method_decorator(login_required())
-    def get(self, request, *args, **kwargs):
-        return super(AddRequestView, self).get(self, request, *args, **kwargs)
-
-    @method_decorator(login_required())
-    def post(self, request, *args, **kwargs):
-        return super(AddRequestView, self).post(self, request, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AddRequestView, self).dispatch(request, *args, **kwargs)
 
 
 class BookFormView(StaffOnlyView, FormView):
@@ -60,7 +47,7 @@ class BookFormView(StaffOnlyView, FormView):
         return super(BookFormView, self).get(self, request, *args, **kwargs)
 
 
-class BookView(LoginRequiredView, DetailView, CreateView):
+class BookView(LoginRequiredView, DetailView, CreateView, FormView):
     model = Book
     form_class = Book_CommentForm
     object = None
@@ -95,17 +82,17 @@ class AuthorView(LoginRequiredView, DetailView):
     model = Author
 
 
-class AuthorAdd(AddView):
+class AuthorAdd(StaffOnlyView, CreateView):
     model = Author
     form_class = AuthorForm
 
 
-class TagAdd(AddView):
+class TagAdd(StaffOnlyView, CreateView):
     model = Book_Tag
     form_class = Book_TagForm
 
 
-class BookAdd(AddView):
+class BookAdd(StaffOnlyView, CreateView):
     model = Book
     form_class = BookForm
     object = None
@@ -114,9 +101,6 @@ class BookAdd(AddView):
 class BookUpdate(StaffOnlyView, UpdateView):
     model = Book
     form_class = Book_UpdateForm
-
-    def get(self, request, *args, **kwargs):
-        return super(BookUpdate, self).get(self, request, *args, **kwargs)
 
 
 class Delete(StaffOnlyView, DeleteView):
@@ -135,6 +119,7 @@ class DeleteTag(Delete):
 
 class DeleteAuthor(Delete):
     model = Author
+
 
 class DeleteAuthor(Delete):
     model = Author
@@ -238,9 +223,8 @@ def ask_to_return(request, *args, **kwargs):
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:
-            request_return = Request_Return.objects.create(book=book, user_request=request.user)
-            request_return.save()
-            return HttpResponse(content= json.dumps({'message': 'Request has been sent'}))
+            Request_Return.objects.create(book=book, user_request=request.user)
+            return HttpResponse(content=json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
 
@@ -365,7 +349,6 @@ def rating_post(request, *args, **kwargs):
                 common = math.ceil(common*100)/100
                 book.book_rating.remove(record)
                 elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
-                elem.save()
                 book.book_rating.add(elem)
 
                 return HttpResponse(content=json.dumps({
