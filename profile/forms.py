@@ -29,12 +29,16 @@ class ProfileForm(ModelForm):
     helper.form_class = 'form-signin'
     helper.form_show_labels = False
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
         super(ProfileForm, self).__init__(*args, **kwargs)
-        if not self.is_bound and self.instance.pk:
-            profile = self.instance.get_profile()
+        self.fields['first_name'].initial = self.user.first_name
+        self.fields['last_name'].initial = self.user.last_name
+        self.fields['email'].initial = self.user.email
+        if not self.is_bound and self.user.pk:
+            profile = self.user.get_profile()
             self.fields['avatar'].initial = profile.avatar
-            cancel_url = reverse('profile:profile', kwargs={'pk': self.instance.pk})
+            cancel_url = reverse('profile:profile', kwargs={'pk': self.user.pk})
             self.helper.layout = Layout(Field('first_name'),
                                         Field('last_name'),
                                         Field('email'),
@@ -49,7 +53,11 @@ class ProfileForm(ModelForm):
                                         css_class='btn-group  btn-group-lg form-actions', id='id-action-form-change'))
 
     def save(self, commit=True):
-        profile = super(ProfileForm, self).save(commit)
+        profile = self.user
+        profile.first_name = self.cleaned_data['first_name']
+        profile.last_name = self.cleaned_data['last_name']
+        profile.email = self.cleaned_data['email']
+        profile.save()
         photo = self.cleaned_data['avatar']
         if photo is None:
             return profile
@@ -58,7 +66,6 @@ class ProfileForm(ModelForm):
             photo = None
         profile.get_profile().avatar = photo
         new_avatar = profile.get_profile()
-
         new_avatar.save()
         return profile
 
@@ -66,6 +73,6 @@ class ProfileForm(ModelForm):
 class ProfileFormAddition(ModelForm):
 
     class Meta:
-        model=Profile_addition
+        model = Profile_addition
 
 

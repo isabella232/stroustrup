@@ -158,18 +158,30 @@ body {
 
 }
 
+
 #id-action-form-change{
     width:300px;
 }
 
-#submit-id-save_changes_profile{
-    width: 150px;
+@media (min-width: 361px)  {
+    #submit-id-save_changes_profile{
+        width: 150px;
+    }
+
+    #button-id-cancel{
+        width: 150px;
+    }
 }
 
-#button-id-cancel{
-    width: 150px;
-}
+@media (max-width: 361px)  {
+    #submit-id-save_changes_profile{
+        width: 130px;
+    }
 
+    #button-id-cancel{
+        width: 130px;
+    }
+}
 .media-body{
     word-wrap: break-word;
 }
@@ -181,7 +193,7 @@ body {
     padding-bottom: 10px;
 }
 
-@media (max-width: 866px) and (min-width: 768px) {
+@media (max-width: 881px) and (min-width: 768px) {
   .navbar-brand {
     display: none;
   }

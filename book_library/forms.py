@@ -165,7 +165,7 @@ class Book_UpdateForm(BookForm):
 
         def clean_isbn(self):
             data = self.cleaned_data['isbn']
-            if data and self.instance.isbn == data:
+            if data == '' or self.instance.isbn == data:
                 return data
             try:
                 Book.books.get(isbn=data)
