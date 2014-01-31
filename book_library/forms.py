@@ -39,10 +39,9 @@ class BookForm(ModelForm):
     helper.form_class = 'form-group'
     helper.layout = Layout(PrependedText('isbn', '13 digits'),
                            Field('title', css_class='form-control'),
-                           Field('e_version_exists',css_class='form-group'),
+                           Field('e_version_exists', css_class='form-group'),
                            Field('paperback_version_exists', css_class='form-group'),
-                           Field('description', rows="3", css_class='form-control',
-                                 style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;"),
+                           Field('description', rows="3", css_class='form-control'),
                            Field('picture', css_class='form-control'),
                            Field('book_file', css_class='form-control'),
                            Field('authors_names', css_class='form-control'),
@@ -60,15 +59,27 @@ class BookForm(ModelForm):
         raise forms.ValidationError('This ISBN is already taken.')
 
     def clean(self):
+        cleaned_data = self.cleaned_data
         e_version_exists = self.cleaned_data['e_version_exists']
-        file_book = self.cleaned_data['book_file']
+        try:
+            file_book = self.cleaned_data['book_file']
+        except KeyError:
+            return cleaned_data
         if (e_version_exists and (file_book is not None)) or (e_version_exists is False and (file_book is None)):
-            return self.cleaned_data
+            return cleaned_data
         else:
             if e_version_exists and (file_book is None):
-                raise forms.ValidationError('You select "E-version" but not selected a file')
+                msg = 'You select "E-version" but not selected a file.'
+                self._errors['book_file'] = self.error_class([msg])
+                del cleaned_data['book_file']
+                return cleaned_data
             else:
-                raise forms.ValidationError('You select a file but not selected "E-version"')
+                msg = 'You select a file but not selected "E-version".'
+                self._errors['book_file'] = self.error_class([msg])
+                del cleaned_data['book_file']
+                return cleaned_data
+
+
 
     class Meta:
         model = Book
@@ -134,17 +145,15 @@ class SearchForm(forms.Form):
     keywords = forms.CharField(label='Search',max_length=45)
 
     helper = FormHelper()
-    helper.form_method='get'
+    helper.form_method = 'get'
     helper.form_class = "form-inline"
     helper.form_id = "search_form"
     helper.field_template = 'bootstrap3/layout/inline_field.html'
     helper.form_show_labels = False
-    helper.layout = Layout(
-            InlineField('busy', css_class="search_box"),
-            InlineField('free', css_class="search_box"),
-            InlineField('keywords', wrapper_class="col-xs-5"),
-            Submit('search','Search', css_class="btn btn-default")
-    )
+    helper.layout = Layout(InlineField('busy', css_class="search_box"),
+                           InlineField('free', css_class="search_box"),
+                           InlineField('keywords', wrapper_class="col-xs-5"),
+                           Submit('search', 'Search', css_class="btn btn-default"))
 
 
 class Book_UpdateForm(BookForm):
@@ -161,7 +170,7 @@ class Book_UpdateForm(BookForm):
 
         def clean_isbn(self):
             data = self.cleaned_data['isbn']
-            if data and self.instance.isbn == data:
+            if data == '' or self.instance.isbn == data:
                 return data
             try:
                 Book.books.get(isbn=data)
