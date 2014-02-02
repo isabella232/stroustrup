@@ -6,12 +6,14 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
+from django.core import mail
+from django.contrib.sites.models import RequestSite
+from django.shortcuts import get_object_or_404, Http404
 from django.db.models import Q
 from django.contrib.auth.models import User
-
 from pure_pagination.mixins import PaginationMixin
-from Library.main.settings import BOOKS_ON_PAGE,REQUEST_ON_PAGE,USERS_ON_PAGE
+from Library.main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE
+
 import json
 import math
 
@@ -40,14 +42,31 @@ class BookFormView(StaffOnlyView, FormView):
         return super(BookFormView, self).get(self, request, *args, **kwargs)
 
 
-class BookView(LoginRequiredView, DetailView):
+class BookView(LoginRequiredView, DetailView, CreateView):
     model = Book
+    form_class = Book_CommentForm
+    object = None
 
     def get_context_data(self, **kwargs):
-        context = super(BookView, self).get_context_data()
+        context = {}
+        context['book'] = Book.books.get(pk=self.kwargs['pk'])
         if context['book'].busy:
-            context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
-        return context
+            context['book_user'] = context['object'].client_story_record_set.latest('book_taken').user
+        context['form'] = self.get_form(self.form_class)
+        return super(BookView, self).get_context_data(**context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        try:
+            book = Book.books.get(id=int(kwargs['pk']))
+        except Book.DoesNotExist:
+            raise Http404
+        if request.POST and form.is_valid():
+            message = request.POST['comment']
+            comment = Book_Comment.comments.create(user=request.user, comment=message)
+            book.comments.add(comment)
+            return HttpResponseRedirect(reverse("books:book", args=[kwargs['pk']]))
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class TagView(LoginRequiredView, DetailView):
@@ -129,7 +148,7 @@ def return_book_view(request, number, *args, **kwargs):
         book.return_by(client)
         book.save()
         return HttpResponse(content= json.dumps({'message': 'Book returned'}))
-    return  HttpResponseRedirect(reverse('book:list'))
+    return HttpResponseRedirect(reverse('book:list'))
 
 
 class BookListView(PaginationMixin, LoginRequiredView, ListView):
@@ -174,7 +193,7 @@ class BookListView(PaginationMixin, LoginRequiredView, ListView):
                 query = query & Q(busy=False)
 
             if query:
-                self.queryset = Book.books.filter(query)
+                self.queryset = Book.books.filter(query).distinct()
         if self.kwargs['page']:
             self.page = int(self.kwargs['page'])
 
@@ -239,8 +258,8 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
-    queryset = Book_Request.requests.all()
-    page=1
+    queryset = Book_Request.requests.order_by('-id')
+    page = 1
     paginate_by = REQUEST_ON_PAGE
 
 
@@ -253,13 +272,13 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
 
 
     def post(self, request, *args, **kwargs):
-        form=self.form_class(request.POST)
+        form = self.form_class(request.POST)
         if request.POST and form.is_valid():
-            _url=request.POST['url']
-            start_str='http'
-            if(not _url.startswith(start_str)):
-                _url=start_str+'://'+_url
-            _title=request.POST['title']
+            _url = request.POST['url']
+            start_str = 'http'
+            if not _url.startswith(start_str):
+                _url = start_str+'://'+_url
+            _title = request.POST['title']
             req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
 
             req.save()
@@ -267,29 +286,11 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
         return super(AddRequestView, self).get(request, *args, **kwargs)
 
 
-def CommentAdd(request, number, *args): #SpaT_edition
-    queryset = Book.books.all()
-    number=int(number)
-    book = None
-    for _book in queryset:
-        if number == _book.id:
-            book = _book
-            break
-    if not book:
-        raise ValueError
-    message = request.REQUEST.dicts[1]['Comment']
-    _user = request.user
-    com = Book_Comment.comments.create(user=_user, comment=message)
-    book.comments.add(com)
-    com.save()
-    return HttpResponseRedirect('../..')
-
-
 def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
-    user=request.user
+    user = request.user
     result_vote = 0
-    all_users=[]
+    all_users = []
     for req in queryset:
 
         if req.id == int(number):
@@ -308,24 +309,24 @@ def LikeRequest(request, number, *args): #SpaT_edition
                 req.save()
 
                 for i in req.users.all():
-                   all_users.append(i.username)
+                    all_users.append(i.username)
 
                 break
 
-            req.vote+=1
+            req.vote += 1
             req.users.add(user)
             req.save()
             for i in req.users.all():
                     all_users.append(i.username)
-            result_vote=req.vote
+            result_vote = req.vote
             break
 
     return HttpResponse(content=json.dumps({
-        'status':'OK',
-        'vote':result_vote,
-        'listuser':all_users,
+        'status': 'OK',
+        'vote': result_vote,
+        'listuser': all_users,
 
-        }, sort_keys = True))
+        }, sort_keys=True))
 
 def rating_post(request, *args, **kwargs):
     number = int(args[0])
@@ -346,32 +347,32 @@ def rating_post(request, *args, **kwargs):
         value = book.book_rating.all()
     except Exception:
         return HttpResponse(content=json.dumps({
-            'status':'BAD_GATE',
+            'status': 'BAD_GATE',
             'score': request.GET['score'],
             'msg': 'Unexpected error',
-            }, sort_keys = True))
-    if (value):
+            }, sort_keys=True))
+    if value:
         for record in value:
             if record.user_owner.id == _user.id:
-                _votes-=1
-                if _votes>1:
+                _votes -= 1
+                if _votes > 1:
                     common = float(request.GET['val'])-record.user_rating/_votes
                 else:
-                    common=0
+                    common = 0
                 common += _rate/_votes
                 common = math.ceil(common*100)/100
                 book.book_rating.remove(record)
-                elem = Book_Rating.rating_manager.create(user_owner = _user, user_rating = _rate, common_rating = common, votes = _votes)
+                elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
                 elem.save()
                 book.book_rating.add(elem)
 
                 return HttpResponse(content=json.dumps({
-                    'status':'CHANGED',
+                    'status': 'CHANGED',
                     'score': request.GET['score'],
                     'votes': request.GET['votes'],
                     'val': common,
                     'msg': 'Your vote has been changed',
-                    }, sort_keys = True))
+                    }, sort_keys=True))
 
 
     common = (float(request.GET['val'])*(_votes-1)+_rate)/_votes

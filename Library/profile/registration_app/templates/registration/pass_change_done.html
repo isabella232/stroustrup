@@ -1,0 +1,31 @@
+{% extends 'profilebase.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Profile{% endblock %}
+{%  block location %} Your Profile {% endblock %}
+
+{% block link_extension %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/book_index.css' %}"/>
+
+{% endblock %}
+
+{% block content %}
+  <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">Success!</div>
+            <div class="panel-body">
+
+                <h3>Password change successful</h3>
+                Your password was changed.
+                <a href="{% url 'profile:profile' user.id %}" class="btn btn-primary pull-right">
+                    Back <span class="glyphicon glyphicon-hand-left"></span>
+                 </a>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block extensions %}
+
+{% endblock %}

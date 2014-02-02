@@ -7,8 +7,8 @@ from django.test.client import Client
 from django.test.client import RequestFactory
 from django.contrib.auth import authenticate
 
-from testbase import create_random_user, write_percentage, count_delta, random_string
-from book_library.views import *
+from Library.testbase import create_random_user, write_percentage, count_delta, random_string
+from Library.book_library.views import *
 
 MAX_NUMBER_OF_AUTHORS = 50
 
@@ -193,8 +193,12 @@ class FormsTests(TestCase):
                 was_error = True
             else:
                 title = random_string(size=(random.randint(1, 45)))
-            e_version_exists = random.randint(0, 1)
+            e_version_exists = 0
             paperback_version_exists = random.randint(0, 1)
+            # if e_version_exists ==0:
+            #     file = None
+            # else:
+            #     file = 'file'
             description = random_string(size=random.randint(1, MAX_LENGTH_OF_DESCRIPTION), chars=string.printable)
             if will_be_an_error and (random.randint(0, 1) or not was_error):
                 authors = random_string(size=random.randint(1, 90), chars=string.letters)
@@ -204,11 +208,12 @@ class FormsTests(TestCase):
             #     tags = random_string(size=random.randint(1, 90), chars=string.letters)
             # else:
             #     tags = random_string(size=random.randint(1, MAX_LENGTH_OF_TAGS), chars=string.printable)
-            form_context =  {'title': title,
-                             'e_version_exists': e_version_exists,
-                             'paperback_version_exists': paperback_version_exists,
-                             'description': description,
-                             'authors_names': authors}
+            form_context = {'title': title,
+                            'e_version_exists': e_version_exists,
+                            'paperback_version_exists': paperback_version_exists,
+                            'description': description,
+                            'file': file,
+                            'authors_names': authors}
             if there_is_isbn:
                 form_context['isbn'] = isbn
             request = self.client.post(reverse('books:add'), form_context)
@@ -383,3 +388,6 @@ class SpecialCaseTests(TestCase):
             self.assertTrue(not book.busy and (book not in user2[0].get_users_books()))
 
             self.client.logout()
+
+    # def test_request_book_post(self):
+

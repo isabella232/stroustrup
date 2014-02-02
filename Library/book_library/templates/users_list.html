@@ -1,4 +1,4 @@
-{% extends 'book_library/books_mainpage.html' %}
+{% extends 'books_mainpage.html' %}
 {% block title %}All Users.{% endblock %}
 {% block location %}Users page{% endblock %}
 
@@ -41,7 +41,7 @@
 
                                     {% else%}
 
-                                            <a href="{%  static 'image/user.jpeg' %}" class="pull-left">
+                                            <a href="{% url "profile:profile" user.id %}" class="pull-left">
                                                 <img class="media-object" src="{%  static 'image/user.jpeg' %}" alt="Image">
                                             </a>
                                     {% endif %}
@@ -89,7 +89,7 @@
 
             </div>
         {% endfor %}
-    {% include "book_library/pagination.html"  %}
+    {% include "pagination.html" %}
 {% endblock %}
 
 

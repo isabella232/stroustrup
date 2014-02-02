@@ -5,8 +5,8 @@ from django.test import TestCase
 from django.test.client import Client
 from django.test.client import RequestFactory
 
-from testbase import create_random_user, write_percentage, count_delta
-from book_library.views import *
+from Library.testbase import create_random_user, write_percentage, count_delta
+from Library.book_library.views import *
 
 MAX_NUMBER_OF_ADMINS = 6
 
@@ -24,7 +24,7 @@ class RestrictionsTests(TestCase):
             user[0].is_staff = True
             user[0].save()
             self.admins.append(user)
-        urls_to_test = ['profile:all',]
+        urls_to_test = ['profile:all']
         for user in User.objects.all():
             urls_to_test.append((('profile:profile', user.pk)))
             urls_to_test.append((('profile:change', user.pk)))
@@ -85,4 +85,16 @@ class RestrictionsTests(TestCase):
                     self.assertEqual(request.status_code, 200)
                 else:
                     self.assertEqual(request.status_code, 302)
+            self.client.logout()
+
+    def test_profile_change_post_request(self):
+        for user in self.users:
+            self.client.login(username=user[0].username, password=user[1])
+            request = self.client.post(reverse('profile:change', kwargs={'pk': user[0].pk}),
+                                       {'first_name': user[0].first_name,
+                                        'last_name': user[0].last_name,
+                                        'email': user[0].email,
+                                        'avatar': None}
+            )
+            self.assertEqual(request.status_code, 302)
             self.client.logout()

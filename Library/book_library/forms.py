@@ -37,7 +37,7 @@ class TagField(forms.CharField):
 
 class BookForm(ModelForm):
     authors_names = NameField(max_length=100, label="Add authors full names (to separate use a comma):")
-    tag_field = TagField(max_length=50, label = 'Add tags (to separate use a comma):', required=False)
+    tag_field = TagField(max_length=50, label='Add tags (to separate use a comma):', required=False)
     e_version_exists = forms.BooleanField(label='E-version', required=False)
     paperback_version_exists = forms.BooleanField(label='Paper version', required=False)
 
@@ -66,8 +66,28 @@ class BookForm(ModelForm):
             Book.books.get(isbn= data)
         except Book.DoesNotExist:
             return data
-        raise  forms.ValidationError('This ISBN is already taken.')
+        raise forms.ValidationError('This ISBN is already taken.')
 
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        e_version_exists = self.cleaned_data['e_version_exists']
+        try:
+            file_book = self.cleaned_data['file']
+        except KeyError:
+            return cleaned_data
+        if (e_version_exists and (file_book is not None)) or (e_version_exists is False and (file_book is None)):
+            return cleaned_data
+        else:
+            if e_version_exists and (file_book is None):
+                msg = 'You select "E-version" but not selected a file.'
+                self._errors['file'] = self.error_class([msg])
+                del cleaned_data['file']
+                return cleaned_data
+            else:
+                msg = 'You select a file but not selected "E-version".'
+                self._errors['file'] = self.error_class([msg])
+                del cleaned_data['file']
+                return cleaned_data
 
     class Meta:
         model = Book
@@ -143,7 +163,7 @@ class SearchForm(forms.Form):
     helper.form_class = "form-inline"
     helper.form_id = "search_form"
     helper.field_template = 'bootstrap3/layout/inline_field.html'
-    helper.form_show_labels=False
+    helper.form_show_labels = False
     helper.layout = Layout(
             InlineField('busy', css_class="search_box"),
             InlineField('free', css_class="search_box"),
@@ -176,20 +196,19 @@ class Book_UpdateForm(BookForm):
             raise forms.ValidationError('This ISBN is already taken.')
 
 
-
 class Book_RequestForm(ModelForm): #SpaT_edition
-    title=forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
-    url=forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
+    url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Paste URL here'}))
     helper = FormHelper()
-    helper.form_method='post'
+    helper.form_method = 'post'
     helper.form_class = "form-group row"
-    helper.form_show_labels=False
-    helper.error_text_inline=True
+    helper.form_show_labels = False
+    helper.error_text_inline = True
     helper.field_template = 'bootstrap3/layout/inline_field.html'
     helper.layout = Layout(
             Field('title',wrapper_class="col-xs-5"),
             Field('url',wrapper_class="col-xs-5"),
-            Submit('send','Send!',css_class="btn  btn-success col-md-2")
+            Submit('send', 'Send!', css_class="btn  btn-success col-md-2")
     )
 
     class Meta:
@@ -201,8 +220,8 @@ class Book_RequestForm(ModelForm): #SpaT_edition
 
     def save(self, commit=True):   #Probably it's became useless
         if self.cleaned_data['url'] and self.cleaned_data['title']:
-            _url=self.cleaned_data['url']
-            _title=self.cleaned_data['title']
+            _url = self.cleaned_data['url']
+            _title = self.cleaned_data['title']
             req = Book_Request.requests.create(url=_url, title=_title)
             req.save()
             return req
