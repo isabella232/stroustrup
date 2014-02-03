@@ -7,7 +7,7 @@ from django.contrib import auth
 from easy_thumbnails.fields import ThumbnailerImageField
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from PyQRNative import *
+import qrcode
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
@@ -122,12 +122,15 @@ class Book(models.Model):
 def qrcode_post_save(sender, instance, **kwargs):
         if instance.qr_image:
             return instance.qr_image
-        qr = QRCode(4, QRErrorCorrectLevel.L)
-        qr.addData(settings.DOMAIN+reverse('books:book', kwargs={'pk': instance.id}))
-        qr.make()
-        image = qr.makeImage()
+        qr = qrcode.QRCode(version=1,
+                           error_correction=qrcode.constants.ERROR_CORRECT_L,
+                           box_size=10,
+                           border=4)
+        qr.add_data(settings.DOMAIN+reverse('books:book', kwargs={'pk': instance.id}))
+        qr.make(fit=True)
+        image = qr.make_image()
         image_buffer = StringIO()
-        image.save(image_buffer, format='PNG')
+        image.save(image_buffer, 'PNG')
         image_buffer.seek(0)
         file_name = 'QR_%s.png' % instance.id
         file_object = File(image_buffer, file_name)

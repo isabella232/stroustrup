@@ -271,3 +271,7 @@ LOGGING = {
 
 #DATABASES['default'] =  dj_database_url.config(default='postgres://user:pass@localhost/dbname')
 
+try:
+    from local_settings import *
+except ImportError:
+    pass
