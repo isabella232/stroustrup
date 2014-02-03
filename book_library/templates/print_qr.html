@@ -1,5 +1,4 @@
 
-
 {% extends 'books_mainpage.html' %}
 {% load crispy_forms_tags %}
 {% block title %}Add book page{% endblock %}
@@ -24,7 +23,6 @@
 
 
                    {% crispy form  %}
-                    <br/>
                     <a class="btn btn-lg btn-block btn-danger" href="{% url 'books:list' %}">
                     Cancel
                     </a>

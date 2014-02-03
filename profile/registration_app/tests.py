@@ -10,7 +10,9 @@ from django.test.client import RequestFactory
 from registration.models import RegistrationProfile
 
 from testbase import create_random_user, write_percentage, count_delta, random_string
-from Library.book_library.views import *
+
+from book_library.views import *
+
 
 os.environ['RECAPTCHA_TESTING'] = 'True'  # read https://pypi.python.org/pypi/django-recaptcha
 

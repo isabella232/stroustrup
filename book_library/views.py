@@ -9,7 +9,7 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
 from django.core import mail
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, Http404
 from django.db.models import Q
 from django.contrib.auth.models import User
 from pure_pagination.mixins import PaginationMixin
@@ -17,6 +17,7 @@ from main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE, EMAIL_H
 from book_library.forms import *
 from book_library.models import *
 from django_xhtml2pdf.utils import generate_pdf
+
 
 
 class StaffOnlyView(object):
@@ -33,6 +34,12 @@ class LoginRequiredView(object):
         return super(LoginRequiredView, self).dispatch(request, *args, **kwargs)
 
 
+class AddRequestView(CreateView): #SpaT_edition
+    @method_decorator(login_required())
+    def dispatch(self, request, *args, **kwargs):
+        return super(AddRequestView, self).dispatch(request, *args, **kwargs)
+
+
 class BookFormView(StaffOnlyView, FormView):
     form_class = BookForm
 
@@ -40,14 +47,32 @@ class BookFormView(StaffOnlyView, FormView):
         return super(BookFormView, self).get(self, request, *args, **kwargs)
 
 
-class BookView(LoginRequiredView, DetailView):
+
+class BookView(LoginRequiredView, DetailView, FormView):
     model = Book
+    form_class = Book_CommentForm
+    object = None
 
     def get_context_data(self, **kwargs):
-        context = super(BookView, self).get_context_data()
+        context = {}
+        context['book'] = Book.books.get(pk=self.kwargs['pk'])
         if context['book'].busy:
-            context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
-        return context
+            context['book_user'] = context['object'].client_story_record_set.latest('book_taken').user
+        context['form'] = self.get_form(self.form_class)
+        return super(BookView, self).get_context_data(**context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        try:
+            book = Book.books.get(id=int(kwargs['pk']))
+        except Book.DoesNotExist:
+            raise Http404
+        if request.POST and form.is_valid():
+            message = request.POST['comment']
+            comment = Book_Comment.comments.create(user=request.user, comment=message)
+            book.comments.add(comment)
+            return HttpResponseRedirect(reverse("books:book", args=[kwargs['pk']]))
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class TagView(LoginRequiredView, DetailView):
@@ -58,23 +83,17 @@ class AuthorView(LoginRequiredView, DetailView):
     model = Author
 
 
-class AddView(StaffOnlyView, CreateView):
-
-    def get(self, request, *args, **kwargs):
-        return super(AddView, self).get(self, request, *args, **kwargs)
-
-
-class AuthorAdd(AddView):
+class AuthorAdd(StaffOnlyView, CreateView):
     model = Author
     form_class = AuthorForm
 
 
-class TagAdd(AddView):
+class TagAdd(StaffOnlyView, CreateView):
     model = Book_Tag
     form_class = Book_TagForm
 
 
-class BookAdd(AddView):
+class BookAdd(StaffOnlyView, CreateView):
     model = Book
     form_class = BookForm
     object = None
@@ -83,9 +102,6 @@ class BookAdd(AddView):
 class BookUpdate(StaffOnlyView, UpdateView):
     model = Book
     form_class = Book_UpdateForm
-
-    def get(self, request, *args, **kwargs):
-        return super(BookUpdate, self).get(self, request, *args, **kwargs)
 
 
 class Delete(StaffOnlyView, DeleteView):
@@ -127,8 +143,6 @@ class BookListView(PaginationMixin, LoginRequiredView, ListView):
     form_class = SearchForm
     page = 1
     paginate_by = BOOKS_ON_PAGE
-
-
 
     def get_queryset(self):
         self.queryset = Book.books.all()
@@ -211,8 +225,7 @@ def ask_to_return(request, *args, **kwargs):
                                           server_email, [profile.email])
                 email.send()
             else:
-                request_return = Request_Return.objects.create(book=book, user_request=request.user)
-                request_return.save()
+                Request_Return.objects.create(book=book, user_request=request.user)
             return HttpResponse(content=json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
@@ -231,16 +244,12 @@ class UsersView(PaginationMixin, LoginRequiredView, ListView):
         context['object_list']=self.queryset
         return super(UsersView, self).get_context_data(**context)
 
-class AddRequestView(CreateView): #SpaT_edition
-    @method_decorator(login_required())
-    def get(self, request, *args, **kwargs):
-        return super(AddRequestView, self).get(self, request, *args, **kwargs)
 
-
-class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
+class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
     model = Book_Request
     form_class = Book_RequestForm
     object = None
+    object_list = None
     queryset = Book_Request.requests.order_by('-id')
     page = 1
     paginate_by = REQUEST_ON_PAGE
@@ -251,39 +260,19 @@ class requestBook(PaginationMixin,AddRequestView,ListView): #SpaT_edition
         context['form'] = self.get_form(self.form_class)
         return super(requestBook, self).get_context_data(**context)
 
-
-
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
-        if request.POST and form.is_valid():
+        if form.is_valid():
             _url = request.POST['url']
             start_str = 'http'
             if not _url.startswith(start_str):
                 _url = start_str+'://'+_url
             _title = request.POST['title']
             req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
-
             req.save()
-            return super(AddRequestView, self).get(request, *args, **kwargs)
-        return super(AddRequestView, self).get(request, *args, **kwargs)
+            return HttpResponseRedirect(reverse("books:request"))
+        return self.render_to_response(self.get_context_data(form=form))
 
-
-def CommentAdd(request, number, *args): #SpaT_edition
-    queryset = Book.books.all()
-    number = int(number)
-    book = None
-    for _book in queryset:
-        if number == _book.id:
-            book = _book
-            break
-    if not book:
-        raise ValueError
-    message = request.REQUEST.dicts[1]['Comment']
-    _user = request.user
-    com = Book_Comment.comments.create(user=_user, comment=message)
-    book.comments.add(com)
-    com.save()
-    return HttpResponseRedirect('../..')
 
 
 def LikeRequest(request, number, *args): #SpaT_edition
@@ -363,7 +352,6 @@ def rating_post(request, *args, **kwargs):
                 common = math.ceil(common*100)/100
                 book.book_rating.remove(record)
                 elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
-                elem.save()
                 book.book_rating.add(elem)
 
                 return HttpResponse(content=json.dumps({'status': 'CHANGED',

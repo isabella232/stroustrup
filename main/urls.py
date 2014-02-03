@@ -5,10 +5,9 @@ from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic.base import TemplateView
 import views
-import settings
+from django.conf import settings
 from profile.registration_app.forms import CustomAuthForm
 from profile.registration_app.views import *
-
 
 dajaxice_autodiscover()
 

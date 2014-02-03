@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from crispy_forms.bootstrap import PrependedText, InlineField
-
 from book_library.models import Book, Book_Tag, Author, Book_Request, Book_Comment, Book_Rating
 
 
@@ -22,6 +21,7 @@ class NameField(forms.CharField):
             raise ValidationError(["Enter first name and last name with namespace. "
                                    "Every author should be separated by comma from another author. "
                                    "Probably you wrote single (last or first) name."])
+
 
 
 class TagField(forms.CharField):
@@ -44,14 +44,12 @@ class BookForm(ModelForm):
                            Field('title', css_class='form-control'),
                            Field('e_version_exists', css_class='form-group'),
                            Field('paperback_version_exists', css_class='form-group'),
-                           Field('description', rows="3", css_class='form-control',
-                                 style="max-width: 100%; margin: 0px; width: 1489px; height: 74px;"),
+                           Field('description', rows="3", css_class='form-control'),
                            Field('picture', css_class='form-control'),
                            Field('book_file', css_class='form-control'),
                            Field('authors_names', css_class='form-control'),
                            Field('tag_field', css_class='form-group'),
-                           Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'),
-                           )
+                           Submit('save_changes', 'Save', css_class='btn btn-lg btn-block btn-success form-group'))
 
     def clean_isbn(self):
         data = self.cleaned_data['isbn']
@@ -63,16 +61,27 @@ class BookForm(ModelForm):
             return data
         raise forms.ValidationError('This ISBN is already taken.')
 
-    def clean_file(self):
+    def clean(self):
+        cleaned_data = self.cleaned_data
         e_version_exists = self.cleaned_data['e_version_exists']
-        file_book = self.cleaned_data['book_file']
+        try:
+            file_book = self.cleaned_data['book_file']
+        except KeyError:
+            return cleaned_data
         if (e_version_exists and (file_book is not None)) or (e_version_exists is False and (file_book is None)):
-            return file_book
+            return cleaned_data
         else:
             if e_version_exists and (file_book is None):
-                raise forms.ValidationError('You select "E-version" but not selected a file')
+                msg = 'You select "E-version" but not selected a file.'
+                self._errors['book_file'] = self.error_class([msg])
+                del cleaned_data['book_file']
+                return cleaned_data
             else:
-                raise forms.ValidationError('You select a file but not selected "E-version"')
+                msg = 'You select a file but not selected "E-version".'
+                self._errors['book_file'] = self.error_class([msg])
+                del cleaned_data['book_file']
+                return cleaned_data
+
 
     class Meta:
         model = Book
@@ -84,7 +93,6 @@ class BookForm(ModelForm):
         book = super(BookForm, self).save(commit)
         book.authors.clear()
         book.tags.clear()
-
         for author in authors:
         # all inputs checks to belong to db
         # if such input not exists then it creates
@@ -101,7 +109,6 @@ class BookForm(ModelForm):
             if not flag:
                 new_author, created = Author.authors.get_or_create(first_name=author[0], last_name=author[1])
             book.authors.add(new_author)
-
         for _tag in tags:
         #as same as authors
             new_tag = None
@@ -204,7 +211,6 @@ class Book_RequestForm(ModelForm): #SpaT_edition
             _url = self.cleaned_data['url']
             _title = self.cleaned_data['title']
             req = Book_Request.requests.create(url=_url, title=_title)
-            req.save()
             return req
         else:
             return super(Book_RequestForm, self).save(commit=True)
@@ -217,10 +223,20 @@ class Book_RatingForm(ModelForm):
 
 
 class Book_CommentForm(ModelForm):
+    comment = forms.CharField(widget=forms.Textarea())
 
     class Meta:
         model = Book_Comment
         fields = ['comment']
+
+    helper = FormHelper()
+    helper.form_method = 'post'
+    helper.form_class = "form-group"
+    helper.form_show_labels = False
+    helper.error_text_inline = True
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.layout = Layout(Field('comment', rows="4", css_class='form-control'),
+                           Submit('send', 'Send!', css_class="btn  btn-success"))
 
 
 class PrintQRcodesForm(forms.Form):
@@ -228,5 +244,9 @@ class PrintQRcodesForm(forms.Form):
 
     helper = FormHelper()
     helper.form_method = 'post'
+    helper.form_class = "form-group"
+    helper.form_show_labels = False
+    helper.error_text_inline = True
     helper.layout = Layout(Field('books', wrapper_class="form-group"),
                            Submit('print', 'Print!', css_class="btn btn-lg btn-block btn-success form-group"))
+

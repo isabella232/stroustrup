@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from book_library.views import LoginRequiredView
-from profile import forms
+import forms
 
 
 class ProfileView(LoginRequiredView, DetailView):
@@ -19,7 +19,8 @@ class ProfileView(LoginRequiredView, DetailView):
 
 @csrf_protect
 @login_required
-def profile_change(request, post_change_redirect=None):
+def profile_change(request):
+
     template_name = 'profile_change.html'
     profile_change_form = forms.ProfileForm
     post_change_redirect = reverse("profile:profile", args=str(request.user.pk))

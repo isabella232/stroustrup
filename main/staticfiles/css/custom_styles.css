@@ -198,3 +198,13 @@ body {
     display: none;
   }
 }
+
+textarea { resize:none; }
+
+#id_description{
+    max-width: 100%;
+    margin: 0px;
+    width: 1489px;
+    height: 74px;
+}
+

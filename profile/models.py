@@ -14,6 +14,3 @@ class Profile_addition(models.Model):
 def create_profile_addition(sender, instance, created, **kwargs):
     if created:
         profile, created = Profile_addition.objects.get_or_create(user=instance)
-
-
-
