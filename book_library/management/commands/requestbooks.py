@@ -1,15 +1,12 @@
 __author__ = 'romanusynin'
-from datetime import datetime
-
+from book_library.models import Request_Return
 from django.core.management.base import NoArgsCommand
 from django.conf import settings
+from datetime import datetime
 from django.core.mail import EmailMessage
-
-from book_library.models import Request_Return
 
 
 class Command(NoArgsCommand):
-
 
         def handle(self, *args, **options):
             query = Request_Return.objects.order_by("book__id", "id").distinct('book')

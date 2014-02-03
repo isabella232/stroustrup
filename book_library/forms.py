@@ -79,8 +79,6 @@ class BookForm(ModelForm):
                 del cleaned_data['book_file']
                 return cleaned_data
 
-
-
     class Meta:
         model = Book
         exclude = ['busy', 'users', 'authors', 'tags', 'book_rating', 'comments']

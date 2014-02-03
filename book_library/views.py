@@ -9,11 +9,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, Http404
 from django.db.models import Q
 from django.contrib.auth.models import User
 from pure_pagination.mixins import PaginationMixin
-from django.http import Http404
 
 from main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE
 from forms import *
@@ -47,7 +46,8 @@ class BookFormView(StaffOnlyView, FormView):
         return super(BookFormView, self).get(self, request, *args, **kwargs)
 
 
-class BookView(LoginRequiredView, DetailView, CreateView, FormView):
+
+class BookView(LoginRequiredView, DetailView, FormView):
     model = Book
     form_class = Book_CommentForm
     object = None
@@ -270,6 +270,7 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
             req.save()
             return HttpResponseRedirect(reverse("books:request"))
         return self.render_to_response(self.get_context_data(form=form))
+
 
 
 def LikeRequest(request, number, *args): #SpaT_edition
