@@ -1,6 +1,5 @@
-
-
 {% extends 'books_mainpage.html' %}
+{% load crispy_forms_tags %}
 {% block title %}{{ book.title }}{% endblock %}
 {% block location %}Book: {{ book.title }}{% endblock %}
 {% block link_extension %}
@@ -24,17 +23,10 @@
                     <div class="col-md-1">
 
                                 {% if book.picture%}
-                                    <a TARGET="_blank" href="{{ book.picture.url }}" class="thumbnail">
-                                        <img data-src="holder.js/100%x320" src="{{ book.picture.book_profile.url }}" alt="Image">
-                                    </a>
-
+                                    <img class="thumbnail"  TARGET="_blank" data-src="holder.js/100%x320" src="{{ book.picture.book_profile.url }}" alt="Image">
                                 {% endif%}
                                 {% if not book.picture%}
-
-                                    <a  TARGET="_blank"  href="{% static 'image/book_index.png'%}" class="thumbnail">
-                                        <img data-src="holder.js/200%x320" src="{% static 'image/book_index.png' %}" alt="Image">
-                                    </a>
-
+                                    <img class="thumbnail" TARGET="_blank" data-src="holder.js/100%x320" src="{% static 'image/book_index.png' %}" alt="Image">
                                 {% endif %}
 
                                 {% if book.file %}
@@ -206,6 +198,10 @@
                                 </ul>
                             </div>
                             {% endif %}
+                            <!-- Button trigger modal -->
+
+
+
                             <a href=" {% url "books:list" current_page%}" class="btn btn-primary">
                                 Fall back <span class="glyphicon glyphicon-chevron-down"></span>
                             </a>
@@ -215,7 +211,7 @@
 
             </div>
         </div>
-
+        <!--MODAL-->
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Share your opinion:</h4>
@@ -264,18 +260,7 @@
                     <div class="modal-footer">
                         <div class="row">
                             <div class="col-lg-6 pull-right">
-                                <div class="input-group">
-                                    <input id="input{{ book.id }}"
-                                           onkeydown="enter(event, {{ book.id }}, {{ user.pk }})"
-                                           onkeypress="enter(event, {{ book.id }}, {{ user.pk }})"
-                                           type="text" class="form-control">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary"
-                                                onclick="  comment({{ book.id }}, {{ user.pk }});">
-                                            Send! <span class="glyphicon glyphicon-envelope"></span>
-                                        </button>
-                                    </span>
-                                </div><!-- /input-group -->
+                                {% crispy form  %}
                             </div><!-- /.col-lg-6 -->
                         </div>
                     </div>

@@ -1,5 +1,3 @@
-
-
 {% extends 'books_mainpage.html' %}
 {% load crispy_forms_tags %}
 {% block title %}Add book page{% endblock %}
@@ -22,16 +20,10 @@
             </strong>
         </div>
         <div class="panel-body">
-
-
                     {% crispy form  %}
-
                     <a class="btn btn-lg btn-block btn-danger" href="{% url 'books:list' %}">
                     Cancel
                     </a>
-
-
-
         </div>
     </div>
 
@@ -44,11 +36,8 @@
 {% block extensions %}
     <script>
         $(document).ready(function(){
-
-
             $('#id_tag_field').tagsInput();
             $('#id_tag_field_tagsinput').attr('style','width: 100%; height: 100px ')
-                                        .attr('class','tagsinput form-control');
             });
     </script>
 

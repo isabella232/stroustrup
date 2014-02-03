@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-
 import string
 import random
 from sys import stdout

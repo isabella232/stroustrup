@@ -193,8 +193,19 @@ body {
     padding-bottom: 10px;
 }
 
+
 @media (max-width: 881px) and (min-width: 768px) {
   .navbar-brand {
     display: none;
   }
 }
+
+textarea { resize:none; }
+
+#id_description{
+    max-width: 100%;
+    margin: 0px;
+    width: 1489px;
+    height: 74px;
+}
+

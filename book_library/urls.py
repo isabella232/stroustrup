@@ -4,7 +4,8 @@ from book_library.models import Author, Book_Tag
 from book_library.views import *
 
 urlpatterns = patterns('',
-                       url(r'^page/(?P<page>\d+)?/?(?P<slug>[free|busy])?/?$', BookListView.as_view(template_name='book_list.html'),
+                       url(r'^page/(?P<page>\d+)?/?(?P<slug>[free|busy])?/?$',
+                           BookListView.as_view(template_name='book_list.html'),
                            name='list'),
                        url(r'add/$', BookAdd.as_view(success_url="/",
                                                            template_name="add_book.html",
@@ -54,9 +55,7 @@ urlpatterns = patterns('',
                        url(r'^users/(?P<page>\d+)?/?$', UsersView.as_view(template_name='users_list.html'),
                            name = 'users'
                        ),
-                       url(r'comment/(\d+)/(.*)$', CommentAdd, name='comment'),
-
-                       url(r'rating/(\d+)', rating_post, name='rating'),
+                        url(r'rating/(\d+)', rating_post, name='rating'),
                        #SpaT edition ^
                        url(r'print/$', PrintQrCodesView.as_view(template_name="print_qr.html"), name='print')
                        )

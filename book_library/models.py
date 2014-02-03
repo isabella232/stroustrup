@@ -41,39 +41,41 @@ class Book_Rating(models.Model): #SpaT_edition
     votes = models.IntegerField(null=0, default=0, blank=True)
 
     def __unicode__(self):
-        return str('total=' + str(self.common_rating)+' by ' + str(self.votes) + ' vote(s)'+';\n'+'current_rate=' +
-                   str(self.user_rating) + ' user: ' + self.user_owner.username)
+        return "total={0} by {1} vote(s);\ncurrent_rate={2} user: {3}".format(self.common_rating, self.votes,
+                                                                              self.user_rating,
+                                                                              self.user_owner.username)
 
 
 class Book_Comment(models.Model):
     comments = models.Manager()
     sent_time = models.DateTimeField(auto_now_add=True)
-    comment = models.CharField(max_length=255, default='')
+    comment = models.CharField(max_length=255, null=False)
     user = models.ForeignKey(User, related_name="comment", default=0, blank=True)
 
     def __unicode__(self):
-        return self.user.username + ": " + self.comment
+        return "{0}: {1}".format(self.user.username, self.comment)
 
 
 class Book(models.Model):
     books = models.Manager()
-
-    isbn = models.CharField(max_length=13, blank=True,
-                            validators=[RegexValidator(regex="\d{13,13}", message="Please just 13 digits")],
-                            )
+    isbn = models.CharField(max_length=13, blank=True, validators=[RegexValidator(regex="\d{13,13}",
+                                                                                  message="Please just 13 digits")])
     title = models.CharField(max_length=75)
     busy = models.BooleanField(default=False)
-    e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
     description = models.TextField(max_length=255, blank=True)
     picture = ThumbnailerImageField(upload_to='book_images', blank=True)
     authors = models.ManyToManyField(Author, related_name="books")
     users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
-    book_file = models.FileField(upload_to='book_files', blank=True)
     qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True)
+    book_file = models.FileField(upload_to='book_files', blank=True, null=True)
+    e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', related_name='books', default=None, blank=True) #SpaT_edition
+
+    class Meta:
+        ordering = ['title']
 
     def __unicode__(self):
         return self.title
@@ -112,8 +114,8 @@ class Book(models.Model):
             return self.book_rating.latest('id').votes
         return 0
 
-    class Meta:
-        ordering = ['title']
+
+
 
 
 @receiver(post_save, sender=Book)
@@ -135,7 +137,6 @@ def qrcode_post_save(sender, instance, **kwargs):
 
 class Book_Tag(models.Model):
     tags = models.Manager()
-
     tag = models.CharField(max_length=20, unique=True, error_messages={'unique': 'Tag already exists.'})
 
     def __unicode__(self):
@@ -165,5 +166,4 @@ class Request_Return(models.Model):
     book = models.ForeignKey(Book)
     time_request = models.DateTimeField(auto_now_add=True)
     processing_time = models.DateTimeField(blank=True, null=True)
-
 

@@ -1,12 +1,12 @@
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.models import User
-from django.template.response import TemplateResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
+from django.template.response import TemplateResponse
 from book_library.views import LoginRequiredView
-from profile import forms
+import forms
 
 
 class ProfileView(LoginRequiredView, DetailView):
@@ -19,7 +19,7 @@ class ProfileView(LoginRequiredView, DetailView):
 
 @csrf_protect
 @login_required
-def profile_change(request, post_change_redirect=None):
+def profile_change(request):
     template_name = 'profile_change.html'
     profile_change_form = forms.ProfileForm
     post_change_redirect = reverse("profile:profile", args=str(request.user.pk))
@@ -35,7 +35,6 @@ def profile_change(request, post_change_redirect=None):
         form = profile_change_form(user=request.user)
         context = {'form': form}
         return TemplateResponse(request, template_name, context)
-
 
 class UsersView(LoginRequiredView, ListView):
     model = User
