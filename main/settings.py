@@ -50,13 +50,13 @@ THUMBNAIL_ALIASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'postgres',                      # Or path to database file if using sqlite3.
+        'NAME': 'dbe6mv9fdteflq',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'USER': 'riatxglemgeygz',
+        'PASSWORD': 'etpg6fqDP6RAhuZMdmB0WCulqM',
+        'HOST': 'ec2-54-197-238-239.compute-1.amazonaws.com',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
 
-        'PORT': '5433',                           # Set to empty string for default.
+        'PORT': '5432',                           # Set to empty string for default.
         'OPTIONS': {
             'autocommit': True,
         }
