@@ -27,6 +27,7 @@ urlpatterns = patterns('',
                                                                   ),
                            name='change'),
                        url(r'^(?P<pk>\d+)/delete/$', DeleteBook.as_view(success_url="/",
+                                                                        template_name="book_confirm_delete.html"
                                                                   ),
                            name='delete'),
                        url(r'/take/(\d+)', take_book_view, name='take'),
