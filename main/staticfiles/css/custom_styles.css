@@ -1,0 +1,191 @@
+html{
+    background: url(../image/wood_bg.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+}
+
+body {
+    padding-top: 10px;
+    padding-bottom: 30px;
+    background: none;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+.form-signin .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.btn-full-row {
+    width: 100%;
+}
+
+.arrow-img{
+    margin: 0;
+    padding: 0;
+}
+
+.crystalnix-logo{
+    height: 50px;
+    width: auto;
+    float: left;
+}
+.hidden-overflow-content{
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.library-notice{
+    margin-left: 20px;
+    font-family: monospace;
+}
+
+.books-content{
+    margin-top: 100px;
+
+}
+
+.work_tool{
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-radius: 15px;
+    border: #a9a9a9 solid 1px;
+    border-top-color: white;
+    border-left-color: white;
+    background-color: #dcdcdc;
+    box-shadow: 5px 5px 10px black;
+    padding: 20px;
+    position: relative;
+    height: auto;
+    width: 100%;
+}
+
+.title{
+    color: #000000;
+    margin: 10px 0 10px 0;
+    text-align: justify;
+    text-justify: inter-ideograph;
+    font-size: 14pt;
+    -webkit-transition-property: color, text-shadow;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+    -moz-transition-property: color, text-shadow;
+    -moz-transition-duration: 0.5s;
+    -moz-transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+    -o-transition-property: color, text-shadow;
+    -o-transition-duration: 0.5s;
+    -o-transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+    text-shadow: none;
+    width: 100%;
+}
+
+.title:hover{
+    color: white;
+    text-shadow: 0 0 2px black;
+    text-decoration: none;
+
+}
+.author{
+    color: #000000;
+}
+.author:hover{
+    color: #428BCA;
+    text-decoration: none;
+}
+
+.media-object{
+    max-width: 180px;
+    max-height: 100px;
+}
+
+.tag{
+    font-size: 14pt;
+    word-wrap: break-word;
+}
+
+.page_number{
+    font-size: 20pt;
+}
+
+.take_return_button{
+    position: relative;
+}
+
+#div_id_busy {
+    color:#f0ad4e
+}
+
+#div_id_free {
+    color:#5cb85c
+}
+
+#submit-id-send {
+    width: 15.366666666666664%;
+
+}
+
+#id-action-form-change{
+    width:300px;
+}
+
+#submit-id-save_changes_profile{
+    width: 150px;
+}
+
+#submit-id-cancel_profile{
+    width: 150px;
+}
+
+.media-body{
+    word-wrap: break-word;
+}
+
+#body_book{
+    padding-left: 25px;
+    padding-right: 25px ;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+textarea { resize:none; }
+
+#id_description{
+    max-width: 100%;
+    margin: 0px;
+    width: 1489px;
+    height: 74px;
+}

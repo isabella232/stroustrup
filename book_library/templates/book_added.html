@@ -1,0 +1,7 @@
+{% extends 'books_mainpage.html' %}
+{% block title %}Book added{% endblock %}
+
+{% block content %}
+    <p>Book has been added</p>
+    <p>Return to <a href="{% url 'books:books_list' %}">all books</a> page.</p>
+{% endblock %}
