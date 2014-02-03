@@ -39,6 +39,7 @@
                 <li id="request_bar"><a href="{% url 'books:request'  %}">Request book from shop</a></li>
                 {% if user.is_staff %}
                 <li id="add_bar"><a href="{%  url 'books:add' %}">Add book in Library</a></li>
+                <li id="print_bar"><a href="{% url 'books:print' %}">Print QR codes</a></li>
                 {% endif %}
             </ul>
             <p class="navbar-text pull-right">Signed in as<a href="{% url "profile:profile" user.pk %}" class="navbar-link"> {{ user }} </a>

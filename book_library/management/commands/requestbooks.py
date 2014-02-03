@@ -1,6 +1,7 @@
 __author__ = 'romanusynin'
 from book_library.models import Request_Return
 from django.core.management.base import NoArgsCommand
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from datetime import datetime
 from django.core.mail import EmailMessage
@@ -19,10 +20,11 @@ class Command(NoArgsCommand):
                         user = request_return.user_request
                         email = EmailMessage('Book free request',
                                              "Book (''{0}'' author(s): {1}) has been returned."
-                                             " You can take it by click on this link: {2}/books/{3}"
-                                             .format(book.title, authors, settings.DOMAIN, book.id),
-                                             server_email, [user.email])
-                        email.send()
+
+                                             " You can take it by click on this link: {2}{3}"
+                                             .format(book.title, authors, settings.DOMAIN,
+                                             reverse('books:book', kwargs={'pk': book.id})),
+                                             email.send())
                         request_return.delete()
                         continue
                     if request_return.processing_time is not None:
@@ -31,8 +33,9 @@ class Command(NoArgsCommand):
                         user = book.taken_by()
                         email = EmailMessage('Book return request',
                                              "We is asking you to return the book: ''{0}''author(s): {1}"
-                                             " You can return it by click on this link: {2}/books/{3}"
-                                             .format(book.title, authors, settings.DOMAIN, book.id),
+                                             " You can return it by click on this link: {2}{3}"
+                                             .format(book.title, authors, settings.DOMAIN,
+                                             reverse('books:book', kwargs={'pk': book.id})),
                                              server_email, [user.email])
                         email.send()
                         request_return.processing_time = datetime.now()

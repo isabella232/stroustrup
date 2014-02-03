@@ -1,9 +1,17 @@
 import datetime
+from cStringIO import StringIO
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib import auth
 from easy_thumbnails.fields import ThumbnailerImageField
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from PyQRNative import *
+from django.core.files import File
+from django.core.files.base import ContentFile
+from django.core.urlresolvers import reverse
+from django.conf import settings
 
 
 class Client_Story_Record(models.Model):
@@ -22,7 +30,7 @@ class Author(models.Model):
     last_name = models.CharField(max_length=45, verbose_name="Last name")
 
     def __unicode__(self):
-        return '{0} {1}'.format(self.first_name,self.last_name)
+        return '{0} {1}'.format(self.first_name, self.last_name)
 
 
 class Book_Rating(models.Model): #SpaT_edition
@@ -50,17 +58,17 @@ class Book_Comment(models.Model):
 
 class Book(models.Model):
     books = models.Manager()
-
     isbn = models.CharField(max_length=13, blank=True, validators=[RegexValidator(regex="\d{13,13}",
                                                                                   message="Please just 13 digits")])
-    title = models.CharField(max_length=45)
+    title = models.CharField(max_length=75)
     busy = models.BooleanField(default=False)
     paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
-    description = models.TextField(max_length=255, default="No description available.")
+    description = models.TextField(max_length=255, blank=True)
     picture = ThumbnailerImageField(upload_to='book_images', blank=True)
     authors = models.ManyToManyField(Author, related_name="books")
     users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
+    qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True)
     book_file = models.FileField(upload_to='book_files', blank=True, null=True)
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
@@ -107,6 +115,24 @@ class Book(models.Model):
         return 0
 
 
+
+
+
+@receiver(post_save, sender=Book)
+def qrcode_post_save(sender, instance, **kwargs):
+        if instance.qr_image:
+            return instance.qr_image
+        qr = QRCode(4, QRErrorCorrectLevel.L)
+        qr.addData(settings.DOMAIN+reverse('books:book', kwargs={'pk': instance.id}))
+        qr.make()
+        image = qr.makeImage()
+        image_buffer = StringIO()
+        image.save(image_buffer, format='PNG')
+        image_buffer.seek(0)
+        file_name = 'QR_%s.png' % instance.id
+        file_object = File(image_buffer, file_name)
+        content_file = ContentFile(file_object.read())
+        instance.qr_image.save(file_name, content_file, save=True)
 
 
 class Book_Tag(models.Model):

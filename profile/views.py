@@ -1,11 +1,10 @@
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.models import User
-from django.views.generic.edit import UpdateView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.csrf import csrf_protect
+from django.template.response import TemplateResponse
 from book_library.views import LoginRequiredView
 import forms
 
@@ -18,17 +17,24 @@ class ProfileView(LoginRequiredView, DetailView):
         return super(ProfileView, self).get_context_data(**context)
 
 
-class ProfileFormView(UpdateView):
-    model = User
-    form_class = forms.ProfileForm
-
-    @method_decorator(login_required())
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.pk == int(kwargs['pk']):
-            return super(ProfileFormView, self).dispatch(request, *args, **kwargs)
+@csrf_protect
+@login_required
+def profile_change(request):
+    template_name = 'profile_change.html'
+    profile_change_form = forms.ProfileForm
+    post_change_redirect = reverse("profile:profile", args=str(request.user.pk))
+    if request.method == "POST":
+        form = profile_change_form(user=request.user, data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(post_change_redirect)
         else:
-            return HttpResponseRedirect(reverse("profile:all"))
-
+            context = {'form': form}
+            return TemplateResponse(request, template_name, context)
+    else:
+        form = profile_change_form(user=request.user)
+        context = {'form': form}
+        return TemplateResponse(request, template_name, context)
 
 class UsersView(LoginRequiredView, ListView):
     model = User

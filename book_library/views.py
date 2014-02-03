@@ -1,6 +1,5 @@
 import json
 import math
-
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
@@ -9,14 +8,16 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
+from django.core import mail
 from django.shortcuts import get_object_or_404, Http404
 from django.db.models import Q
 from django.contrib.auth.models import User
 from pure_pagination.mixins import PaginationMixin
+from main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE, EMAIL_HOST_USER
+from book_library.forms import *
+from book_library.models import *
+from django_xhtml2pdf.utils import generate_pdf
 
-from main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE
-from forms import *
-from models import *
 
 
 class StaffOnlyView(object):
@@ -223,12 +224,25 @@ def ask_to_return(request, *args, **kwargs):
     if book.busy:
         profile = book.taken_by()
         if request.user != profile:
-            Request_Return.objects.create(book=book, user_request=request.user)
+            if request.user.is_staff:
+                authors = u", ".join(unicode(v) for v in book.authors.all())
+                server_email = EMAIL_HOST_USER
+                email = mail.EmailMessage('Book return request', "Manager {0} ({1} {2}) is asking you to return "
+                                                                 "the book: ''{3}'' author(s): {4}."
+                                                                 " You can return it by click on this link: {5}{6}"
+                                                                 .format(request.user.username, request.user.first_name,
+                                                                         request.user.last_name, book.title,
+                                                                         authors, settings.DOMAIN,
+                                                                         reverse('books:book', kwargs={'pk': book.id})),
+                                          server_email, [profile.email])
+                email.send()
+            else:
+                Request_Return.objects.create(book=book, user_request=request.user)
             return HttpResponse(content=json.dumps({'message': 'Request has been sent'}))
     return HttpResponseRedirect(reverse("books:list"))
 
 
-class UsersView(PaginationMixin,LoginRequiredView, ListView):
+class UsersView(PaginationMixin, LoginRequiredView, ListView):
     model = User
     page = 1
     paginate_by = USERS_ON_PAGE
@@ -336,8 +350,8 @@ def rating_post(request, *args, **kwargs):
         return HttpResponse(content=json.dumps({
             'status': 'BAD_GATE',
             'score': request.GET['score'],
-            'msg': 'Unexpected error',
-            }, sort_keys=True))
+            'msg': 'Unexpected error'},
+            sort_keys=True))
     if value:
         for record in value:
             if record.user_owner.id == _user.id:
@@ -352,15 +366,12 @@ def rating_post(request, *args, **kwargs):
                 elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
                 book.book_rating.add(elem)
 
-                return HttpResponse(content=json.dumps({
-                    'status': 'CHANGED',
-                    'score': request.GET['score'],
-                    'votes': request.GET['votes'],
-                    'val': common,
-                    'msg': 'Your vote has been changed',
-                    }, sort_keys=True))
-
-
+                return HttpResponse(content=json.dumps({'status': 'CHANGED',
+                                                        'score': request.GET['score'],
+                                                        'votes': request.GET['votes'],
+                                                        'val': common,
+                                                        'msg': 'Your vote has been changed'},
+                    sort_keys=True))
     common = (float(request.GET['val'])*(_votes-1)+_rate)/_votes
     common = math.ceil(common*100)/100
     elem = Book_Rating.rating_manager.create(user_owner=_user, user_rating=_rate, common_rating=common, votes=_votes)
@@ -372,4 +383,20 @@ def rating_post(request, *args, **kwargs):
         'votes': request.GET['votes'],
         'val': common,
         'msg': 'Your vote has been approved',
-        }, sort_keys = True))
+        }, sort_keys=True))
+
+
+class PrintQrCodesView(LoginRequiredView, FormView):
+    form_class = PrintQRcodesForm
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            data = form.cleaned_data['books']
+            context = {'books': data}
+            resp = HttpResponse(content_type='application/pdf')
+            result = generate_pdf('book_card.html', file_object=resp, context=context)
+            return result
+        else:
+            return self.form_invalid(form)

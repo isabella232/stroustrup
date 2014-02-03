@@ -27,11 +27,12 @@ class Book_RequestAdmin(admin.ModelAdmin): #SpaT edition
 
 class Profile_additionsAdmin(admin.ModelAdmin):
     model = Profile_addition
-    list_display = ('user','avatar')
+    list_display = ('user', 'avatar')
 
 class Request_ReturnAdmin(admin.ModelAdmin):
     model = Request_Return
-    list_display = ('pk','user_request','book','time_request', 'processing_time')
+    list_display = ('user_request', 'book', 'time_request', 'processing_time')
+
 
 
 
@@ -39,5 +40,6 @@ admin.site.register(Book, BookAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Book_Tag, Book_TagAdmin)
 admin.site.register(Book_Request, Book_RequestAdmin) #SpaTedition
-admin.site.register(Profile_addition,Profile_additionsAdmin)
-admin.site.register(Request_Return,Request_ReturnAdmin)
+admin.site.register(Profile_addition, Profile_additionsAdmin)
+admin.site.register(Request_Return, Request_ReturnAdmin)
+

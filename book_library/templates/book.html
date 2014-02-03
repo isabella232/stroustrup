@@ -107,14 +107,13 @@
                             Status:
                             {% if book.busy %}
                                 {% ifequal user book.taken_by %}
-                                    <span  id="status_row" class="label label-warning take_return_button"> Mine </span></h4>
+                                    <h4><span  id="status_row" class="label label-warning take_return_button"> Mine </span></h4>
                                     <h4 id="owner">Owner:
                                         <a href="{% url "profile:profile" book.taken_by.id %}"  class="author">You</a>
                                     </h4>
 
                                 {% else %}
-                                    <span id="status_row"  class="label label-danger take_return_button"> Busy </span>
-                                </h4>
+                                    <h4><span id="status_row"  class="label label-danger take_return_button"> Busy </span></h4>
                                     <h4 id="owner">Owner:
                                         <a href="{% url "profile:profile" book.taken_by.id %}" class="author">
                                         {{ book.taken_by.username }}
@@ -174,7 +173,10 @@
 
                     </script>
                 </div>
+
+
             </div>
+
                 <hr/>
 
                 <div class="row">

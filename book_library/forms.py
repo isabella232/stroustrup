@@ -1,10 +1,10 @@
+from urllib2 import urlopen
 from django.forms import ModelForm
 from django import forms
 from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from crispy_forms.bootstrap import PrependedText, InlineField
-
 from book_library.models import Book, Book_Tag, Author, Book_Request, Book_Comment, Book_Rating
 
 
@@ -18,7 +18,10 @@ class NameField(forms.CharField):
 
     def validate(self, value):
         if not value:
-            raise ValidationError(["Enter first name and last name with namespace. Every author shold be separated by comma from another author. Probably you wrote single (last or first) name."])
+            raise ValidationError(["Enter first name and last name with namespace. "
+                                   "Every author should be separated by comma from another author. "
+                                   "Probably you wrote single (last or first) name."])
+
 
 
 class TagField(forms.CharField):
@@ -78,6 +81,7 @@ class BookForm(ModelForm):
                 self._errors['book_file'] = self.error_class([msg])
                 del cleaned_data['book_file']
                 return cleaned_data
+
 
     class Meta:
         model = Book
@@ -140,7 +144,7 @@ class SureForm(forms.Form):
 class SearchForm(forms.Form):
     busy = forms.BooleanField(label='Busy', required=False)
     free = forms.BooleanField(label='Free', required=False)
-    keywords = forms.CharField(label='Search',max_length=45)
+    keywords = forms.CharField(label='Search', max_length=45)
 
     helper = FormHelper()
     helper.form_method = 'get'
@@ -174,7 +178,8 @@ class Book_UpdateForm(BookForm):
                 Book.books.get(isbn=data)
             except Book.DoesNotExist:
                 return data
-            raise forms.ValidationError('This ISBN is already taken.')
+            else:
+                raise forms.ValidationError('This ISBN is already taken.')
 
 
 class Book_RequestForm(ModelForm): #SpaT_edition
@@ -193,6 +198,13 @@ class Book_RequestForm(ModelForm): #SpaT_edition
     class Meta:
         model = Book_Request
         fields = ['title', 'url']
+
+    def clean_url(self):
+        try:
+            urlopen(self.cleaned_data['url'])
+        except:
+            raise forms.ValidationError('This URL is not available.')
+        return self.cleaned_data['url']
 
     def save(self, commit=True):   #Probably it's became useless
         if self.cleaned_data['url'] and self.cleaned_data['title']:
@@ -226,4 +238,15 @@ class Book_CommentForm(ModelForm):
     helper.layout = Layout(Field('comment', rows="4", css_class='form-control'),
                            Submit('send', 'Send!', css_class="btn  btn-success"))
 
+
+class PrintQRcodesForm(forms.Form):
+    books = forms.ModelMultipleChoiceField(queryset=Book.books.all(), widget=forms.CheckboxSelectMultiple)
+
+    helper = FormHelper()
+    helper.form_method = 'post'
+    helper.form_class = "form-group"
+    helper.form_show_labels = False
+    helper.error_text_inline = True
+    helper.layout = Layout(Field('books', wrapper_class="form-group"),
+                           Submit('print', 'Print!', css_class="btn btn-lg btn-block btn-success form-group"))
 
