@@ -114,18 +114,6 @@ class DeleteBook(Delete):
     model = Book
 
 
-class DeleteTag(Delete):
-    model = Book_Tag
-
-
-class DeleteAuthor(Delete):
-    model = Author
-
-
-class DeleteAuthor(Delete):
-    model = Author
-
-
 @login_required
 def take_book_view(request, number, *args, **kwargs):
     book = Book.books.get(id=number)
