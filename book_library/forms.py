@@ -23,7 +23,6 @@ class NameField(forms.CharField):
                                    "Probably you wrote single (last or first) name."])
 
 
-
 class TagField(forms.CharField):
 
     def to_python(self, value):
@@ -64,24 +63,23 @@ class BookForm(ModelForm):
     def clean(self):
         cleaned_data = self.cleaned_data
         e_version_exists = self.cleaned_data['e_version_exists']
-        try:
-            file_book = self.cleaned_data['book_file']
-        except KeyError:
+        if 'book_file' in cleaned_data:
+            file_book = cleaned_data['book_file']
+        else:
             return cleaned_data
         if (e_version_exists and (file_book is not None)) or (e_version_exists is False and (file_book is None)):
             return cleaned_data
         else:
             if e_version_exists and (file_book is None):
-                msg = 'You select "E-version" but not selected a file.'
+                msg = 'You selected "E-version" but not selected a file.'
                 self._errors['book_file'] = self.error_class([msg])
                 del cleaned_data['book_file']
                 return cleaned_data
             else:
-                msg = 'You select a file but not selected "E-version".'
+                msg = 'You selected a file but not selected "E-version".'
                 self._errors['book_file'] = self.error_class([msg])
                 del cleaned_data['book_file']
                 return cleaned_data
-
 
     class Meta:
         model = Book

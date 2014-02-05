@@ -19,16 +19,13 @@ from book_library.models import *
 from django_xhtml2pdf.utils import generate_pdf
 
 
-
 class StaffOnlyView(object):
-
     @method_decorator(user_passes_test(lambda u: u.is_staff))
     def dispatch(self, request, *args, **kwargs):
         return super(StaffOnlyView, self).dispatch(request, *args, **kwargs)
 
 
 class LoginRequiredView(object):
-
     @method_decorator(login_required())
     def dispatch(self, request, *args, **kwargs):
         return super(LoginRequiredView, self).dispatch(request, *args, **kwargs)
@@ -40,14 +37,6 @@ class AddRequestView(CreateView): #SpaT_edition
         return super(AddRequestView, self).dispatch(request, *args, **kwargs)
 
 
-class BookFormView(StaffOnlyView, FormView):
-    form_class = BookForm
-
-    def get(self, request, *args, **kwargs):
-        return super(BookFormView, self).get(self, request, *args, **kwargs)
-
-
-
 class BookView(LoginRequiredView, DetailView, FormView):
     model = Book
     form_class = Book_CommentForm
@@ -55,24 +44,19 @@ class BookView(LoginRequiredView, DetailView, FormView):
 
     def get_context_data(self, **kwargs):
         context = {}
-        context['book'] = Book.books.get(pk=self.kwargs['pk'])
+        context['book'] = self.get_object()
         if context['book'].busy:
-            context['book_user'] = context['object'].client_story_record_set.latest('book_taken').user
+            context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
         context['form'] = self.get_form(self.form_class)
         return super(BookView, self).get_context_data(**context)
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        try:
-            book = Book.books.get(id=int(kwargs['pk']))
-        except Book.DoesNotExist:
-            raise Http404
-        if request.POST and form.is_valid():
-            message = request.POST['comment']
-            comment = Book_Comment.comments.create(user=request.user, comment=message)
-            book.comments.add(comment)
-            return HttpResponseRedirect(reverse("books:book", args=[kwargs['pk']]))
-        return self.render_to_response(self.get_context_data(form=form))
+    def form_valid(self, form):
+        book = self.get_object()
+        msg = form.cleaned_data['comment']
+        user = self.request.user
+        comment = Book_Comment.comments.create(user=user, comment=msg)
+        book.comments.add(comment)
+        return HttpResponseRedirect(reverse("books:book", args=[book.id]))
 
 
 class TagView(LoginRequiredView, DetailView):
@@ -81,16 +65,6 @@ class TagView(LoginRequiredView, DetailView):
 
 class AuthorView(LoginRequiredView, DetailView):
     model = Author
-
-
-class AuthorAdd(StaffOnlyView, CreateView):
-    model = Author
-    form_class = AuthorForm
-
-
-class TagAdd(StaffOnlyView, CreateView):
-    model = Book_Tag
-    form_class = Book_TagForm
 
 
 class BookAdd(StaffOnlyView, CreateView):
@@ -274,7 +248,6 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
         return self.render_to_response(self.get_context_data(form=form))
 
 
-
 def LikeRequest(request, number, *args): #SpaT_edition
     queryset = Book_Request.requests.all()
     user = request.user
@@ -377,14 +350,10 @@ def rating_post(request, *args, **kwargs):
 class PrintQrCodesView(LoginRequiredView, FormView):
     form_class = PrintQRcodesForm
 
-    def post(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        if form.is_valid():
-            data = form.cleaned_data['books']
-            context = {'books': data}
-            resp = HttpResponse(content_type='application/pdf')
-            result = generate_pdf('book_card.html', file_object=resp, context=context)
-            return result
-        else:
-            return self.form_invalid(form)
+    def form_valid(self, form):
+        data = form.cleaned_data['books']
+        context = {'books': data}
+        resp = HttpResponse(content_type='application/pdf')
+        result = generate_pdf('book_card.html', file_object=resp, context=context)
+        return result
+
