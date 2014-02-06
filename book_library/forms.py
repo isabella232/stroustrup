@@ -67,19 +67,15 @@ class BookForm(ModelForm):
             file_book = cleaned_data['book_file']
         else:
             return cleaned_data
-        if (e_version_exists and (file_book is not None)) or (e_version_exists is False and (file_book is None)):
-            return cleaned_data
-        else:
-            if e_version_exists and (file_book is None):
-                msg = 'You selected "E-version" but not selected a file.'
-                self._errors['book_file'] = self.error_class([msg])
-                del cleaned_data['book_file']
-                return cleaned_data
-            else:
-                msg = 'You selected a file but not selected "E-version".'
-                self._errors['book_file'] = self.error_class([msg])
-                del cleaned_data['book_file']
-                return cleaned_data
+        if e_version_exists and (file_book is None):
+            msg = 'You selected "E-version" but not selected a file.'
+            self._errors['book_file'] = self.error_class([msg])
+            del cleaned_data['book_file']
+        if e_version_exists is False and (file_book is not None):
+            msg = 'You selected a file but not selected "E-version".'
+            self._errors['book_file'] = self.error_class([msg])
+            del cleaned_data['book_file']
+        return cleaned_data
 
     class Meta:
         model = Book

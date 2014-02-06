@@ -1,0 +1,2 @@
+We is asking you to return the book: "{{book.title}}" author(s): {{authors}}.
+You can return it by click on this link: {{link}}"
