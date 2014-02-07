@@ -46,7 +46,7 @@ class BookView(LoginRequiredView, DetailView, FormView):
         context = {}
         context['book'] = self.get_object()
         if context['book'].busy:
-            context['book_user'] = context['book'].client_story_record_set.latest('book_taken').user
+            context['book_user'] = context['book'].taken_by
         context['form'] = self.get_form(self.form_class)
         return super(BookView, self).get_context_data(**context)
 

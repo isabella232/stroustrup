@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from datetime import datetime
 from django.core.mail import EmailMessage
-from django.template.loader import get_template, Context
+from django.template.loader import render_to_string
+from django.contrib.sites.models import Site
 
 
 class Command(NoArgsCommand):
@@ -17,14 +18,12 @@ class Command(NoArgsCommand):
                     authors = u", ".join(unicode(v) for v in book.authors.all())
                     round_day = datetime
                     server_email = settings.EMAIL_HOST_USER
-                    link = settings.DOMAIN+reverse('books:book', kwargs={'pk': book.id})
-                    context = Context({'book': book,
-                                       'authors': authors,
-                                       'link': link})
+                    link = Site.objects.get_current().domain+reverse('books:book', kwargs={'pk': book.id})
+                    context = {'book': book, 'authors': authors, 'link': link}
                     if book.busy is False:
                         user = request_return.user_request
-                        msg = get_template('book_free_email.txt')
-                        email = EmailMessage('Book free request', msg.render(context), server_email, [user.email])
+                        msg = render_to_string('book_free_email.txt', context)
+                        email = EmailMessage('Book free request', msg, server_email, [user.email])
                         email.send()
                         request_return.delete()
                         continue
@@ -32,7 +31,7 @@ class Command(NoArgsCommand):
                         round_day = datetime.now() - request_return.processing_time
                     if book.taken_about() == settings.DEADLINE and (request_return.processing_time is None or round_day.days > 0):
                         user = book.taken_by()
-                        msg = get_template('book_return_request_mail.txt')
+                        msg = render_to_string('book_return_request_mail.txt', context)
                         email = EmailMessage('Book return request', msg.render(context), server_email, [user.email])
                         email.send()
                         request_return.processing_time = datetime.now()
