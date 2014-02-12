@@ -9,10 +9,10 @@ import warnings
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 ADMINS = (
-    ('Roman', 'r.vaseev@crystalnix.com'),
+    ('Roman', 'r.usynin@crystalnix.com'),
 )
 
-DOMAIN = '127.0.0.1:8000'
+DOMAIN = 'stroustrup.herokuapp.com'
 
 MANAGERS = ADMINS
 
@@ -69,7 +69,7 @@ PASSWORD_HASHERS = (
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['stroustrup.herokuapp.com']
 
 EMAIL_USE_TLS = True
 
@@ -272,6 +272,6 @@ LOGGING = {
 #DATABASES['default'] =  dj_database_url.config(default='postgres://user:pass@localhost/dbname')
 
 try:
-    from local_settings import *
+    from main.local_settings import *
 except ImportError:
     pass

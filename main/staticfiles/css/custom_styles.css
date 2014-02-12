@@ -163,25 +163,9 @@ body {
     width:300px;
 }
 
-@media (min-width: 361px)  {
-    #submit-id-save_changes_profile{
-        width: 150px;
-    }
 
-    #button-id-cancel{
-        width: 150px;
-    }
-}
 
-@media (max-width: 361px)  {
-    #submit-id-save_changes_profile{
-        width: 130px;
-    }
 
-    #button-id-cancel{
-        width: 130px;
-    }
-}
 .media-body{
     word-wrap: break-word;
 }

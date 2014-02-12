@@ -48,7 +48,7 @@
                         <li class="row">
                             <div class="col-md-2">
                             {% if  book.picture %}
-                                <a class="pull-left" href="{% url "books:book" book.id %}">
+                                <a href="{% url "books:book" book.id %}">
                                     <img class="media-object" src="{{ book.picture.book_size.url }}" alt="image">
                                 </a>
 
