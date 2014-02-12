@@ -68,11 +68,11 @@ class BookForm(ModelForm):
         else:
             return cleaned_data
         if e_version_exists and (file_book is None):
-            msg = 'You have selected "E-version" but not selected a file.'
+            msg = 'You selected "E-version" but did not select a file.'
             self._errors['book_file'] = self.error_class([msg])
             del cleaned_data['book_file']
         if e_version_exists is False and (file_book is not None):
-            msg = 'You have selected a file but not selected "E-version".'
+            msg = 'You selected a file but did not select "E-version".'
             self._errors['book_file'] = self.error_class([msg])
             del cleaned_data['book_file']
         return cleaned_data
