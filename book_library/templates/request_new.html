@@ -30,7 +30,23 @@
 
                     </div>
                     <div class="panel-body" >
-                        <h3 class="pull-left">
+
+                                <div class="media">
+                                    <div class="pull-left">
+                                      {% if order.book_image_url == None  %}
+                                            <img src="{% static 'image/no_book_cover.jpg' %}" width="150">
+                                      {% else %}
+                                            <img src='{{ order.book_image_url }}' width="150">
+                                      {% endif %}
+                                    </div>
+                                      <div class="media-body">
+                                            <h4 class="media-heading">Title of book: {{ order.book_title }}</h4>
+                                            <h4 class="media-heading">Author(s) of book: {{ order.book_authors }}</h4>
+                                            <h4 class="media-heading">Price: {{ order.book_price }}</h4>
+
+                                      </div>
+                                </div>
+                         <h3 class="pull-left">
                             Ordered by <a href="{% url "profile:profile" order.user.pk  %}">  <span class="comment_name"> {{ order.user }} </span></a>
                             <p>Liked:
                             <span id="userslist{{ order.id }}">
@@ -40,7 +56,7 @@
 
                             </span>
                             </p>
-                        </h3>
+                         </h3>
 
                             <div class="pull-right">
 

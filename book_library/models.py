@@ -13,7 +13,6 @@ from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-
 class Client_Story_Record(models.Model):
     records = models.Manager()
 
@@ -159,6 +158,10 @@ class Book_Request(models.Model): #SpaT_edition
     url = models.URLField(null='')
     title = models.CharField(max_length=30)
     vote = models.IntegerField(default=0)
+    book_image_url = models.TextField(blank=True, null=True)
+    book_title = models.TextField(blank=True, null=True)
+    book_authors = models.TextField(blank=True, null=True)
+    book_price = models.CharField(max_length=10, blank=True, null=True)
 
     def __unicode__(self):
         return '{0} {1}'.format(self.title, self.url)
