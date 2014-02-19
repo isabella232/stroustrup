@@ -9,7 +9,7 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse
 from django.core import mail
-from django.shortcuts import get_object_or_404, Http404
+from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
 from pure_pagination.mixins import PaginationMixin
@@ -17,8 +17,6 @@ from main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE, EMAIL_H
 from book_library.forms import *
 from book_library.models import *
 from django_xhtml2pdf.utils import generate_pdf
-from urllib2 import urlopen
-from urlparse import urlparse
 from amazon.api import AmazonAPI
 from re import search
 

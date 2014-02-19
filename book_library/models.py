@@ -12,6 +12,7 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from book_library.dbstorage import DatabaseStoragePostgres
 
 class Client_Story_Record(models.Model):
     records = models.Manager()
@@ -67,7 +68,7 @@ class Book(models.Model):
     authors = models.ManyToManyField(Author, related_name="books")
     users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
-    qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True)
+    qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True, storage=DatabaseStoragePostgres())
     book_file = models.FileField(upload_to='book_files', blank=True, null=True)
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
