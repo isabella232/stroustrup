@@ -3,11 +3,12 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from easy_thumbnails.fields import ThumbnailerImageField
+from book_library.dbstorage import DatabaseStoragePostgres
 
 
 class Profile_addition(models.Model):
     user = models.ForeignKey(User, unique=True, related_name='profile')
-    avatar = ThumbnailerImageField(upload_to='user_avatar')
+    avatar = ThumbnailerImageField(upload_to='user_avatar', thumbnail_storage=DatabaseStoragePostgres())
 
 
 @receiver(post_save, sender=User)

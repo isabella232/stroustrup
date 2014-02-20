@@ -80,14 +80,18 @@ class BookUpdate(StaffOnlyView, UpdateView):
     form_class = Book_UpdateForm
 
 
-class Delete(StaffOnlyView, DeleteView):
-
-    def get(self, request, *args, **kwargs):
-        return super(Delete, self).get(self, request, *args, **kwargs)
-
-
-class DeleteBook(Delete):
+class DeleteBook(StaffOnlyView, DeleteView):
     model = Book
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        book = self.object
+        book.picture.delete()
+        book.qr_image.delete()
+        book.book_file.delete()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
 
 @login_required

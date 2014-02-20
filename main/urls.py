@@ -7,7 +7,7 @@ import views
 from django.conf import settings
 from profile.registration_app.forms import CustomAuthForm
 from profile.registration_app.views import *
-from book_library.dbstorage import image_view
+
 
 
 import warnings
@@ -19,7 +19,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
                        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT},
                            name='media'),
-                       url(r'^dbfiles/(?P<filename>.*)$', 'book_library.dbstorage.image_view', name='image'),
+
+                       url(r'^dbfiles/(?P<filename>.*)$', 'book_library.dbstorage.file_view', name='filestorage'),
 
                        url(r'^admin/', include(admin.site.urls)),
 

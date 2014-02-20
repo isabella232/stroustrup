@@ -1,79 +1,71 @@
-import psycopg2
-from storages.backends.database import DatabaseStorage
+from django.core.files.storage import Storage
 from django.conf import settings
-import os
-from django.http import HttpResponse
-from django.utils._os import safe_join
+from django.http import HttpResponse, Http404, HttpResponseNotModified
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import transaction, IntegrityError
-REQUIRED_FIELDS = ('db_table', 'fname_column', 'blob_column', 'size_column', 'base_url')
+from main.models import FileStorage
+import StringIO
+import urlparse
+from django.core.files import File
+import mimetypes
 
 
-class DatabaseStoragePostgres(DatabaseStorage):
+class DatabaseStoragePostgres(Storage):
 
-    def __init__(self, option=settings.DB_FILES):
-        if not option or not all([field in option for field in REQUIRED_FIELDS]):
-            raise ValueError("You didn't specify required options")
+    def __init__(self):
+        self.base_url = settings.DB_FILES_URL
 
-        self.db_table = option['db_table']
-        self.fname_column = option['fname_column']
-        self.blob_column = option['blob_column']
-        self.size_column = option['size_column']
-        self.base_url = option['base_url']
-        self.connection = psycopg2.connect("host='localhost' port='5433' dbname='postgres' user='postgres' password='admin'")
-        self.cursor = self.connection.cursor()
+    def _open(self, name, mode='rb'):
+
+        assert mode == 'rb', "You've tried to open binary file without specifying binary mode! You specified: %s" % mode
+        try:
+            media_file = FileStorage.objects.get(file_name=name)
+        except ObjectDoesNotExist:
+            return None
+        inMemFile = StringIO.StringIO(media_file.blob)
+        inMemFile.name = name
+        inMemFile.mode = mode
+        retFile = File(inMemFile)
+        return retFile
 
     def exists(self, name):
-        row = self.cursor.execute("SELECT %s from %s where %s = '%s'"%(self.fname_column,
-                                                                       self.db_table,
-                                                                       self.fname_column,
-                                                                       name))
-        if row is not None:
-            return row.fetchone()
+        blob = FileStorage.objects.filter(file_name=name)
+        return blob
 
     def _save(self, name, content):
-        """Save 'content' as file named 'name'.
-
-        @note '\' in path will be converted to '/'.
-        """
-
         name = name.replace('\\', '/')
-        binary = psycopg2.Binary(content.read())
+        binary = content.read()
         size = content.size
+        blob_exist = self.exists(name)
 
-        #todo: check result and do something (exception?) if failed.
-        if self.exists(name):
-            self.cursor.execute("UPDATE %s SET %s = %s, %s = %s WHERE %s = '%s'" % (self.db_table,
-                                                                                    self.blob_column,
-                                                                                    self.size_column,
-                                                                                    self.fname_column,
-                                                                                    name, binary, size))
+        if blob_exist:
+            blob_exist.update(blob=binary, size=size)
         else:
-            # try:
-                self.cursor.execute("INSERT INTO %s VALUES('%s',%s,%s)" % (self.db_table, name, binary, size))
-            # except IntegrityError:
-            #     transaction.rollback()
-            # self.cursor.execute("INSERT INTO %s VALUES('%s',%s,%s)" % (self.db_table, name, binary, size))
-        self.connection.commit()
+            FileStorage.objects.create(file_name=name, blob=binary, size=size)
         return name
 
+    def url(self, name):
+        if self.base_url is None:
+            raise ValueError("This file is not accessible via a URL.")
+        return urlparse.urljoin(self.base_url, name).replace('\\', '/')
 
-def image_view(request, filename):
+    def get_available_name(self, name):
+        return name
+
+    def delete(self, name):
+        FileStorage.objects.filter(file_name=name).delete()
 
 
+def file_view(request, filename):
     storage = DatabaseStoragePostgres()
-
-    try:
-        image_file = storage.open(filename, 'rb')
+    image_file = storage.open(filename, 'rb')
+    if image_file is None:
+        raise Http404
+    else:
         file_content = image_file.read()
-    except:
-        filename = 'no_image.gif'
-        path = safe_join(os.path.abspath(settings.MEDIA_ROOT), filename)
-        if not os.path.exists(path):
-            raise ObjectDoesNotExist
-        no_image = open(path, 'rb')
-        file_content = no_image.read()
-
-    response = HttpResponse(file_content, mimetype="image/jpeg")
-    response['Content-Disposition'] = 'inline; filename=%s'%filename
+    if request.META.get('HTTP_IF_MODIFIED_SINCE') is not None:
+        return HttpResponseNotModified()
+    content_type, encoding = mimetypes.guess_type(filename)
+    content_type = content_type or 'application/octet-stream'
+    response = HttpResponse(file_content, content_type=content_type)
+    response['Content-Disposition'] = 'inline; filename=%s' % filename
     return response
