@@ -35,12 +35,10 @@ class DatabaseStoragePostgres(Storage):
         name = name.replace('\\', '/')
         binary = content.read()
         size = content.size
-        blob_exist = self.exists(name)
-
-        if blob_exist:
-            blob_exist.update(blob=binary, size=size)
-        else:
-            FileStorage.objects.create(file_name=name, blob=binary, size=size)
+        while self.exists(name):
+            dot_index = name.rindex('.')
+            name = name[:dot_index] + '_1' + name[dot_index:]
+        FileStorage.objects.create(file_name=name, blob=binary, size=size)
         return name
 
     def url(self, name):

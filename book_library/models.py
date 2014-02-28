@@ -64,11 +64,11 @@ class Book(models.Model):
     busy = models.BooleanField(default=False)
     paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
     description = models.TextField(max_length=255, blank=True)
-    picture = ThumbnailerImageField(upload_to='book_images', blank=True, thumbnail_storage=DatabaseStoragePostgres())
+    picture = ThumbnailerImageField(upload_to='book_images', blank=True, storage=DatabaseStoragePostgres(), thumbnail_storage=DatabaseStoragePostgres())
     authors = models.ManyToManyField(Author, related_name="books")
     users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
-    qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True, thumbnail_storage=DatabaseStoragePostgres())
+    qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True, storage=DatabaseStoragePostgres(), thumbnail_storage=DatabaseStoragePostgres())
     book_file = models.FileField(upload_to='book_files', blank=True, null=True, storage=DatabaseStoragePostgres())
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition

@@ -8,7 +8,7 @@ from book_library.dbstorage import DatabaseStoragePostgres
 
 class Profile_addition(models.Model):
     user = models.ForeignKey(User, unique=True, related_name='profile')
-    avatar = ThumbnailerImageField(upload_to='user_avatar', thumbnail_storage=DatabaseStoragePostgres())
+    avatar = ThumbnailerImageField(upload_to='user_avatar', storage=DatabaseStoragePostgres(), thumbnail_storage=DatabaseStoragePostgres())
 
 
 @receiver(post_save, sender=User)
