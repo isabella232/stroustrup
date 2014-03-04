@@ -19,6 +19,7 @@ from book_library.models import *
 from django_xhtml2pdf.utils import generate_pdf
 from amazon.api import AmazonAPI
 from re import search
+from django.db.models.signals import post_delete
 
 
 class StaffOnlyView(object):
@@ -83,15 +84,13 @@ class BookUpdate(StaffOnlyView, UpdateView):
 class DeleteBook(StaffOnlyView, DeleteView):
     model = Book
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        book = self.object
-        book.picture.delete()
-        book.qr_image.delete()
-        book.book_file.delete()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+
+@receiver(post_delete, sender=Book)
+def post_delete_book(sender, instance, *args, **kwargs):
+    instance.picture.delete(save=False)
+    instance.qr_image.delete(save=False)
+    instance.book_file.delete(save=False)
+
 
 
 @login_required

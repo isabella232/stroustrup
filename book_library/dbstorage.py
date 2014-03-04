@@ -15,17 +15,11 @@ class DatabaseStoragePostgres(Storage):
         self.base_url = settings.DB_FILES_URL
 
     def _open(self, name, mode='rb'):
-
-        assert mode == 'rb', "You've tried to open binary file without specifying binary mode! You specified: %s" % mode
         try:
             media_file = FileStorage.objects.get(file_name=name)
         except ObjectDoesNotExist:
             return None
-        inMemFile = StringIO.StringIO(media_file.blob)
-        inMemFile.name = name
-        inMemFile.mode = mode
-        retFile = File(inMemFile)
-        return retFile
+        return media_file
 
     def exists(self, name):
         blob = FileStorage.objects.filter(file_name=name)
@@ -33,12 +27,14 @@ class DatabaseStoragePostgres(Storage):
 
     def _save(self, name, content):
         name = name.replace('\\', '/')
+        content_type, encoding = mimetypes.guess_type(name)
+        content_type = content_type or 'application/octet-stream'
         binary = content.read()
         size = content.size
         while self.exists(name):
             dot_index = name.rindex('.')
             name = name[:dot_index] + '_1' + name[dot_index:]
-        FileStorage.objects.create(file_name=name, blob=binary, size=size)
+        FileStorage.objects.create(file_name=name, blob=binary, content_type=content_type, size=size)
         return name
 
     def url(self, name):
@@ -55,15 +51,18 @@ class DatabaseStoragePostgres(Storage):
 
 def file_view(request, filename):
     storage = DatabaseStoragePostgres()
-    image_file = storage.open(filename, 'rb')
-    if image_file is None:
+    file_object = storage.open(filename, 'rb')
+    inMemFile = StringIO.StringIO(file_object.blob)
+    inMemFile.name = file_object.file_name
+    inMemFile.mode = 'rb'
+    ready_file = File(inMemFile)
+    content_type = file_object.content_type
+    if ready_file is None:
         raise Http404
     else:
-        file_content = image_file.read()
+        file_content = ready_file.read()
     if request.META.get('HTTP_IF_MODIFIED_SINCE') is not None:
         return HttpResponseNotModified()
-    content_type, encoding = mimetypes.guess_type(filename)
-    content_type = content_type or 'application/octet-stream'
     response = HttpResponse(file_content, content_type=content_type)
     response['Content-Disposition'] = 'inline; filename=%s' % filename
     return response
