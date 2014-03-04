@@ -156,12 +156,13 @@ class Book_Request(models.Model): #SpaT_edition
     user = models.ForeignKey(User, default=None, blank=True)
     users = models.ManyToManyField(User, related_name="request", default=None, blank=True)
     url = models.URLField(null='')
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=100)
     vote = models.IntegerField(default=0)
-    book_image_url = models.TextField(blank=True, null=True)
-    book_title = models.TextField(blank=True, null=True)
-    book_authors = models.TextField(blank=True, null=True)
-    book_price = models.CharField(max_length=10, blank=True, null=True)
+    book_image_url = models.URLField(blank=True, null='')
+    book_title = models.CharField(max_length=255, blank=True, null=True)
+    book_authors = models.CharField(max_length=255, blank=True, null=True)
+    book_price = models.CharField(max_length=20, blank=True, null=True)
+    book_description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return '{0} {1}'.format(self.title, self.url)
