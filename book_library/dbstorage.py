@@ -8,18 +8,24 @@ import urlparse
 from django.core.files import File
 import mimetypes
 
-
 class DatabaseStoragePostgres(Storage):
 
     def __init__(self):
         self.base_url = settings.DB_FILES_URL
 
     def _open(self, name, mode='rb'):
+        assert mode == 'rb', "You've tried to open binary file without specifying binary mode! You specified: %s" % mode
         try:
             media_file = FileStorage.objects.get(file_name=name)
         except ObjectDoesNotExist:
             return None
-        return media_file
+        content_type = media_file.content_type
+        inMemFile = StringIO.StringIO(media_file.blob)
+        inMemFile.name = name
+        inMemFile.mode = mode
+        retFile = File(inMemFile)
+        retFile.content_type = content_type
+        return retFile
 
     def exists(self, name):
         blob = FileStorage.objects.filter(file_name=name)
@@ -31,9 +37,13 @@ class DatabaseStoragePostgres(Storage):
         content_type = content_type or 'application/octet-stream'
         binary = content.read()
         size = content.size
+        count = 0
+        dot_index = name.rindex('.')
+        head = name[:dot_index]
+        tail = name[dot_index:]
         while self.exists(name):
-            dot_index = name.rindex('.')
-            name = name[:dot_index] + '_1' + name[dot_index:]
+            count += 1
+            name = '%s_%d%s' % (head, count, tail)
         FileStorage.objects.create(file_name=name, blob=binary, content_type=content_type, size=size)
         return name
 
@@ -52,17 +62,12 @@ class DatabaseStoragePostgres(Storage):
 def file_view(request, filename):
     storage = DatabaseStoragePostgres()
     file_object = storage.open(filename, 'rb')
-    inMemFile = StringIO.StringIO(file_object.blob)
-    inMemFile.name = file_object.file_name
-    inMemFile.mode = 'rb'
-    ready_file = File(inMemFile)
-    content_type = file_object.content_type
-    if ready_file is None:
+    if file_object is None:
         raise Http404
     else:
-        file_content = ready_file.read()
+        file_content = file_object.read()
     if request.META.get('HTTP_IF_MODIFIED_SINCE') is not None:
         return HttpResponseNotModified()
-    response = HttpResponse(file_content, content_type=content_type)
+    response = HttpResponse(file_content, content_type=file_object.content_type)
     response['Content-Disposition'] = 'inline; filename=%s' % filename
     return response

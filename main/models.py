@@ -6,3 +6,6 @@ class FileStorage(models.Model):
     blob = models.BinaryField()
     content_type = models.CharField(max_length=100)
     size = models.BigIntegerField()
+
+    def __unicode__(self):
+        return self.file_name

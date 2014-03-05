@@ -1,7 +1,7 @@
 from django.contrib import admin
 from book_library.models import Book, Author, Book_Tag, Book_Request, Request_Return
 from profile.models import Profile_addition
-
+from main.models import FileStorage
 
 class BooksInLine(admin.TabularInline):
     model = Book
@@ -43,10 +43,15 @@ class Request_ReturnAdmin(admin.ModelAdmin):
     list_display = ('user_request', 'book', 'time_request', 'processing_time')
 
 
+class FileStorageAdmin(admin.ModelAdmin):
+    model = FileStorage
+
+
 admin.site.register(Book, BookAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Book_Tag, Book_TagAdmin)
 admin.site.register(Book_Request, Book_RequestAdmin) #SpaTedition
 admin.site.register(Profile_addition, Profile_additionsAdmin)
 admin.site.register(Request_Return, Request_ReturnAdmin)
+admin.site.register(FileStorage, FileStorageAdmin)
 
