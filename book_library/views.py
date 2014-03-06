@@ -240,21 +240,8 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
         return super(requestBook, self).get_context_data(**context)
 
     def form_valid(self, form):
-            url = form.data['url']
-            title = form.data['title']
-            start_str_http = 'http'
-            start_str_https = 'https'
-            if not url.startswith(start_str_http) and not url.startswith(start_str_https):
-                url = start_str_http+'://'+url
-            parser = book_shop_factory(url)
-            product = parser.parse(url)
-            if product is not None:
-                Book_Request.requests.create(url=url, title=title, user=self.request.user,
-                                             book_image_url=product.book_image_url,
-                                             book_title=product.title, book_authors=product.authors,
-                                             book_price=product.price, book_description=product.description)
-            else:
-                Book_Request.requests.create(url=url, title=title, user=self.request.user)
+            form.instance.author = self.request.user
+            self.object = form.save()
             return HttpResponseRedirect(reverse("books:request"))
 
 
