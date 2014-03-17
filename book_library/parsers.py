@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-__author__ = 'romanusynin'
+author = 'Roman Usynin'
+email = 'r.usynin@crystalnix.com'
+copyright = 'Copyright 2014, Crystalnix'
+
 from urllib2 import urlopen
 from amazon.api import AmazonAPI, AsinNotFound
 from re import search
