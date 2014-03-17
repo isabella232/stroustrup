@@ -28,8 +28,10 @@ class DatabaseStoragePostgres(Storage):
         return retFile
 
     def exists(self, name):
-        blob = FileStorage.objects.filter(file_name=name)
-        return blob
+        if FileStorage.objects.filter(file_name=name):
+            return True
+        else:
+            return False
 
     def _save(self, name, content):
         name = name.replace('\\', '/')
@@ -66,8 +68,6 @@ def file_view(request, filename):
         raise Http404
     else:
         file_content = file_object.read()
-    if request.META.get('HTTP_IF_MODIFIED_SINCE') is not None:
-        return HttpResponseNotModified()
     response = HttpResponse(file_content, content_type=file_object.content_type)
     response['Content-Disposition'] = 'inline; filename=%s' % filename
     return response
