@@ -215,9 +215,9 @@ class Book_RequestForm(ModelForm): #SpaT_edition
             url = '//'+url
         if self.product is not None:
             Book_Request.requests.create(url=url, title=title, user=self.instance.author,
-                                         book_image_url=self.product.book_image_url,
-                                         book_title=self.product.title, book_authors=self.product.authors,
-                                         book_price=self.product.price, book_description=self.product.description)
+                                         book_image_url=self.product['book_image_url'],
+                                         book_title=self.product['title'], book_authors=self.product['authors'],
+                                         book_price=self.product['price'], book_description=self.product['description'])
         else:
             Book_Request.requests.create(url=url, title=title, user=self.instance.author)
 

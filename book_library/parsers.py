@@ -12,13 +12,6 @@ from urlparse import urlparse
 
 
 class BaseParser(object):
-    def __init__(self):
-        self.title = ''
-        self.authors = ''
-        self.book_image_url = ''
-        self.price = ''
-        self.description = ''
-
     def parse(self, urlopen_object):
         raise NotImplementedError()
 
@@ -30,15 +23,19 @@ class AmazonParser(BaseParser):
                 id_product = product_url.group(4)
                 amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
                 product = amazon.lookup(ItemId=id_product)
-                self.title = product.title
-                self.authors = u", ".join(unicode(v) for v in product.authors)
-                self.price = '{0} {1}'.format(product.price_and_currency[0], product.price_and_currency[1])
-                self.description = product.editorial_review
+                title = product.title
+                authors = u", ".join(unicode(v) for v in product.authors)
+                price = '{0} {1}'.format(product.price_and_currency[0], product.price_and_currency[1])
+                description = product.editorial_review
                 if product.medium_image_url is None:
-                    self.book_image_url = ''
+                    book_image_url = ''
                 else:
-                    self.book_image_url = product.medium_image_url
-                return self
+                    book_image_url = product.medium_image_url
+                return {'title': title,
+                        'authors': authors,
+                        'price': price,
+                        'description': description,
+                        'book_image_url': book_image_url}
 
         else:
             return None
