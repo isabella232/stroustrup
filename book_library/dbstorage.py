@@ -7,6 +7,7 @@ import StringIO
 import urlparse
 from django.core.files import File
 import mimetypes
+import os
 
 class DatabaseStoragePostgres(Storage):
 
@@ -28,10 +29,7 @@ class DatabaseStoragePostgres(Storage):
         return retFile
 
     def exists(self, name):
-        if FileStorage.objects.filter(file_name=name):
-            return True
-        else:
-            return False
+        return FileStorage.objects.exists(file_name=name)
 
     def _save(self, name, content):
         name = name.replace('\\', '/')
@@ -40,9 +38,9 @@ class DatabaseStoragePostgres(Storage):
         binary = content.read()
         size = content.size
         count = 0
-        dot_index = name.rindex('.')
-        head = name[:dot_index]
-        tail = name[dot_index:]
+        dot_index = os.path.splitext(name)
+        head = dot_index[0]
+        tail = dot_index[1]
         while self.exists(name):
             count += 1
             name = '%s_%d%s' % (head, count, tail)

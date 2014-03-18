@@ -239,28 +239,18 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
         context['form'] = self.get_form(self.form_class)
         return super(requestBook, self).get_context_data(**context)
 
-    def form_valid(self, form):
-            url = form.data['url']
-            title = form.data['title']
-            start_str_http = 'http'
-            start_str_https = 'https'
-            if not url.startswith(start_str_http) and not url.startswith(start_str_https):
-                url = start_str_http+'://'+url
-            product_url = search('https?://www.amazon.[a-z]+\/[A-Za-z0-9-!$@&?%\(\)]+\/dp/([0-9A-Z]+)', url)
-            if product_url is not None:
-                    id_product = product_url.group(1)
-                    amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
-                    product = amazon.lookup(ItemId=id_product)
-                    authors = u", ".join(unicode(v) for v in product.authors)
-                    price = '{0} {1}'.format(product.price_and_currency[0], product.price_and_currency[1])
-                    Book_Request.requests.create(url=url, title=title, user=self.request.user,
-                                                 book_image_url=product.medium_image_url,
-                                                 book_title=product.title, book_authors=authors,
-                                                 book_price=price)
-                    return HttpResponseRedirect(reverse("books:request"))
-            else:
-                Book_Request.requests.create(url=url, title=title, user=self.request.user)
-                return HttpResponseRedirect(reverse("books:request"))
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            _url = request.POST['url']
+            start_str = 'http'
+            if not _url.startswith(start_str):
+                _url = start_str+'://'+_url
+            _title = request.POST['title']
+            req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
+            return HttpResponseRedirect(reverse("books:request"))
+        return self.render_to_response(self.get_context_data(form=form))
+
 
 
 def LikeRequest(request, number, *args): #SpaT_edition
