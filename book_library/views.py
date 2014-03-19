@@ -85,14 +85,6 @@ class DeleteBook(StaffOnlyView, DeleteView):
     model = Book
 
 
-@receiver(post_delete, sender=Book)
-def post_delete_book(sender, instance, *args, **kwargs):
-    instance.picture.delete(save=False)
-    instance.qr_image.delete(save=False)
-    instance.book_file.delete(save=False)
-
-
-
 @login_required
 def take_book_view(request, number, *args, **kwargs):
     book = Book.books.get(id=number)

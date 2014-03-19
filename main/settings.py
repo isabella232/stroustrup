@@ -53,6 +53,7 @@ THUMBNAIL_ALIASES = {
 }
 
 THUMBNAIL_DEFAULT_STORAGE = 'book_library.dbstorage.DatabaseStoragePostgres'
+DEFAULT_FILE_STORAGE = 'book_library.dbstorage.DatabaseStoragePostgres'
 
 DATABASES = {
     'default': {

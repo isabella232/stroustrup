@@ -1,15 +1,18 @@
 from types import TupleType
 import random
 import string
-
 from django.test import TestCase
 from django.test.client import Client
 from django.test.client import RequestFactory
 from django.contrib.auth import authenticate
+from book_library.dbstorage import DatabaseStoragePostgres
+import mimetypes
+import urlparse
 
 from testbase import create_random_user, write_percentage, count_delta, random_string
 
 from book_library.views import *
+from main.models import FileStorage
 
 
 MAX_NUMBER_OF_AUTHORS = 50
@@ -391,5 +394,81 @@ class SpecialCaseTests(TestCase):
 
             self.client.logout()
 
-    # def test_request_book_post(self):
 
+class DBStoragePostgresTest(TestCase):
+
+    def setUp(self):
+        self.storage = DatabaseStoragePostgres()
+
+    def test_storage_save(self):
+        """
+        Test saving a file
+        """
+        name = 'test_storage_save.txt'
+        content = ContentFile('new content')
+        self.storage.save(name, content)
+        self.assertTrue(FileStorage.objects.exists(name=name))
+
+    def test_storage_open(self):
+        """
+        Test opening a file
+        """
+        name_file = 'test_open_file.txt'
+        content_file = ContentFile("test! test! test!")
+        content_type, encoding = mimetypes.guess_type(name_file)
+        content_type = content_type or 'application/octet-stream'
+        binary = content_file.read()
+        size = content_file.size
+        FileStorage.objects.create(file_name=name_file, blob=binary, content_type=content_type, size=size)
+        open_file = self.storage.open(name_file, 'rb')
+        self.assertEqual(content_file, open_file.read())
+
+    def test_storage_delete(self):
+        """
+        Test deleting a file
+        """
+        name_file = 'test_delete_file.txt'
+        content_file = ContentFile("test! test! test!")
+        content_type, encoding = mimetypes.guess_type(name_file)
+        content_type = content_type or 'application/octet-stream'
+        binary = content_file.read()
+        size = content_file.size
+        FileStorage.objects.create(file_name=name_file, blob=binary, content_type=content_type, size=size)
+        self.storage.delete(name_file)
+        self.assertFalse(FileStorage.objects.exists(name_file))
+
+    def test_storage_exist_true(self):
+        """
+        Test existing a file
+        """
+        name_file = 'test_exist_file.txt'
+        content_file = ContentFile("test! test! test!")
+        content_type, encoding = mimetypes.guess_type(name_file)
+        content_type = content_type or 'application/octet-stream'
+        binary = content_file.read()
+        size = content_file.size
+        FileStorage.objects.create(file_name=name_file, blob=binary, content_type=content_type, size=size)
+        self.assertTrue(self.storage.exists(name_file))
+
+    def test_storage_exist_false(self):
+        """
+        Test existing a file if is not exist
+        """
+        name_file = 'test_not_exist_file.txt'
+        self.assertFalse(self.storage.exists(name_file))
+
+    def test_storage_url(self):
+        """
+        Test correct url
+        """
+        base_url = self.storage.base_url
+        name_file = 'test_url_file.txt'
+        full_url = urlparse.urljoin(base_url, name_file).replace('\\', '/')
+        self.assertEqual(self.storage.url(name_file), full_url)
+
+    def test_storage_get_available_name(self):
+        """
+        Test available name of file
+        """
+        name_file = 'test_available_name_file.txt'
+        self.assertEqual(self.storage.get_available_name(name_file), name_file)

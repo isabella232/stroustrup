@@ -9,6 +9,7 @@ from django.core.files import File
 import mimetypes
 import os
 
+
 class DatabaseStoragePostgres(Storage):
 
     def __init__(self):
@@ -38,9 +39,7 @@ class DatabaseStoragePostgres(Storage):
         binary = content.read()
         size = content.size
         count = 0
-        dot_index = os.path.splitext(name)
-        head = dot_index[0]
-        tail = dot_index[1]
+        head, tail = os.path.splitext(name)
         while self.exists(name):
             count += 1
             name = '%s_%d%s' % (head, count, tail)

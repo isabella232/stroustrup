@@ -6,13 +6,14 @@ from django.core.validators import RegexValidator
 from django.contrib import auth
 from easy_thumbnails.fields import ThumbnailerImageField
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 import qrcode
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from book_library.dbstorage import DatabaseStoragePostgres
+
 
 class Client_Story_Record(models.Model):
     records = models.Manager()
@@ -113,6 +114,13 @@ class Book(models.Model):
         if self.book_rating.latest('id'):
             return self.book_rating.latest('id').votes
         return 0
+
+
+@receiver(post_delete, sender=Book)
+def post_delete_book(sender, instance, *args, **kwargs):
+    instance.picture.delete(save=False)
+    instance.qr_image.delete(save=False)
+    instance.book_file.delete(save=False)
 
 
 @receiver(post_save, sender=Book)
