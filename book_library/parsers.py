@@ -45,12 +45,16 @@ class OzonParser(BaseParser):
     def parse(self, urlopen_object):
         try:
             soup = BeautifulSoup(urlopen_object.read().replace('\n', '').decode('windows-1251'))
-            self.title = soup.find("h1").text
-            self.authors = soup.find("p", itemprop="author").text.split(':')[1]
-            self.book_image_url = soup.find("img", attrs={'class': "eMicroGallery_fullImage"}).attrs['src']
-            self.price = soup.find("span", attrs={'itemprop': 'price', 'class': 'hidden'}).text
-            self.description = soup.find("div", id="detail_description").text.replace(u"Сообщить о неточности в описании",'')
-            return self
+            title = soup.find("h1").text
+            authors = soup.find("p", itemprop="author").text.split(':')[1]
+            book_image_url = soup.find("img", attrs={'class': "eMicroGallery_fullImage"}).attrs['src']
+            price = soup.find("span", attrs={'itemprop': 'price', 'class': 'hidden'}).text
+            description = soup.find("div", id="detail_description").text.replace(u"Сообщить о неточности в описании",'')
+            return {'title': title,
+                    'authors': authors,
+                    'price': price,
+                    'description': description,
+                    'book_image_url': book_image_url}
         except:
             return None
 
