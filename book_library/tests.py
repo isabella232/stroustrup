@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from types import TupleType
 import random
 import string
@@ -6,6 +7,8 @@ from django.test import TestCase
 from django.test.client import Client
 from django.test.client import RequestFactory
 from django.contrib.auth import authenticate
+from book_library.parsers import AmazonParser, OzonParser
+from urllib2 import urlopen
 
 from testbase import create_random_user, write_percentage, count_delta, random_string
 
@@ -391,5 +394,63 @@ class SpecialCaseTests(TestCase):
 
             self.client.logout()
 
-    # def test_request_book_post(self):
 
+class AmazonParserTestCase(TestCase):
+
+    def setUp(self):
+        self.parser = AmazonParser()
+
+    def test_parse(self):
+        test_url_book = "http://www.amazon.com/Learning-Python-Edition-Mark-Lutz/dp/1449355730/ref=sr_1_1?ie=UTF8&qid=1395302708&sr=8-1&keywords=python"
+        url_obj = urlopen(test_url_book)
+        test_title = 'Learning Python, 5th Edition'
+        test_authors = u'Mark Lutz'
+        test_price = '39.3 USD'
+        test_descr = u"<div><p>Get a comprehensive, in-depth introduction to the core Python language with this hands-on book. " \
+                     u"Based on author Mark Lutz’s popular training course, this updated fifth edition will help you quickly write efficient, " \
+                     u"high-quality code with Python. It’s an ideal way to begin, whether you’re new to programming or a professional developer versed in other languages. " \
+                     u"</p><p> Complete with quizzes, exercises, and helpful illustrations,  " \
+                     u"this easy-to-follow, self-paced tutorial gets you started with both Python 2.7 and 3.3— the latest releases in the 3.X  " \
+                     u"and 2.X lines—plus all other releases in common use today. You’ll also learn some advanced language features that recently have become more common in Python code. " \
+                     u"</p><ul><li>Explore Python’s major built-in object types such as numbers, lists, and dictionaries " \
+                     u"</li><li>Create and process objects with Python statements, and learn Python’s general syntax model " \
+                     u"</li><li>Use functions to avoid code redundancy and package code for reuse " \
+                     u"</li><li>Organize statements, functions, and other tools into larger components with modules " \
+                     u"</li><li>Dive into classes: Python’s object-oriented programming tool for structuring code " \
+                     u"</li><li>Write large programs with Python’s exception-handling model and development tools " \
+                     u"</li><li>Learn advanced Python tools, including decorators, descriptors, metaclasses, and Unicode processing </li></ul></div>"
+        test_picture_url = 'http://ecx.images-amazon.com/images/I/517JerW0%2B3L._SL160_.jpg'
+        result = {'title': test_title,
+                  'authors': test_authors,
+                  'price': test_price,
+                  'description': test_descr,
+                  'book_image_url': test_picture_url}
+        self.assertEqual(result, self.parser.parse(url_obj))
+
+class OzonParserTestCase(TestCase):
+
+    def setUp(self):
+        self.parser = OzonParser()
+
+    def test_parse(self):
+        test_url_book = 'http://www.ozon.ru/context/detail/id/4562082/'
+        url_obj = urlopen(test_url_book)
+        test_title = u'Программирование на Python 3. Подробное руководство'
+        test_authors = u' Марк Саммерфилд '
+        test_price = u'1654.00 руб'
+        test_descr = u'      От производителя  Третья версия языка Python сделала его еще более мощным, удобным, логичным и выразительным. ' \
+                     u'Книга "Программирование на Python 3" написана одним из ведущих специалистов по этому языку, обладающим многолетним опытом работы с ним. ' \
+                     u'Издание содержит все необходимое для практического освоения языка: написания любых программ с использованием как стандартной библиотеки, ' \
+                     u'так и сторонних библиотек для языка Python 3, а также и здания собственных библиотечных модулей.  Автор начинает с описания ключевых элементов Python, ' \
+                     u'знание которых необходимо в качестве базовых понятий. Затем обсуждаются более сложные темы, поданные так, чтобы читатель мог постепенно наращивать свой опыт: ' \
+                     u'распределение вычислительной нагрузки между несколькими процессами и потоками, использование сложных типов данных, управляющих структур и функций, ' \
+                     u'создание приложений для работы с базами данных SQL и с файлами DBI.  Книга может служить как учебником, так и справочником. ' \
+                     u'Текст сопровождается многочисленными примерами, доступными на специальном сайте издания. Весь код примеров был протестирован с окончательным релизом Python в ОС Windows, Linux и Mac OS X.         '
+        test_picture_url = '//static2.ozone.ru/multimedia/books_covers/c300/1001194588.jpg'
+        product = self.parser.parse(url_obj)
+        result = {'title': test_title,
+                  'authors': test_authors,
+                  'price': test_price,
+                  'description': test_descr,
+                  'book_image_url': test_picture_url}
+        self.assertEqual(result, product)
