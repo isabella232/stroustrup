@@ -30,7 +30,7 @@ class DatabaseStoragePostgres(Storage):
         return retFile
 
     def exists(self, name):
-        return FileStorage.objects.exists(file_name=name)
+        return FileStorage.objects.filter(file_name=name).exists()
 
     def _save(self, name, content):
         name = name.replace('\\', '/')

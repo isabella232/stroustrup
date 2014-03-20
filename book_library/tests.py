@@ -407,7 +407,7 @@ class DBStoragePostgresTest(TestCase):
         name = 'test_storage_save.txt'
         content = ContentFile('new content')
         self.storage.save(name, content)
-        self.assertTrue(FileStorage.objects.exists(name=name))
+        self.assertTrue(FileStorage.objects.filter(file_name=name).exists())
 
     def test_storage_open(self):
         """
@@ -421,7 +421,8 @@ class DBStoragePostgresTest(TestCase):
         size = content_file.size
         FileStorage.objects.create(file_name=name_file, blob=binary, content_type=content_type, size=size)
         open_file = self.storage.open(name_file, 'rb')
-        self.assertEqual(content_file, open_file.read())
+        content_file.open()
+        self.assertEqual(content_file.read(), open_file.read())
 
     def test_storage_delete(self):
         """
@@ -435,7 +436,8 @@ class DBStoragePostgresTest(TestCase):
         size = content_file.size
         FileStorage.objects.create(file_name=name_file, blob=binary, content_type=content_type, size=size)
         self.storage.delete(name_file)
-        self.assertFalse(FileStorage.objects.exists(name_file))
+        queryset = FileStorage.objects.filter(file_name=name_file).exists()
+        self.assertFalse(queryset)
 
     def test_storage_exist_true(self):
         """
