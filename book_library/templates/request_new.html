@@ -27,6 +27,7 @@
                                 <a  target="_blank" class="title" href='{{ order.url }}'>
                                     {{ order.title }}
                                 </a>
+                        <a type="button" class="btn btn-success pull-right" href="{% url "books:request_add" order.pk %}"> Add into library</a>
 
                     </div>
                     <div class="panel-body" >

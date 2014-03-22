@@ -47,6 +47,10 @@ urlpatterns = patterns('',
                            requestBook.as_view(template_name='request_new.html'),
                            name='request'),
 
+                       url(r'^request/add/(?P<pk>\d+)/$',
+                           RequestBookSave.as_view(),
+                           name='request_add'),
+
                        url(r'like/(\d+)/$',
                            LikeRequest,
                            name='like'),
