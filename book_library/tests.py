@@ -11,6 +11,7 @@ from book_library.parsers import AmazonParser, OzonParser
 from urllib2 import urlopen
 from re import search
 
+
 from testbase import create_random_user, write_percentage, count_delta, random_string
 
 from book_library.views import *
@@ -324,7 +325,6 @@ class FormsTests(TestCase):
                 self.assertTrue(book_free not in request.context_data['object_list'] and book_busy in request.context_data['object_list'])
 
 
-
 class SpecialCaseTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -435,3 +435,4 @@ class OzonParserTestCase(TestCase):
         self.assertTrue(test_descr in product['description'])
         self.assertIsNotNone(search(u'^([0-9]+\.[0-9]+\s[а-я]+)$', product['price']))
         self.assertEqual(test_picture_url, product['book_image_url'])
+
