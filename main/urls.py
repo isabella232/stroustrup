@@ -17,10 +17,10 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 admin.autodiscover()
 
 urlpatterns = patterns('',
-                       url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT},
-                           name='media'),
+                       # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT},
+                       #     name='media'),
 
-                       url(r'^dbfiles/(?P<filename>.*)$', 'book_library.dbstorage.file_view', name='filestorage'),
+                       url(r'^media/(?P<filename>.*)$', 'book_library.dbstorage.file_view', name='filestorage'),
 
                        url(r'^admin/', include(admin.site.urls)),
 
