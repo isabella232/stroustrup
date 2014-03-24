@@ -423,6 +423,9 @@ class DBStoragePostgresTest(TestCase):
         open_file = self.storage.open(name_file, 'rb')
         content_file.open()
         self.assertEqual(content_file.read(), open_file.read())
+        file_name = 'test_nonexistent_file.txt'
+        open_file = self.storage.open(file_name, 'rb')
+        self.assertIsNone(open_file)
 
     def test_storage_delete(self):
         """
@@ -438,6 +441,9 @@ class DBStoragePostgresTest(TestCase):
         self.storage.delete(name_file)
         queryset = FileStorage.objects.filter(file_name=name_file).exists()
         self.assertFalse(queryset)
+        file_name = 'test_nonexistent_file.txt'
+        delete_file = self.storage.delete(file_name)
+        self.assertIsNone(delete_file)
 
     def test_storage_exist_true(self):
         """
