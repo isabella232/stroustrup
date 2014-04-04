@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import math
 from django.http import HttpResponseRedirect, HttpResponse
@@ -7,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.core import mail
 from django.shortcuts import get_object_or_404, Http404
 from django.db.models import Q
@@ -17,6 +18,9 @@ from main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE, EMAIL_H
 from book_library.forms import *
 from book_library.models import *
 from django_xhtml2pdf.utils import generate_pdf
+from urlparse import urlparse
+from parsers import book_shop_factory
+
 
 
 class StaffOnlyView(object):
@@ -227,6 +231,7 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
     queryset = Book_Request.requests.order_by('-id')
     page = 1
     paginate_by = REQUEST_ON_PAGE
+    success_url = reverse_lazy("books:request")
 
     def get_context_data(self, **kwargs):
         context = {}
@@ -234,18 +239,11 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
         context['form'] = self.get_form(self.form_class)
         return super(requestBook, self).get_context_data(**context)
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            _url = request.POST['url']
-            start_str = 'http'
-            if not _url.startswith(start_str):
-                _url = start_str+'://'+_url
-            _title = request.POST['title']
-            req = Book_Request.requests.create(url=_url, title=_title, user=request.user)
-            req.save()
+    def form_valid(self, form):
+            form.instance.author = self.request.user
+            self.object = form.save()
             return HttpResponseRedirect(reverse("books:request"))
-        return self.render_to_response(self.get_context_data(form=form))
+
 
 
 def LikeRequest(request, number, *args): #SpaT_edition
@@ -349,6 +347,7 @@ def rating_post(request, *args, **kwargs):
 
 class PrintQrCodesView(LoginRequiredView, FormView):
     form_class = PrintQRcodesForm
+    template_name = "print_qr.html"
 
     def form_valid(self, form):
         data = form.cleaned_data['books']

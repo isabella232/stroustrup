@@ -27,6 +27,34 @@ class Migration(SchemaMigration):
 
         # Changing field 'Book.title'
         db.alter_column(u'book_library_book', 'title', self.gf('django.db.models.fields.CharField')(max_length=75))
+        # Adding field 'Book_Request.book_image_url'
+        db.add_column(u'book_library_book_request', 'book_image_url',
+                      self.gf('django.db.models.fields.URLField')(default='', max_length=200, null='', blank=True),
+                      keep_default=False)
+
+        # Adding field 'Book_Request.book_title'
+        db.add_column(u'book_library_book_request', 'book_title',
+                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Book_Request.book_authors'
+        db.add_column(u'book_library_book_request', 'book_authors',
+                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Book_Request.book_price'
+        db.add_column(u'book_library_book_request', 'book_price',
+                      self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Book_Request.book_description'
+        db.add_column(u'book_library_book_request', 'book_description',
+                      self.gf('django.db.models.fields.TextField')(null=True, blank=True),
+                      keep_default=False)
+
+
+        # Changing field 'Book_Request.title'
+        db.alter_column(u'book_library_book_request', 'title', self.gf('django.db.models.fields.CharField')(max_length=100))
 
     def backwards(self, orm):
         # Adding model 'Books_QR'
@@ -55,6 +83,24 @@ class Migration(SchemaMigration):
 
         # Changing field 'Book.title'
         db.alter_column(u'book_library_book', 'title', self.gf('django.db.models.fields.CharField')(max_length=45))
+        # Deleting field 'Book_Request.book_image_url'
+        db.delete_column(u'book_library_book_request', 'book_image_url')
+
+        # Deleting field 'Book_Request.book_title'
+        db.delete_column(u'book_library_book_request', 'book_title')
+
+        # Deleting field 'Book_Request.book_authors'
+        db.delete_column(u'book_library_book_request', 'book_authors')
+
+        # Deleting field 'Book_Request.book_price'
+        db.delete_column(u'book_library_book_request', 'book_price')
+
+        # Deleting field 'Book_Request.book_description'
+        db.delete_column(u'book_library_book_request', 'book_description')
+
+
+        # Changing field 'Book_Request.title'
+        db.alter_column(u'book_library_book_request', 'title', self.gf('django.db.models.fields.CharField')(max_length=30))
 
     models = {
         u'auth.group': {
@@ -75,7 +121,7 @@ class Migration(SchemaMigration):
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -83,7 +129,7 @@ class Migration(SchemaMigration):
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
         u'book_library.author': {
@@ -127,8 +173,13 @@ class Migration(SchemaMigration):
         },
         u'book_library.book_request': {
             'Meta': {'object_name': 'Book_Request'},
+            'book_authors': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'book_description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'book_image_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': "''", 'blank': 'True'}),
+            'book_price': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+            'book_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': "''"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['auth.User']", 'blank': 'True'}),
             'users': ('django.db.models.fields.related.ManyToManyField', [], {'default': 'None', 'related_name': "'request'", 'blank': 'True', 'symmetrical': 'False', 'to': u"orm['auth.User']"}),

@@ -12,6 +12,11 @@ ADMINS = (
     ('Roman', 'r.usynin@crystalnix.com'),
 )
 
+#Amazon Product Advertising API Account
+AMAZON_ACCESS_KEY = "AKIAJP5RTGQPZNN5RM4Q"
+AMAZON_SECRET_KEY = "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"
+AMAZON_ASSOC_TAG = "520"
+
 DOMAIN = 'stroustrup.herokuapp.com'
 
 MANAGERS = ADMINS
@@ -62,6 +67,7 @@ DATABASES = {
         }
     }
 }
+
 
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
@@ -130,7 +136,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'dajaxice.finders.DajaxiceFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -184,13 +189,11 @@ INSTALLED_APPS = (
     'book_library',
     'profile.registration_app',
     'profile',
-    'dajaxice',
     'main',
     'pure_pagination',
     'crispy_forms',
     'south',
-    'easy_thumbnails'
-
+    'easy_thumbnails',
 )
 
 warnings.filterwarnings(

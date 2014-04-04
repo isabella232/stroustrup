@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django_openid_auth.views import login_complete
-from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic.base import TemplateView
 import views
@@ -9,7 +8,6 @@ from django.conf import settings
 from profile.registration_app.forms import CustomAuthForm
 from profile.registration_app.views import *
 
-dajaxice_autodiscover()
 
 import warnings
 warnings.simplefilter('error', DeprecationWarning)
@@ -21,7 +19,6 @@ urlpatterns = patterns('',
                        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT},
                            name='media'),
                        url(r'^admin/', include(admin.site.urls)),
-                       url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
 
                        url(r'^$', views.main_view, name='mainpage'),
 
