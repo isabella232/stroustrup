@@ -351,3 +351,24 @@ class PrintQrCodesView(LoginRequiredView, FormView):
         result = generate_pdf('book_card.html', file_object=resp, context=context)
         return result
 
+
+class RequestBookSave(BookAdd):
+    success_url = '/'
+    template_name = 'add_book.html'
+
+    def get_initial(self):
+        initial = super(RequestBookSave, self).get_initial()
+        initial = initial.copy()
+        try:
+            book = Book_Request.requests.get(pk=self.kwargs['pk'])
+            initial['title'] = book.book_title
+            initial['description'] = book.book_description
+            initial['authors_names'] = book.book_authors
+            return initial
+        except Book_Request.DoesNotExist:
+            return initial
+
+    def form_valid(self, form):
+        book = Book_Request.requests.get(pk=self.kwargs['pk'])
+        book.delete()
+        return super(RequestBookSave, self).form_valid(form)
