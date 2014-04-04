@@ -10,7 +10,7 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import DetailView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core import mail
-from django.shortcuts import get_object_or_404, Http404
+from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
 from pure_pagination.mixins import PaginationMixin
@@ -18,9 +18,11 @@ from main.settings import BOOKS_ON_PAGE, REQUEST_ON_PAGE, USERS_ON_PAGE, EMAIL_H
 from book_library.forms import *
 from book_library.models import *
 from django_xhtml2pdf.utils import generate_pdf
+from amazon.api import AmazonAPI
+from re import search
+from django.db.models.signals import post_delete
 from urlparse import urlparse
 from parsers import book_shop_factory
-
 
 
 class StaffOnlyView(object):
@@ -82,13 +84,7 @@ class BookUpdate(StaffOnlyView, UpdateView):
     form_class = Book_UpdateForm
 
 
-class Delete(StaffOnlyView, DeleteView):
-
-    def get(self, request, *args, **kwargs):
-        return super(Delete, self).get(self, request, *args, **kwargs)
-
-
-class DeleteBook(Delete):
+class DeleteBook(StaffOnlyView, DeleteView):
     model = Book
 
 
@@ -243,7 +239,6 @@ class requestBook(PaginationMixin, AddRequestView, ListView): #SpaT_edition
             form.instance.author = self.request.user
             self.object = form.save()
             return HttpResponseRedirect(reverse("books:request"))
-
 
 
 def LikeRequest(request, number, *args): #SpaT_edition

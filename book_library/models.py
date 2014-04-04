@@ -6,12 +6,14 @@ from django.core.validators import RegexValidator
 from django.contrib import auth
 from easy_thumbnails.fields import ThumbnailerImageField
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 import qrcode
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from book_library.dbstorage import DatabaseStoragePostgres
+
 
 class Client_Story_Record(models.Model):
     records = models.Manager()
@@ -63,12 +65,12 @@ class Book(models.Model):
     busy = models.BooleanField(default=False)
     paperback_version_exists = models.BooleanField(default=False, verbose_name="paper version")
     description = models.TextField(max_length=255, blank=True)
-    picture = ThumbnailerImageField(upload_to='book_images', blank=True)
+    picture = ThumbnailerImageField(upload_to='book_images', blank=True, storage=DatabaseStoragePostgres())
     authors = models.ManyToManyField(Author, related_name="books")
     users = models.ManyToManyField(User, related_name="books", through=Client_Story_Record, blank=True)
     tags = models.ManyToManyField("Book_Tag", related_name="books", blank=True)
-    qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True)
-    book_file = models.FileField(upload_to='book_files', blank=True, null=True)
+    qr_image = ThumbnailerImageField(upload_to='qr_codes', null=True, blank=True, storage=DatabaseStoragePostgres())
+    book_file = models.FileField(upload_to='book_files', blank=True, null=True, storage=DatabaseStoragePostgres())
     e_version_exists = models.BooleanField(default=False, verbose_name="e version")
     book_rating = models.ManyToManyField('Book_Rating', null=None, default=None, blank=True)#SpaT_eedition
     comments = models.ManyToManyField('Book_Comment', related_name='books', default=None, blank=True) #SpaT_edition
@@ -114,7 +116,11 @@ class Book(models.Model):
         return 0
 
 
-
+@receiver(post_delete, sender=Book)
+def post_delete_book(sender, instance, *args, **kwargs):
+    instance.picture.delete(save=False)
+    instance.qr_image.delete(save=False)
+    instance.book_file.delete(save=False)
 
 
 @receiver(post_save, sender=Book)
@@ -173,4 +179,7 @@ class Request_Return(models.Model):
     book = models.ForeignKey(Book)
     time_request = models.DateTimeField(auto_now_add=True)
     processing_time = models.DateTimeField(blank=True, null=True)
+
+
+
 
