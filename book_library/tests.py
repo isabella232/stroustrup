@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from types import TupleType
 import random
 import string
@@ -8,7 +9,9 @@ from django.contrib.auth import authenticate
 from book_library.dbstorage import DatabaseStoragePostgres
 import mimetypes
 import urlparse
-
+from book_library.parsers import AmazonParser, OzonParser
+from urllib2 import urlopen
+from re import search
 from testbase import create_random_user, write_percentage, count_delta, random_string
 
 from book_library.views import *
@@ -323,7 +326,6 @@ class FormsTests(TestCase):
                 self.assertTrue(book_free not in request.context_data['object_list'] and book_busy in request.context_data['object_list'])
 
 
-
 class SpecialCaseTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -393,6 +395,47 @@ class SpecialCaseTests(TestCase):
             self.assertTrue(not book.busy and (book not in user2[0].get_users_books()))
 
             self.client.logout()
+
+
+class AmazonParserTestCase(TestCase):
+
+    def setUp(self):
+        self.parser = AmazonParser()
+
+    def test_parse(self):
+        test_url_book = "http://www.amazon.com/Learning-Python-Edition-Mark-Lutz/dp/1449355730/ref=sr_1_1?ie=UTF8&qid=1395302708&sr=8-1&keywords=python"
+        url_obj = urlopen(test_url_book)
+        test_title = 'Learning Python, 5th Edition'
+        test_authors = u'Mark Lutz'
+        test_descr = u"Get a comprehensive, in-depth introduction to the core Python language with this hands-on book."
+        test_picture_url = 'http://ecx.images-amazon.com/images/I/517JerW0%2B3L._SL160_.jpg'
+        book = self.parser.parse(url_obj)
+        self.assertEqual(test_title, book['title'])
+        self.assertEqual(test_authors, book['authors'])
+        self.assertIsNotNone(search('^([0-9]+\.[0-9]+\s\w+)$', book['price']))
+        self.assertTrue(test_descr in book['description'])
+        self.assertEqual(test_picture_url, book['book_image_url'])
+
+
+class OzonParserTestCase(TestCase):
+
+    def setUp(self):
+        self.parser = OzonParser()
+
+    def test_parse(self):
+        test_url_book = 'http://www.ozon.ru/context/detail/id/4562082/'
+        url_obj = urlopen(test_url_book)
+        test_title = u'Программирование на Python 3. Подробное руководство'
+        test_authors = u' Марк Саммерфилд '
+        test_price = u'1654.00 руб'
+        test_descr = u'Третья версия языка Python сделала его еще более мощным, удобным, логичным и выразительным.'
+        test_picture_url = '//static2.ozone.ru/multimedia/books_covers/c300/1001194588.jpg'
+        product = self.parser.parse(url_obj)
+        self.assertEqual(test_title, product['title'])
+        self.assertEqual(test_authors, product['authors'])
+        self.assertTrue(test_descr in product['description'])
+        self.assertIsNotNone(search(u'^([0-9]+\.[0-9]+\s[а-я]+)$', product['price']))
+        self.assertEqual(test_picture_url, product['book_image_url'])
 
 
 class DBStoragePostgresTest(TestCase):
